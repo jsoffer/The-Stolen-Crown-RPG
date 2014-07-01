@@ -1,4 +1,9 @@
-import copy
+"""
+
+Store and show attribution
+
+"""
+
 import pygame as pg
 from .. import tools, setup
 from .. import constants as c
@@ -17,62 +22,64 @@ class CreditEntry(object):
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.timer = 0.0
+        self.current_time = 0.0
         self.level = level
 
     def make_credits(self):
         """
         Make a list of lists for all the credit surfaces.
         """
-        credits = [['THE STOLEN CROWN', 'A Fantasy RPG'],
-                   ['PROGRAMMING AND GAME DESIGN', 'Justin Armstrong'],
-                   ['ART', 'JPhilipp', 
-                           'Reemax', 
-                           'Lanea Zimmerman', 
-                           'Redshrike', 
-                           'StumpyStrust', 
-                           'Benjamin Larsson', 
-                           'russpuppy', 
-                           'hc',
-                           'Iron Star Media'],
-                   ['MUSIC', 'Telaron: The King\'s Theme', 
-                             'Mekathratos: Forest Dance (Town Theme)', 
-                             'bart: Adventure Begins (Overworld Theme)', 
-                             '8th Mode Music: High Action (Battle Theme)', 
-                             'Arron Krogh: Coastal Town (Shop Theme)', 
-                             'Arron Krogh: My Enemy (Dungeon Theme)', 
-                             'Matthew Pablo: Enchanted Festival (Victory Theme)', 
-                             'Matthew Pablo: Pleasant Creek (Brother Theme)'],
-                   ['SOUND EFFECTS', 'Kenney',
-                                     'Nic3_one',
-                                     'Ekokubza123',
-                                     'kuzyaburst',
-                                     'audione'],
-                   ['SPECIAL THANKS', '/r/pygame', 
-                                      'Leif Theden', 
-                                      'Stacey Hunniford']]
-        
+        sc_credits = [['THE STOLEN CROWN', 'A Fantasy RPG'],
+                      ['PROGRAMMING AND GAME DESIGN', 'Justin Armstrong'],
+                      ['ART', 'JPhilipp',
+                       'Reemax',
+                       'Lanea Zimmerman',
+                       'Redshrike',
+                       'StumpyStrust',
+                       'Benjamin Larsson',
+                       'russpuppy',
+                       'hc',
+                       'Iron Star Media'],
+                      ['MUSIC', 'Telaron: The King\'s Theme',
+                       'Mekathratos: Forest Dance (Town Theme)',
+                       'bart: Adventure Begins (Overworld Theme)',
+                       '8th Mode Music: High Action (Battle Theme)',
+                       'Arron Krogh: Coastal Town (Shop Theme)',
+                       'Arron Krogh: My Enemy (Dungeon Theme)',
+                       'Matthew Pablo: Enchanted Festival (Victory Theme)',
+                       'Matthew Pablo: Pleasant Creek (Brother Theme)'],
+                      ['SOUND EFFECTS', 'Kenney',
+                       'Nic3_one',
+                       'Ekokubza123',
+                       'kuzyaburst',
+                       'audione'],
+                      ['SPECIAL THANKS', '/r/pygame',
+                       'Leif Theden',
+                       'Stacey Hunniford']]
+
         credit_sprites = []
 
-        for credit in credits:
+        for credit in sc_credits:
             subcredit_list = []
             for i, subcredit in enumerate(credit):
                 text_sprite = pg.sprite.Sprite()
-                text_sprite.text_image = self.font.render(subcredit, True, c.WHITE)
-                text_sprite.rect = text_sprite.text_image.get_rect(centerx = 400,
-                                                                   y=100+(i*40))
+                text_sprite.text_image = self.font.render(
+                    subcredit, True, c.WHITE)
+                text_sprite.rect = text_sprite.text_image.get_rect(
+                    centerx=400, y=100+(i*40))
                 text_sprite.image = pg.Surface(text_sprite.rect.size).convert()
                 text_sprite.image.set_colorkey(c.BLACK)
                 text_sprite.image.set_alpha(self.alpha)
                 subcredit_list.append(text_sprite)
             credit_sprites.append(subcredit_list)
-        
+
         return credit_sprites
 
     def make_state_dict(self):
         """
         Make the dictionary of state methods used to update credit.
         """
-        state_dict = {c.TRANSITION_IN: self.transition_in, 
+        state_dict = {c.TRANSITION_IN: self.transition_in,
                       c.TRANSITION_OUT: self.transition_out,
                       c.NORMAL: self.normal_update}
 
@@ -97,7 +104,7 @@ class CreditEntry(object):
             credit.image.set_colorkey(c.BLACK)
             credit.image.set_alpha(self.alpha)
             credit.image.blit(credit.text_image, (0, 0))
-           
+
         self.alpha -= 5
         if self.alpha <= 0:
             self.alpha = 0
@@ -138,10 +145,11 @@ class Credits(tools._State):
         self.music = None
         self.volume = None
         self.credit = None
-    
+        self.background = None
+
     def startup(self, current_time, game_data):
         """
-        Initialize data at scene start. 
+        Initialize data at scene start.
         """
         self.game_data = game_data
         self.music = setup.MUSIC['overworld']
@@ -164,6 +172,6 @@ class Credits(tools._State):
         """
         surface.blit(self.background, (0, 0))
         self.credit.draw(surface)
-        
-    
+
+
 

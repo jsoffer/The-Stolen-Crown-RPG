@@ -177,9 +177,9 @@ class InfoBox(pg.sprite.Sprite):
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
-        self.sword = self.get_tile(48, 0, setup.GFX['shopsigns'], 16, 16, 2)
-        self.shield = self.get_tile(32, 0, setup.GFX['shopsigns'], 16, 16, 2)
-        self.potion = self.get_tile(16, 0, setup.GFX['shopsigns'], 16, 16, 2)
+        self.sword = self.get_tile((48, 0), setup.GFX['shopsigns'], (16, 16), 2)
+        self.shield = self.get_tile((32, 0), setup.GFX['shopsigns'], (16, 16), 2)
+        self.potion = self.get_tile((16, 0), setup.GFX['shopsigns'], (16, 16), 2)
         self.possible_potions = ['Healing Potion', 'ELIXIR', 'Ether Potion']
         self.possible_armor = ['Wooden Shield', 'Chain Mail']
         self.possible_weapons = ['Long Sword', 'Rapier']
@@ -237,7 +237,7 @@ class InfoBox(pg.sprite.Sprite):
                                          stat[1:],
                                          self.player_stats[stat])
             elif stat == 'Attack Power':
-				text = "{}: {}".format(stat, self.get_attack_power()) 
+                text = "{}: {}".format(stat, self.get_attack_power()) 
             elif stat == 'Defense Power':
                 text = "{}: {}".format(stat, self.get_defense_power())
             elif stat == 'gold':

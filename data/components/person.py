@@ -1,5 +1,5 @@
 from __future__ import division
-from itertools import izip
+#from itertools import izip
 import math, random, copy, sys
 import pygame as pg
 from .. import setup, observer
@@ -64,7 +64,7 @@ class Person(pg.sprite.Sprite):
                 image_list.append(
                     self.get_image(column*32, row*32, 32, 32, sheet))
 
-        for key, image in izip(image_keys, image_list):
+        for key, image in zip(image_keys, image_list):
             image_dict[key] = image
 
         return image_dict

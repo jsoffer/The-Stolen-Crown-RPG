@@ -1,6 +1,12 @@
+"""
+
+Control, state, loaders
+
+"""
+
 __author__ = 'justinarmstrong'
 
-import os, random
+import os
 import pygame as pg
 from . import constants as c
 
@@ -11,25 +17,38 @@ class Control(object):
     states is also found here.
     """
     def __init__(self, caption):
+        # drawable
         self.screen = pg.display.get_surface()
-        self.done = False
-        self.clock = pg.time.Clock()
         self.caption = caption
-        self.fps = 60
+        # stop condition
+        self.done = False
+        # clock
+        self.clock = pg.time.Clock()
         self.show_fps = False
         self.current_time = 0.0
+        # all keys' pressed-or-not-pressed state
         self.keys = pg.key.get_pressed()
+        # (derived from) _State
+        # .state is the .state_name'ish member of .state_dict
         self.state_dict = {}
         self.state_name = None
         self.state = None
 
     def setup_states(self, state_dict, start_state):
+        """ Set the pool of states and choose one; because of the choosing,
+        make sure its music is set
+
+        """
         self.state_dict = state_dict
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
         self.set_music()
 
     def update(self):
+        """ Update self.state... maybe better in _State itself?
+
+        """
+
         self.current_time = pg.time.get_ticks()
         if self.state.quit:
             self.done = True
@@ -38,6 +57,11 @@ class Control(object):
         self.state.update(self.screen, self.keys, self.current_time)
 
     def flip_state(self):
+        """ Choose a new state from the pool; if the state changed,
+        maybe the music changes too
+
+        """
+
         previous, self.state_name = self.state_name, self.state.next
         previous_music = self.state.music_title
         persist = self.state.cleanup()
@@ -59,9 +83,9 @@ class Control(object):
             pg.mixer.music.play(-1)
 
     def event_loop(self):
-        self.events = pg.event.get()
+        events = pg.event.get()
 
-        for event in self.events:
+        for event in events:
             if event.type == pg.QUIT:
                 self.done = True
             elif event.type == pg.KEYDOWN:
@@ -84,7 +108,7 @@ class Control(object):
             self.event_loop()
             self.update()
             pg.display.update()
-            self.clock.tick(self.fps)
+            self.clock.tick(c.FPS)
             if self.show_fps:
                 fps = self.clock.get_fps()
                 with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
@@ -120,7 +144,9 @@ class _State(object):
         pass
 
 
-def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpg', 'bmp')):
+def load_all_gfx(directory,
+                 colorkey=(255, 0, 255),
+                 accept=('.png', 'jpg', 'bmp')):
     graphics = {}
     for pic in os.listdir(directory):
         name, ext = os.path.splitext(pic)
@@ -133,7 +159,6 @@ def load_all_gfx(directory, colorkey=(255,0,255), accept=('.png', 'jpg', 'bmp'))
                 img.set_colorkey(colorkey)
             graphics[name] = img
     return graphics
-
 
 def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
     songs = {}
@@ -152,28 +177,30 @@ def load_all_tmx(directory, accept=('.tmx')):
     return load_all_music(directory, accept)
 
 
-def load_all_sfx(directory, accept=('.wav','.mp3','.ogg','.mdi')):
+def load_all_sfx(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
     effects = {}
-    for fx in os.listdir(directory):
-        name, ext = os.path.splitext(fx)
+    for sound_fx in os.listdir(directory):
+        name, ext = os.path.splitext(sound_fx)
         if ext.lower() in accept:
-            effects[name] = pg.mixer.Sound(os.path.join(directory, fx))
+            effects[name] = pg.mixer.Sound(os.path.join(directory, sound_fx))
     return effects
 
 
-def get_image(x, y, width, height, sprite_sheet):
-    """Extracts image from sprite sheet"""
-    image = pg.Surface([width, height])
-    rect = image.get_rect()
+def get_image(pos_x, pos_y, width, height, sprite_sheet):
+    """ Extracts image from sprite sheet """
 
-    image.blit(sprite_sheet, (0, 0), (x, y, width, height))
+    image = pg.Surface((width, height))
+
+    image.blit(sprite_sheet, (0, 0), (pos_x, pos_y, width, height))
     image.set_colorkey(c.BLACK)
 
     return image
 
-def get_tile(x, y, tileset, width=16, height=16, scale=1):
+def get_tile(pos, tileset, dims=(16, 16), scale=1):
     """Gets the surface and rect for a tile"""
-    surface = get_image(x, y, width, height, tileset)
+    (pos_x, pos_y) = pos
+    (width, height) = dims
+    surface = get_image(pos_x, pos_y, width, height, tileset)
     surface = pg.transform.scale(surface, (int(width*scale), int(height*scale)))
     rect = surface.get_rect()
 
@@ -193,11 +220,11 @@ def create_game_data_dict():
     """Create a dictionary of persistant values the player
     carries between states"""
 
-    player_items = {'GOLD': dict([('quantity',100),
-                                  ('value',0)]),
-                    'Healing Potion': dict([('quantity',2),
-                                            ('value',15)]),
-                    'Ether Potion': dict([('quantity',1),
+    player_items = {'GOLD': dict([('quantity', 100),
+                                  ('value', 0)]),
+                    'Healing Potion': dict([('quantity', 2),
+                                            ('value', 15)]),
+                    'Ether Potion': dict([('quantity', 1),
                                           ('value', 15)]),
                     'Rapier': dict([('quantity', 1),
                                     ('value', 50),
@@ -223,8 +250,8 @@ def create_game_data_dict():
                  'last state': None,
                  'last direction': 'down',
                  'king item': 'GOLD',
-                 'old man item': {'ELIXIR': dict([('value',1000),
-                                                  ('quantity',1)])},
+                 'old man item': {'ELIXIR': dict([('value', 1000),
+                                                  ('quantity', 1)])},
                  'player inventory': player_items,
                  'player stats': player_stats,
                  'battle counter': 50,
@@ -243,14 +270,6 @@ def create_game_data_dict():
                  'battle type': '',
                  'crown quest': False,
                  'delivered crown': False,
-                 'brother item': 'ELIXIR'
-    }
+                 'brother item': 'ELIXIR'}
 
     return data_dict
-
-
-
-
-
-
-

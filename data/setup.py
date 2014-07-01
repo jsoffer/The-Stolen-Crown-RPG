@@ -1,18 +1,16 @@
-__author__ = 'justinarmstrong'
-
 """
+
 This module initializes the display and
 creates dictionaries of resources.
+
 """
+
+__author__ = 'justinarmstrong'
 
 import os
 import pygame as pg
+from data.constants import GAME, ORIGINAL_CAPTION
 from . import tools
-from . import constants as c
-
-GAME = 'BEGIN GAME'
-
-ORIGINAL_CAPTION = 'The Stolen Crown'
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pg.init()

@@ -92,7 +92,7 @@ class Shop(tools._State):
 
         return background
 
-    def make_sprite(self, key, coordx, coordy, x, y=304):
+    def make_sprite(self, key, coordx, coordy, left, center_y=304):
         """
         Get the image for the player.
         """
@@ -104,7 +104,7 @@ class Shop(tools._State):
         surface.blit(image, rect)
 
         surface = pg.transform.scale(surface, (96, 96))
-        rect = surface.get_rect(left=x, centery=y)
+        rect = surface.get_rect(left=left, centery=center_y)
         sprite = pg.sprite.Sprite()
         sprite.image = surface
         sprite.rect = rect
@@ -137,7 +137,7 @@ class Shop(tools._State):
         self.gui.update(keys, current_time)
         self.draw_level(surface)
 
-    def transition_in(self, surface, *args):
+    def transition_in(self, surface, *_):
         """
         Transition into level.
         """
@@ -146,12 +146,12 @@ class Shop(tools._State):
         transition_image.set_alpha(self.transition_alpha)
         self.draw_level(surface)
         surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha -= c.TRANSITION_SPEED 
+        self.transition_alpha -= c.TRANSITION_SPEED
         if self.transition_alpha <= 0:
             self.state = 'normal'
             self.transition_alpha = 0
 
-    def transition_out(self, surface, *args):
+    def transition_out(self, surface, *_):
         """
         Transition level to new scene.
         """
@@ -160,7 +160,7 @@ class Shop(tools._State):
         transition_image.set_alpha(self.transition_alpha)
         self.draw_level(surface)
         surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha += c.TRANSITION_SPEED 
+        self.transition_alpha += c.TRANSITION_SPEED
         if self.transition_alpha >= 255:
             self.done = True
 
@@ -229,10 +229,10 @@ class WeaponShop(Shop):
         rapier_dialogue = 'Rapier (50 gold)'
 
         item2 = {'type': 'Long Sword',
-                'price': 150,
-                'quantity': 1,
-                'power': 11,
-                'dialogue': longsword_dialogue}
+                 'price': 150,
+                 'quantity': 1,
+                 'power': 11,
+                 'dialogue': longsword_dialogue}
 
         item1 = {'type': 'Rapier',
                  'price': 50,
@@ -307,11 +307,11 @@ class MagicShop(Shop):
                  'dialogue': cure_dialogue}
 
         item2 = {'type': 'Fire Blast',
-                'price': 150,
-                'quantity': 1,
-                'magic points': 40,
-                'power': 15,
-                'dialogue': fire_dialogue}
+                 'price': 150,
+                 'quantity': 1,
+                 'magic points': 40,
+                 'power': 15,
+                 'dialogue': fire_dialogue}
 
         return [item1, item2]
 
@@ -351,4 +351,3 @@ class PotionShop(Shop):
                  'dialogue': ether_dialogue}
 
         return [item, item2]
-

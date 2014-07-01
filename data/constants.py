@@ -1,5 +1,18 @@
-#Constants used throughout the game 
+"""
+
+Game level constants
+
+"""
+
+#Constants used throughout the game
+FPS = 60
 SCREEN_SIZE = (800, 608)
+
+# for setup.py
+
+GAME = 'BEGIN GAME'
+
+ORIGINAL_CAPTION = 'The Stolen Crown'
 
 ##GAME STATES
 
@@ -88,7 +101,7 @@ POWERUP = 'powerup'
 TALK = 'talk'
 MISS = 'whoosh'
 
-TRANSITION_SPEED = 35 
+TRANSITION_SPEED = 35
 DEATH_TRANSITION_SPEED = 5
 
 #LEVEL STATES
