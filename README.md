@@ -3,7 +3,7 @@ The Stolen Crown: A mini-RPG
 
 A fantasy mini-RPG built with Python and Pygame.
 
-Requirements: Python 2.7, Pygame 1.9.1
+Requirements: Python 3, developed on 3.4 (for this fork; was 2.7), Pygame 1.9.1
 
 How to run: python The_Stolen_Crown.py
 
