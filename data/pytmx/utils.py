@@ -3,8 +3,11 @@ from collections import defaultdict
 
 from pygame import Rect
 
-from .constants import *
+#from .constants import *
 
+from constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY, 
+                       TRANS_FLIPX, TRANS_FLIPY,
+                       GID_TRANS_ROT, TRANS_ROT)
 
 def read_points(text):
     return [tuple(map(lambda x: int(x), i.split(',')))

@@ -5,11 +5,6 @@ import pygame as pg
 from .. import setup, observer
 from .. import constants as c
 
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    range = xrange
-
-
 class Person(pg.sprite.Sprite):
     """Base class for all world characters
     controlled by the computer"""

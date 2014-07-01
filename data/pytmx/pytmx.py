@@ -549,7 +549,7 @@ class TiledLayer(TiledElement):
 
         elif compression:
             msg = "TMX compression type: {0} is not supported."
-            raise Exception(msg.format(str(attr["compression"])))
+            raise Exception(msg.format(compression))
 
         # if data is None, then it was not decoded or decompressed, so
         # we assume here that it is going to be a bunch of tile elements

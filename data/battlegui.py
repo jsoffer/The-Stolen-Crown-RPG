@@ -6,10 +6,6 @@ import pygame as pg
 from . import setup, observer
 from . import constants as c
 
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    range = xrange
-
 class InfoBox(object):
     """
     Info box that describes attack damage and other battle

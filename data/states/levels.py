@@ -14,12 +14,6 @@ from . import player_menu
 from .. import tilerender
 from .. import setup
 
-
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    range = xrange
-
-
 class LevelState(tools._State):
     def __init__(self, name, battles=False):
         super(LevelState, self).__init__()

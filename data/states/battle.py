@@ -6,12 +6,6 @@ from .. import tools, battlegui, observer, setup
 from .. components import person, attack, attackitems
 from .. import constants as c
 
-
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    range = xrange
-
-
 class Battle(tools._State):
     def __init__(self):
         super(Battle, self).__init__()

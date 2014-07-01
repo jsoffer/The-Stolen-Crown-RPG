@@ -114,8 +114,6 @@ class TextHandler(object):
                     dialogue = self.textbox.dialogue_list
                     if self.textbox.name == 'dialoguebox':
                         self.textbox = DialogueBox(dialogue, index)
-                    elif self.textbox.name == 'infobox':
-                        self.textbox = ItemBox(dialogue, index)
                 elif self.talking_sprite.item:
                     self.check_for_item()
                 elif self.talking_sprite.battle:
@@ -272,9 +270,7 @@ class TextHandler(object):
 
     def make_textbox(self, name, dialogue, item=None):
         """Make textbox on demand"""
-        if name == 'itembox':
-            textbox = ItemBox(dialogue, item)
-        elif name == 'dialoguebox':
+        if name == 'dialoguebox':
             textbox = DialogueBox(dialogue)
         else:
             textbox = None
