@@ -14,7 +14,8 @@ class Person(pg.sprite.Sprite):
     """Base class for all world characters
     controlled by the computer"""
 
-    def __init__(self, sheet_key, x, y, direction='down', state='resting', index=0):
+    def __init__(self, sheet_key, x, y,
+                 direction='down', state='resting', index=0):
         super(Person, self).__init__()
         self.alpha = 255
         self.name = sheet_key
@@ -75,10 +76,14 @@ class Person(pg.sprite.Sprite):
         """
         image_dict = self.spritesheet_dict
 
-        left_list = [image_dict['facing left 1'], image_dict['facing left 2']]
-        right_list = [image_dict['facing right 1'], image_dict['facing right 2']]
-        up_list = [image_dict['facing up 1'], image_dict['facing up 2']]
-        down_list = [image_dict['facing down 1'], image_dict['facing down 2']]
+        left_list = (
+            [image_dict['facing left 1'], image_dict['facing left 2']])
+        right_list = (
+            [image_dict['facing right 1'], image_dict['facing right 2']])
+        up_list = (
+            [image_dict['facing up 1'], image_dict['facing up 2']])
+        down_list = (
+            [image_dict['facing down 1'], image_dict['facing down 2']])
 
         direction_dict = {'left': left_list,
                           'right': right_list,
@@ -493,7 +498,8 @@ class Player(Person):
     User controlled character.
     """
 
-    def __init__(self, direction, game_data, x=0, y=0, state='resting', index=0):
+    def __init__(self, direction, game_data,
+                 x=0, y=0, state='resting', index=0):
         super(Player, self).__init__('player', x, y, direction, state, index)
         self.damaged = False
         self.healing = False
@@ -542,7 +548,8 @@ class Player(Person):
             self.image = copy.copy(self.spritesheet_dict['facing left 2'])
             self.image = pg.transform.scale2x(self.image).convert_alpha()
             damage_image = copy.copy(self.image).convert_alpha()
-            damage_image.fill((255, 0, 0, self.damage_alpha), special_flags=pg.BLEND_RGBA_MULT)
+            damage_image.fill((255, 0, 0, self.damage_alpha),
+                              special_flags=pg.BLEND_RGBA_MULT)
             self.image.blit(damage_image, (0, 0))
             if self.fade_in:
                 self.damage_alpha += 25
@@ -566,7 +573,8 @@ class Player(Person):
             self.image = copy.copy(self.spritesheet_dict['facing left 2'])
             self.image = pg.transform.scale2x(self.image).convert_alpha()
             healing_image = copy.copy(self.image).convert_alpha()
-            healing_image.fill((0, 255, 0, self.healing_alpha), special_flags=pg.BLEND_RGBA_MULT)
+            healing_image.fill((0, 255, 0, self.healing_alpha),
+                               special_flags=pg.BLEND_RGBA_MULT)
             self.image.blit(healing_image, (0, 0))
             if self.fade_in:
                 self.healing_alpha += 25
@@ -609,7 +617,8 @@ class Enemy(Person):
     """
     Enemy sprite.
     """
-    def __init__(self, sheet_key, x, y, direction='down', state='resting', index=0):
+    def __init__(self, sheet_key, x, y,
+                 direction='down', state='resting', index=0):
         super(Enemy, self).__init__(sheet_key, x, y, direction, state, index)
         self.level = 1
         self.type = 'enemy'

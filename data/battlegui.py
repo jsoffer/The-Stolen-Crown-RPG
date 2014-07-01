@@ -35,24 +35,25 @@ class InfoBox(object):
         """
         Make dictionary of states Battle info can be in.
         """
-        state_dict   = {c.SELECT_ACTION: 'Select an action.',
-                        c.SELECT_MAGIC: 'Select a magic spell.',
-                        c.SELECT_ITEM: 'Select an item.',
-                        c.SELECT_ENEMY: 'Select an enemy.',
-                        c.ENEMY_ATTACK: 'Enemy attacks player!',
-                        c.PLAYER_ATTACK: 'Player attacks enemy! ',
-                        c.RUN_AWAY: 'RUN AWAY!!!',
-                        c.ENEMY_DAMAGED: self.enemy_damaged(),
-                        c.ENEMY_DEAD: 'Enemy killed.',
-                        c.PLAYER_DAMAGED: self.player_hit(),
-                        c.DRINK_HEALING_POTION: 'Player healed.',
-                        c.DRINK_ETHER_POTION: 'Magic Points Increased.',
-                        c.FIRE_SPELL: 'FIRE BLAST!',
-                        c.BATTLE_WON: 'Battle won!',
-                        c.SHOW_EXPERIENCE: self.show_experience(),
-                        c.LEVEL_UP: self.level_up(),
-                        c.TWO_ACTIONS: 'Two actions per turn mode is now available.',
-                        c.SHOW_GOLD: self.show_gold()}
+        state_dict   = {
+            c.SELECT_ACTION: 'Select an action.',
+            c.SELECT_MAGIC: 'Select a magic spell.',
+            c.SELECT_ITEM: 'Select an item.',
+            c.SELECT_ENEMY: 'Select an enemy.',
+            c.ENEMY_ATTACK: 'Enemy attacks player!',
+            c.PLAYER_ATTACK: 'Player attacks enemy! ',
+            c.RUN_AWAY: 'RUN AWAY!!!',
+            c.ENEMY_DAMAGED: self.enemy_damaged(),
+            c.ENEMY_DEAD: 'Enemy killed.',
+            c.PLAYER_DAMAGED: self.player_hit(),
+            c.DRINK_HEALING_POTION: 'Player healed.',
+            c.DRINK_ETHER_POTION: 'Magic Points Increased.',
+            c.FIRE_SPELL: 'FIRE BLAST!',
+            c.BATTLE_WON: 'Battle won!',
+            c.SHOW_EXPERIENCE: self.show_experience(),
+            c.LEVEL_UP: self.level_up(),
+            c.TWO_ACTIONS: 'Two actions per turn mode is now available.',
+            c.SHOW_GOLD: self.show_gold()}
 
         return state_dict
 
@@ -136,7 +137,8 @@ class InfoBox(object):
             text_sprites = self.make_text_sprites(self.make_magic_text())
             text_sprites.draw(surface)
         else:
-            text_surface = self.font.render(self.state_dict[self.state], True, c.NEAR_BLACK)
+            text_surface = self.font.render(
+                self.state_dict[self.state], True, c.NEAR_BLACK)
             text_rect = text_surface.get_rect(x=50, y=50)
             surface.blit(text_surface, text_rect)
 
@@ -170,7 +172,8 @@ class InfoBox(object):
         """
         Show how much experience the player earned.
         """
-        return "You earned {} experience points this battle!".format(self.experience_points)
+        return "You earned {} experience points this battle!".format(
+            self.experience_points)
 
     def show_gold(self):
         """
@@ -182,7 +185,8 @@ class InfoBox(object):
         """
         Return message indicating a level up for player.
         """
-        return "You leveled up to Level {}!".format(self.game_data['player stats']['Level'])
+        return "You leveled up to Level {}!".format(
+            self.game_data['player stats']['Level'])
 
     def reset_level_up_message(self):
         self.state_dict[c.LEVEL_UP] = self.level_up()
@@ -444,8 +448,10 @@ class PlayerHealth(object):
             buffer = '    '
         else:
             buffer = ''
-        health_string = "Health: {}{}/{}".format(buffer, current_health, max_health)
-        health_surface =  self.title_font.render(health_string, True, c.NEAR_BLACK)
+        health_string = "Health: {}{}/{}".format(
+            buffer, current_health, max_health)
+        health_surface =  self.title_font.render(
+            health_string, True, c.NEAR_BLACK)
         health_rect = health_surface.get_rect(x=20, y=9)
 
         current_magic = str(self.magic_stats['current'])
@@ -456,8 +462,10 @@ class PlayerHealth(object):
         else:
             buffer = ''
         max_magic = str(self.magic_stats['maximum'])
-        magic_string = "Magic:  {}{}/{}".format(buffer, current_magic, max_magic)
-        magic_surface = self.title_font.render(magic_string, True, c.NEAR_BLACK)
+        magic_string = "Magic:  {}{}/{}".format(
+            buffer, current_magic, max_magic)
+        magic_surface = self.title_font.render(
+            magic_string, True, c.NEAR_BLACK)
         magic_rect = magic_surface.get_rect(x=20, top=health_rect.bottom)
 
         box_surface = setup.GFX['battlestatbox']

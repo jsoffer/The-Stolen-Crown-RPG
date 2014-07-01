@@ -9,7 +9,7 @@ __author__ = 'justinarmstrong'
 
 import os
 import pygame as pg
-from data.constants import GAME, ORIGINAL_CAPTION
+from data.constants import ORIGINAL_CAPTION
 from . import tools
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'

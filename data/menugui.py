@@ -135,7 +135,8 @@ class QuickStats(pg.sprite.Sprite):
             if stat in magic_health_list:
                 current = self.stats[stat]['current']
                 max = self.stats[stat]['maximum']
-                text = "{}{}: {}/{}".format(first_letter, rest_of_letters, current, max)
+                text = "{}{}: {}/{}".format(
+                    first_letter, rest_of_letters, current, max)
             elif stat == 'GOLD':
                 text = "Gold: {}".format(self.inventory[stat]['quantity'])
             render = self.small_font.render(text, True, c.NEAR_BLACK)
@@ -149,7 +150,7 @@ class QuickStats(pg.sprite.Sprite):
             crown = setup.GFX['crown']
             crown_rect = crown.get_rect(x=178, y=40)
             surface.blit(crown, crown_rect)
-        
+
         return surface, rect
 
     def update(self):
@@ -177,9 +178,12 @@ class InfoBox(pg.sprite.Sprite):
         self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
-        self.sword = self.get_tile((48, 0), setup.GFX['shopsigns'], (16, 16), 2)
-        self.shield = self.get_tile((32, 0), setup.GFX['shopsigns'], (16, 16), 2)
-        self.potion = self.get_tile((16, 0), setup.GFX['shopsigns'], (16, 16), 2)
+        self.sword = self.get_tile((48, 0),
+                                   setup.GFX['shopsigns'], (16, 16), 2)
+        self.shield = self.get_tile((32, 0),
+                                    setup.GFX['shopsigns'], (16, 16), 2)
+        self.potion = self.get_tile((16, 0),
+                                    setup.GFX['shopsigns'], (16, 16), 2)
         self.possible_potions = ['Healing Potion', 'ELIXIR', 'Ether Potion']
         self.possible_armor = ['Wooden Shield', 'Chain Mail']
         self.possible_weapons = ['Long Sword', 'Rapier']
@@ -228,10 +232,11 @@ class InfoBox(pg.sprite.Sprite):
 
         for i, stat in enumerate(stat_list):
             if stat == 'health' or stat == 'magic':
-                text = "{}{}: {} / {}".format(stat[0].upper(),
-                                              stat[1:],
-                                              str(self.player_stats[stat]['current']),
-                                              str(self.player_stats[stat]['maximum']))
+                text = "{}{}: {} / {}".format(
+                    stat[0].upper(),
+                    stat[1:],
+                    str(self.player_stats[stat]['current']),
+                    str(self.player_stats[stat]['maximum']))
             elif stat == 'experience to next level':
                 text = "{}{}: {}".format(stat[0].upper(),
                                          stat[1:],

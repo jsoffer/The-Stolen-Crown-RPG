@@ -140,19 +140,20 @@ class TextHandler(object):
                         self.talking_sprite.dialogue = dialogue
                     elif not self.game_data['talked to sick brother']:
                         self.game_data['talked to sick brother'] = True
-                         
+
                         dialogue = ['Hurry to the NorthEast Shores!',
                                     'I do not have much time left.']
                         self.talking_sprite.dialogue = dialogue
                     else:
                         self.end_dialogue(current_time)
                 elif self.talking_sprite.name == 'king':
-                     
+
                     if not self.game_data['talked to king']:
                         self.game_data['talked to king'] = True
-                        new_dialogue = ['Hurry to the castle in the NorthWest!',
-                                        'The sorceror who lives there has my crown.',
-                                        'Please retrieve it for me.']
+                        new_dialogue = [
+                            'Hurry to the castle in the NorthWest!',
+                            'The sorceror who lives there has my crown.',
+                            'Please retrieve it for me.']
                         self.talking_sprite.dialogue = new_dialogue
                         self.end_dialogue(current_time)
                     elif self.game_data['crown quest']:
@@ -212,9 +213,15 @@ class TextHandler(object):
             if item in self.game_data['player inventory']:
                 if 'quantity' in self.game_data['player inventory'][item]:
                     if item == 'GOLD':
-                        self.game_data['player inventory'][item]['quantity'] += 100
+                        self.game_data[
+                            'player inventory'][
+                                item][
+                                    'quantity'] += 100
                     else:
-                        self.game_data['player inventory'][item]['quantity'] += 1
+                        self.game_data[
+                            'player inventory'][
+                                item][
+                                    'quantity'] += 1
             else:
                 self.add_new_item_to_inventory(item)
 

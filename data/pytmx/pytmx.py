@@ -4,8 +4,9 @@ from xml.etree import ElementTree
 from .utils import decode_gid, types, parse_properties, read_points
 
 
-__all__ = ['TiledMap', 'TiledTileset', 'TiledLayer', 'TiledObject', 'TiledObjectGroup', 'TiledImageLayer']
-
+__all__ = [
+    'TiledMap', 'TiledTileset', 'TiledLayer', 'TiledObject',
+    'TiledObjectGroup', 'TiledImageLayer']
 
 class TiledElement(object):
     def set_properties(self, node):
@@ -24,7 +25,8 @@ class TiledElement(object):
                 msg = "{0} \"{1}\" has a property called \"{2}\""
                 print(msg.format(self.__class__.__name__, self.name, k,
                                  self.__class__.__name__))
-                msg = "This name is reserved for {0} objects and cannot be used."
+                msg = ("This name is reserved for {0} objects" +
+                       " and cannot be used.")
                 print(msg.format(self.__class__.__name__))
                 print("Please change the name in Tiled and try again.")
                 raise ValueError
@@ -37,7 +39,9 @@ class TiledMap(TiledElement):
     Tiled TMX map.
     """
 
-    reserved = "visible version orientation width height tilewidth tileheight properties tileset layer objectgroup".split()
+    reserved = (
+        "visible version orientation width height tilewidth" +
+        " tileheight properties tileset layer objectgroup").split()
 
     def __init__(self, filename=None):
         from collections import defaultdict
@@ -299,9 +303,12 @@ class TiledMap(TiledElement):
         # initialize the gid mapping
         self.imagemap[(0, 0)] = 0
 
-        self.background_color = etree.get('backgroundcolor', self.background_color)
+        self.background_color = etree.get(
+            'backgroundcolor', self.background_color)
 
-        # *** do not change this load order!  gid mapping errors will occur if changed ***
+        # *** do not change this load order! ***
+        # *** gid mapping errors will occur if changed ***
+
         for node in etree.findall('layer'):
             self.addTileLayer(TiledLayer(self, node))
 
@@ -315,7 +322,9 @@ class TiledMap(TiledElement):
             self.tilesets.append(TiledTileset(self, node))
 
         # "tile objects", objects with a GID, have need to have their
-        # attributes set after the tileset is loaded, so this step must be performed last
+        # attributes set after the tileset is loaded, so this step
+        # must be performed last
+
         for o in self.objects:
             p = self.getTilePropertiesByGID(o.gid)
             if p:
@@ -395,7 +404,8 @@ class TiledMap(TiledElement):
 
 
 class TiledTileset(TiledElement):
-    reserved = "visible firstgid source name tilewidth tileheight spacing margin image tile properties".split()
+    reserved = ("visible firstgid source name tilewidth tileheight" +
+                " spacing margin image tile properties").split()
 
     def __init__(self, parent, node):
         TiledElement.__init__(self)
@@ -565,13 +575,15 @@ class TiledLayer(TiledElement):
         [self.data.append(array.array("H")) for i in range(self.height)]
 
         for (y, x) in product(range(self.height), range(self.width)):
-            self.data[y].append(self.parent.register_gid(*decode_gid(next(next_gid))))
+            self.data[y].append(
+                self.parent.register_gid(*decode_gid(next(next_gid))))
 
 class TiledObjectGroup(TiledElement, list):
     """
     Stores TiledObjects.  Supports any operation of a normal list.
     """
-    reserved = "visible name color x y width height opacity object properties".split()
+    reserved = ("visible name color x y width height" +
+                " opacity object properties").split()
 
     def __init__(self, parent, node):
         TiledElement.__init__(self)
@@ -600,7 +612,8 @@ class TiledObjectGroup(TiledElement, list):
 
 
 class TiledObject(TiledElement):
-    reserved = "visible name type x y width height gid properties polygon polyline image".split()
+    reserved = ("visible name type x y width height gid properties" +
+                " polygon polyline image").split()
 
     def __init__(self, parent, node):
         TiledElement.__init__(self)
@@ -650,7 +663,8 @@ class TiledObject(TiledElement):
                 if y > y2: y2 = y
             self.width = abs(x1) + abs(x2)
             self.height = abs(y1) + abs(y2)
-            self.points = tuple([(i[0] + self.x, i[1] + self.y) for i in points])
+            self.points = tuple(
+                [(i[0] + self.x, i[1] + self.y) for i in points])
 
 class TiledImageLayer(TiledElement):
     reserved = "visible source name width height opacity visible".split()

@@ -35,7 +35,8 @@ class Battle(tools._State):
         self.player = self.make_player()
         self.attack_animations = pg.sprite.Group()
         self.sword = attackitems.Sword(self.player)
-        self.enemy_group, self.enemy_pos_list, self.enemy_list = self.make_enemies()
+        self.enemy_group, self.enemy_pos_list, self.enemy_list = (
+            self.make_enemies())
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
         self.background = self.make_background()
@@ -68,11 +69,12 @@ class Battle(tools._State):
         """
         Make the dict to execute player actions.
         """
-        action_dict = {c.PLAYER_ATTACK: self.enter_player_attack_state,
-                       c.CURE_SPELL: self.cast_cure,
-                       c.FIRE_SPELL: self.cast_fire_blast,
-                       c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
-                       c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
+        action_dict = {
+            c.PLAYER_ATTACK: self.enter_player_attack_state,
+            c.CURE_SPELL: self.cast_cure,
+            c.FIRE_SPELL: self.cast_fire_blast,
+            c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
+            c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
 
         return action_dict
 
@@ -176,7 +178,8 @@ class Battle(tools._State):
         """
         Make the sprite for the player's character.
         """
-        player = person.Player('left', self.game_data, 630, 220, 'battle resting', 1)
+        player = person.Player(
+            'left', self.game_data, 630, 220, 'battle resting', 1)
         player.image = pg.transform.scale2x(player.image)
         return player
 
@@ -185,8 +188,9 @@ class Battle(tools._State):
         Make a dictionary of states with arrow coordinates as keys.
         """
         pos_list = self.arrow.make_select_action_pos_list()
-        state_list = [self.enter_select_enemy_state, self.enter_select_item_state,
-                      self.enter_select_magic_state, self.try_to_run_away]
+        state_list = [
+            self.enter_select_enemy_state, self.enter_select_item_state,
+            self.enter_select_magic_state, self.try_to_run_away]
         return dict(zip(pos_list, state_list))
 
     def update(self, surface, keys, current_time):
@@ -230,26 +234,36 @@ class Battle(tools._State):
                     self.notify(c.CLICK2)
                     if self.arrow.index == (len(self.arrow.pos_list) - 1):
                         self.enter_select_action_state()
-                    elif self.info_box.item_text_list[self.arrow.index][:14] == 'Healing Potion':
-                        if 'Healing Potion' in self.game_data['player inventory']:
+                    elif self.info_box.item_text_list[
+                        self.arrow.index][
+                            :14] == 'Healing Potion':
+                        if 'Healing Potion' in self.game_data[
+                                'player inventory']:
                             self.player_actions.append(c.DRINK_HEALING_POTION)
                             self.action_selected = True
-                    elif self.info_box.item_text_list[self.arrow.index][:5] == 'Ether':
-                        if 'Ether Potion' in self.game_data['player inventory']:
+                    elif self.info_box.item_text_list[
+                        self.arrow.index][
+                            :5] == 'Ether':
+                        if 'Ether Potion' in self.game_data[
+                                'player inventory']:
                             self.player_actions.append(c.DRINK_ETHER_POTION)
                             self.action_selected = True
                 elif self.state == c.SELECT_MAGIC:
                     self.notify(c.CLICK2)
                     if self.arrow.index == (len(self.arrow.pos_list) - 1):
                         self.enter_select_action_state()
-                    elif self.info_box.magic_text_list[self.arrow.index] == 'Cure':
-                        magic_points = self.game_data['player inventory']['Cure']['magic points']
+                    elif self.info_box.magic_text_list[
+                        self.arrow.index] == 'Cure':
+                        magic_points = self.game_data[
+                            'player inventory']['Cure']['magic points']
                         if self.temp_magic >= magic_points:
                             self.temp_magic -= magic_points
                             self.player_actions.append(c.CURE_SPELL)
                             self.action_selected = True
-                    elif self.info_box.magic_text_list[self.arrow.index] == 'Fire Blast':
-                        magic_points = self.game_data['player inventory']['Fire Blast']['magic points']
+                    elif self.info_box.magic_text_list[
+                        self.arrow.index] == 'Fire Blast':
+                        magic_points = self.game_data[
+                            'player inventory']['Fire Blast']['magic points']
                         if self.temp_magic >= magic_points:
                             self.temp_magic -= magic_points
                             self.player_actions.append(c.FIRE_SPELL)
@@ -336,14 +350,19 @@ class Battle(tools._State):
         elif self.state == c.SHOW_EXPERIENCE:
             if (self.current_time - self.timer) > 2200:
                 player_stats = self.game_data['player stats']
-                player_stats['experience to next level'] -= self.experience_points
+                player_stats['experience to next level'] -= (
+                    self.experience_points)
                 if player_stats['experience to next level'] <= 0:
-                    extra_experience = player_stats['experience to next level'] * -1
+                    extra_experience = player_stats[
+                        'experience to next level'] * -1
                     player_stats['Level'] += 1
-                    player_stats['health']['maximum'] += int(player_stats['health']['maximum']*.25)
-                    player_stats['magic']['maximum'] += int(player_stats['magic']['maximum']*.20)
+                    player_stats['health']['maximum'] += (
+                        int(player_stats['health']['maximum']*.25))
+                    player_stats['magic']['maximum'] += (
+                        int(player_stats['magic']['maximum']*.20))
                     new_experience = int((player_stats['Level'] * 50) * .75)
-                    player_stats['experience to next level'] = new_experience - extra_experience
+                    player_stats['experience to next level'] = (
+                        new_experience - extra_experience)
                     self.enter_level_up_state()
                     self.just_leveled_up = True
                 else:
@@ -469,8 +488,14 @@ class Battle(tools._State):
             health['current'] = health['maximum']
 
         if self.state == c.DRINK_HEALING_POTION:
-            self.game_data['player inventory']['Healing Potion']['quantity'] -= 1
-            if self.game_data['player inventory']['Healing Potion']['quantity'] == 0:
+            self.game_data[
+                'player inventory'][
+                    'Healing Potion'][
+                        'quantity'] -= 1
+            if self.game_data[
+                    'player inventory'][
+                        'Healing Potion'][
+                            'quantity'] == 0:
                 del self.game_data['player inventory']['Healing Potion']
         elif self.state == c.CURE_SPELL:
             self.game_data['player stats']['magic']['current'] -= magic_points
@@ -516,7 +541,8 @@ class Battle(tools._State):
                 self.arrow.remove_pos(enemy)
             else:
                 enemy.enter_knock_back_state()
-        self.enemy_list = [enemy for enemy in self.enemy_list if enemy.health > 0]
+        self.enemy_list = [
+            enemy for enemy in self.enemy_list if enemy.health > 0]
         self.enemy_index = 0
         self.arrow.index = 0
         self.arrow.state = 'invisible'
@@ -534,7 +560,8 @@ class Battle(tools._State):
         self.arrow.state = 'invisible'
         self.enemy_index = 0
         self.damage_points.add(
-            attackitems.HealthPoints(HEAL_AMOUNT, self.player.rect.topright, False))
+            attackitems.HealthPoints(
+                HEAL_AMOUNT, self.player.rect.topright, False))
         self.player_healed(HEAL_AMOUNT, MAGIC_POINTS)
         self.info_box.state = c.DRINK_HEALING_POTION
         self.notify(c.POWERUP)
@@ -762,12 +789,3 @@ class Battle(tools._State):
                 if self.action_selected:
                     self.enter_select_action_state()
                     self.action_selected = False
-
-
-
-
-
-
-
-
-

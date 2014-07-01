@@ -82,7 +82,8 @@ class LevelState(tools._State):
                       c.HOUSE: ('pleasant_creek', .1),
                       c.BROTHER_HOUSE: ('pleasant_creek', .1)}
 
-        if self.game_data['crown quest'] and (self.name == c.TOWN or self.name == c.CASTLE):
+        if self.game_data['crown quest'] and (
+                self.name == c.TOWN or self.name == c.CASTLE):
             self.music_title = 'kings_theme'
             return setup.MUSIC['kings_theme'], .4
         elif self.name in music_dict:
@@ -121,7 +122,8 @@ class LevelState(tools._State):
         last_state = self.previous
 
         if last_state == 'battle':
-            player = person.Player(self.game_data['last direction'], self.game_data)
+            player = person.Player(
+                self.game_data['last direction'], self.game_data)
             player.rect.x = self.game_data['last location'][0] * 32
             player.rect.y = self.game_data['last location'][1] * 32
 
@@ -214,7 +216,8 @@ class LevelState(tools._State):
                                                         x, y, direction,
                                                         'resting', index),
                                'king': person.Person('king', x, y, direction),
-                               'evilwizard': person.Person('evilwizard', x, y, direction),
+                               'evilwizard': person.Person(
+                                   'evilwizard', x, y, direction),
                                'treasurechest': person.Chest(x, y, id)}
 
                 sprite = sprite_dict[properties['type']]
@@ -222,7 +225,9 @@ class LevelState(tools._State):
                     sprite.state = sprite_state
 
                 if sprite.name == 'oldman':
-                    if self.game_data['old man gift'] and not self.game_data['elixir received']:
+                    if (
+                            self.game_data['old man gift'] and not
+                            self.game_data['elixir received']):
                         sprite.item = self.game_data['old man gift']
                     else:
                         sprite.item = item
@@ -234,7 +239,9 @@ class LevelState(tools._State):
                 sprite.battle = battle
                 self.assign_dialogue(sprite, properties)
                 self.check_for_opened_chest(sprite)
-                if sprite.name == 'evilwizard' and self.game_data['crown quest']:
+                if (
+                        sprite.name == 'evilwizard' and
+                        self.game_data['crown quest']):
                     pass
                 else:
                     sprites.add(sprite)
@@ -243,7 +250,7 @@ class LevelState(tools._State):
 
     def assign_dialogue(self, sprite, property_dict):
         """
-        Assign dialogue from object property dictionaries in tmx maps to sprites.
+        Assign dialogue from object property dictionaries in tmx maps to sprites
         """
         dialogue_list = []
         for i in range(int(property_dict['dialogue length'])):
@@ -259,11 +266,12 @@ class LevelState(tools._State):
                     sprite.dialogue = ['My good health is thanks to you.',
                                        'I will be forever in your debt.']
                 else:
-                    sprite.dialogue = ['Thank you for reaching my brother.',
-                                       'This ELIXIR will cure my ailment.',
-                                       'As a reward, I will teach you a magic spell.',
-                                       'Use it wisely.',
-                                       'You learned FIRE BLAST.']
+                    sprite.dialogue = [
+                        'Thank you for reaching my brother.',
+                        'This ELIXIR will cure my ailment.',
+                        'As a reward, I will teach you a magic spell.',
+                        'Use it wisely.',
+                        'You learned FIRE BLAST.']
 
             elif self.game_data['talked to sick brother']:
                 sprite.dialogue = quest_in_process_dialogue
@@ -278,19 +286,24 @@ class LevelState(tools._State):
                 else:
                     sprite.dialogue = ['Hurry! There is precious little time.']
             elif self.game_data['talked to sick brother']:
-                sprite.dialogue = ['My brother is sick?!?',
-                                   'I have not seen him in years.  I had no idea he was not well.',
-                                   'Quick, take this ELIXIR to him immediately.']
+                sprite.dialogue = [
+                    'My brother is sick?!?',
+                    'I have not seen him in years. '
+                    'I had no idea he was not well.',
+                    'Quick, take this ELIXIR to him immediately.']
         elif sprite.name == 'king':
-            retrieved_crown_dialogue = ['My crown! You recovered my stolen crown!!!',
-                                        'I can not believe what I see before my eyes.',
-                                        'You are truly a brave and noble warrior.',
-                                        'Henceforth, I name thee Grand Protector of this Town!',
-                                        'You are the greatest warrior this world has ever known.']
+            retrieved_crown_dialogue = [
+                'My crown! You recovered my stolen crown!!!',
+                'I can not believe what I see before my eyes.',
+                'You are truly a brave and noble warrior.',
+                'Henceforth, I name thee Grand Protector of this Town!',
+                'You are the greatest warrior this world has ever known.']
             thank_you_dialogue = ['Thank you for retrieving my crown.',
                                   'My kingdom is forever in your debt.']
 
-            if self.game_data['crown quest'] and not self.game_data['delivered crown']:
+            if (
+                    self.game_data['crown quest'] and not
+                    self.game_data['delivered crown']):
                 sprite.dialogue = retrieved_crown_dialogue
                 self.reset_dialogue = (sprite, thank_you_dialogue)
             elif self.game_data['delivered crown']:

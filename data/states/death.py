@@ -1,15 +1,15 @@
-import copy, pickle, sys, os
+"""
+
+Game Over / 'Restart from last save point?' pseudo-"room"
+
+"""
+
+import pickle, sys, os
 import pygame as pg
 from .. import setup, tools
 from .. import observer
 from ..components import person
 from .. import constants as c
-
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    import cPickle
-    pickle = cPickle
-
 
 class Arrow(pg.sprite.Sprite):
     """
@@ -24,7 +24,7 @@ class Arrow(pg.sprite.Sprite):
         self.pos_list = [y, y+34]
         self.allow_input = False
         self.observers = [observer.SoundEffects()]
-       
+
     def notify(self, event):
         """
         Notify all observers of event.
@@ -100,7 +100,7 @@ class DeathScene(tools._State):
         box_image = setup.GFX['dialoguebox']
         box_rect = box_image.get_rect()
         text = 'You have died. Restart from last save point?'
-        text_render = self.font.render(text, True, c.NEAR_BLACK) 
+        text_render = self.font.render(text, True, c.NEAR_BLACK)
         text_rect = text_render.get_rect(centerx=box_rect.centerx,
                                          y=30)
         text2 = 'Yes'
@@ -119,11 +119,11 @@ class DeathScene(tools._State):
         temp_surf.blit(text_render, text_rect)
         temp_surf.blit(text2_render, text2_rect)
         temp_surf.blit(text3_render, text3_rect)
-        
+
         box_sprite = pg.sprite.Sprite()
         box_sprite.image = temp_surf
         box_sprite.rect = temp_surf.get_rect(bottom=608)
-        
+
         return box_sprite
 
     def make_state_dict(self):
@@ -136,7 +136,7 @@ class DeathScene(tools._State):
 
         return state_dict
 
-    def update(self, surface, keys, *args):
+    def update(self, surface, keys, *_):
         """
         Update scene.
         """
@@ -144,7 +144,7 @@ class DeathScene(tools._State):
         update_level(keys)
         self.draw_level(surface)
 
-    def transition_in(self, *args):
+    def transition_in(self, *_):
         """
         Transition into scene with a fade.
         """
@@ -154,7 +154,7 @@ class DeathScene(tools._State):
             self.alpha = 0
             self.state = c.NORMAL
 
-    def transition_out(self, *args):
+    def transition_out(self, *_):
         """
         Transition out of scene with a fade.
         """
@@ -190,9 +190,3 @@ class DeathScene(tools._State):
         surface.blit(self.message_box.image, self.message_box.rect)
         surface.blit(self.arrow.image, self.arrow.rect)
         surface.blit(self.transition_surface, (0, 0))
-
-
-
-
-
-        

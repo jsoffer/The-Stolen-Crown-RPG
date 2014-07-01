@@ -48,7 +48,8 @@ class Gui(object):
         self.arrow_pos3 = (50, 555)
         self.arrow_pos4 = (50, 495)
         self.arrow_pos5 = (50, 535)
-        self.arrow_pos_list = [self.arrow_pos1, self.arrow_pos2, self.arrow_pos3]
+        self.arrow_pos_list = [
+            self.arrow_pos1, self.arrow_pos2, self.arrow_pos3]
         self.two_arrow_pos_list = [self.arrow_pos4, self.arrow_pos5]
         self.arrow_index = 0
         self.selection_arrow.rect.topleft = self.arrow_pos1
@@ -264,7 +265,8 @@ class Gui(object):
         self.selection_box = self.make_selection_box(choices)
         self.gold_box = self.make_gold_box()
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
-        self.selection_arrow.rect.topleft = self.two_arrow_pos_list[self.arrow_index]
+        self.selection_arrow.rect.topleft = (
+            self.two_arrow_pos_list[self.arrow_index])
 
         if keys[pg.K_DOWN] and self.allow_input:
             if self.arrow_index < (len(choices) - 1):
@@ -323,7 +325,9 @@ class Gui(object):
         player_items = self.level.game_data['player inventory']
         player_health = self.level.game_data['player stats']['health']
         player_magic = self.level.game_data['player stats']['magic']
-        equipped_armor = self.level.game_data['player inventory']['equipped armor']
+        equipped_armor = self.level.game_data[
+            'player inventory'][
+                'equipped armor']
 
         item_to_add = {'quantity': quantity,
                        'value': value,
@@ -354,7 +358,8 @@ class Gui(object):
         choices = ['Yes', 'No']
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
         self.selection_box = self.make_selection_box(choices)
-        self.selection_arrow.rect.topleft = self.two_arrow_pos_list[self.arrow_index]
+        self.selection_arrow.rect.topleft = (
+            self.two_arrow_pos_list[self.arrow_index])
 
         if keys[pg.K_DOWN] and self.allow_input:
             if self.arrow_index < (len(choices) - 1):
@@ -387,14 +392,18 @@ class Gui(object):
         item_name = self.item_to_be_sold['type']
 
         if item_name in self.weapon_list:
-            if item_name == self.game_data['player inventory']['equipped weapon']:
+            if item_name == self.game_data[
+                    'player inventory'][
+                        'equipped weapon']:
                 self.state = 'cantsellequippedweapon'
             else:
                 self.notify(c.CLOTH_BELT)
                 self.sell_inventory_data_adjust(item_price, item_name)
 
         elif item_name in self.armor_list:
-            if item_name in self.game_data['player inventory']['equipped armor']:
+            if item_name in self.game_data[
+                    'player inventory'][
+                        'equipped armor']:
                 self.state = 'cantsellequippedarmor'
             else:
                 self.notify(c.CLOTH_BELT)
@@ -478,7 +487,8 @@ class Gui(object):
         choices = ['Buy', 'Sell', 'Leave']
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
         self.selection_box = self.make_selection_box(choices)
-        self.selection_arrow.rect.topleft = self.arrow_pos_list[self.arrow_index]
+        self.selection_arrow.rect.topleft = (
+            self.arrow_pos_list[self.arrow_index])
 
         if keys[pg.K_DOWN] and self.allow_input:
             if self.arrow_index < (len(choices) - 1):
@@ -539,9 +549,11 @@ class Gui(object):
         self.selection_box = self.make_selection_box(choices)
 
         if len(choices) == 2:
-            self.selection_arrow.rect.topleft = self.two_arrow_pos_list[self.arrow_index]
+            self.selection_arrow.rect.topleft = (
+                self.two_arrow_pos_list[self.arrow_index])
         elif len(choices) == 3:
-            self.selection_arrow.rect.topleft = self.arrow_pos_list[self.arrow_index]
+            self.selection_arrow.rect.topleft = (
+                self.arrow_pos_list[self.arrow_index])
 
         if keys[pg.K_DOWN] and self.allow_input:
             if self.arrow_index < (len(choices) - 1):
@@ -631,7 +643,8 @@ class Gui(object):
     def draw(self, surface):
         """Draw GUI to level surface"""
         state_list1 = ['dialogue', 'reject', 'accept', 'hasitem']
-        state_list2 = ['select', 'confirmpurchase', 'buysell', 'sell', 'confirmsell']
+        state_list2 = [
+            'select', 'confirmpurchase', 'buysell', 'sell', 'confirmsell']
 
         surface.blit(self.dialogue_box.image, self.dialogue_box.rect)
         surface.blit(self.gold_box.image, self.gold_box.rect)
