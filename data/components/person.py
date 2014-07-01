@@ -318,7 +318,7 @@ class Person(pg.sprite.Sprite):
             rect_pos - diff
         else:
             rect_pos + diff
- 
+
 
     def battle_resting(self):
         """
@@ -608,7 +608,7 @@ class Player(Person):
         """
         weapon = self.game_data['player inventory']['equipped weapon']
         weapon_power = self.game_data['player inventory'][weapon]['power']
-        max_strength = weapon_power 
+        max_strength = weapon_power
         min_strength = max_strength - 7
         return random.randint(min_strength, max_strength)
 
@@ -662,7 +662,3 @@ class Chest(Person):
         state_function = self.state_dict[self.state]
         state_function()
         self.location = self.get_tile_location()
-
-
-
-

@@ -491,7 +491,7 @@ class LevelState(tools._State):
         transition_image.set_alpha(self.transition_alpha)
         self.draw_level(surface)
         surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha -= c.TRANSITION_SPEED 
+        self.transition_alpha -= c.TRANSITION_SPEED
         if self.transition_alpha <= 0:
             self.state = 'normal'
             self.transition_alpha = 0
@@ -521,19 +521,4 @@ class LevelState(tools._State):
 
         surface.blit(self.level_surface, (0, 0), self.viewport)
         self.dialogue_handler.draw(surface)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -4,12 +4,12 @@ from .. import setup, tools, tilerender
 from .. import observer
 from .. import constants as c
 from . import death
- 
+
 
 #Python 2/3 compatibility.
 if sys.version_info[0] == 2:
     import cPickle
-    pickle = cPickle 
+    pickle = cPickle
 
 
 class Menu(tools._State):
@@ -22,7 +22,7 @@ class Menu(tools._State):
         self.tmx_map = setup.TMX['title']
         self.name = c.MAIN_MENU
         self.startup(0, 0)
-    
+
     def startup(self, *args):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
@@ -56,7 +56,7 @@ class Menu(tools._State):
                       c.NORMAL: self.normal_update}
 
         return state_dict
-        
+
     def update(self, surface, *args):
         """
         Update scene.
@@ -73,7 +73,7 @@ class Menu(tools._State):
         self.level_surface.blit(self.title_box, self.title_rect)
         surface.blit(self.level_surface, (0, 0), self.viewport)
         surface.blit(self.transition_surface, (0, 0))
-        
+
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
@@ -87,7 +87,7 @@ class Menu(tools._State):
         if self.alpha <= 0:
             self.alpha = 0
             self.state = c.NORMAL
-        
+
 
     def transition_out(self):
         """
@@ -111,7 +111,7 @@ class Instructions(tools._State):
         self.tmx_map = setup.TMX['title']
         self.music = None
         self.music_title = None
-        
+
     def startup(self, *args):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
@@ -174,7 +174,7 @@ class Instructions(tools._State):
                       c.NORMAL: self.normal_update}
 
         return state_dict
-        
+
     def update(self, surface, keys, *args):
         """
         Update scene.
@@ -195,7 +195,7 @@ class Instructions(tools._State):
 
     def draw_arrow(self):
         pass
-        
+
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
@@ -241,7 +241,7 @@ class LoadGame(Instructions):
 
     def get_event(self, event):
         pass
-    
+
     def normal_update(self, keys):
         if self.allow_input:
             if keys[pg.K_DOWN] and self.arrow.index == 0:
@@ -262,11 +262,8 @@ class LoadGame(Instructions):
                     self.state = c.TRANSITION_OUT
                 self.notify(c.CLICK2)
 
-            self.arrow.rect.y = self.arrow.pos_list[self.arrow.index]  
+            self.arrow.rect.y = self.arrow.pos_list[self.arrow.index]
 
         if not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
-
-        
-
 

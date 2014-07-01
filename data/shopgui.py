@@ -13,7 +13,7 @@ from . import constants as c
 #Python 2/3 compatibility.
 if sys.version_info[0] == 2:
     import cPickle
-    pickle = cPickle 
+    pickle = cPickle
 
 
 class Gui(object):

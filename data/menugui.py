@@ -120,7 +120,7 @@ class QuickStats(pg.sprite.Sprite):
         """
         Make the surface for the gold box.
         """
-        stat_list = ['GOLD', 'health', 'magic'] 
+        stat_list = ['GOLD', 'health', 'magic']
         magic_health_list = ['health', 'magic']
         image = setup.GFX['goldbox']
         rect = image.get_rect(left=10, top=244)
@@ -225,7 +225,7 @@ class InfoBox(pg.sprite.Sprite):
         """Show the player's main stats"""
         title = 'STATS'
         stat_list = ['Level', 'experience to next level',
-                     'health', 'magic', 'Attack Power', 
+                     'health', 'magic', 'Attack Power',
                      'Defense Power', 'gold']
         attack_power = 5
         surface, rect = self.make_blank_info_box(title)
@@ -242,7 +242,7 @@ class InfoBox(pg.sprite.Sprite):
                                          stat[1:],
                                          self.player_stats[stat])
             elif stat == 'Attack Power':
-                text = "{}: {}".format(stat, self.get_attack_power()) 
+                text = "{}: {}".format(stat, self.get_attack_power())
             elif stat == 'Defense Power':
                 text = "{}: {}".format(stat, self.get_defense_power())
             elif stat == 'gold':
@@ -592,3 +592,4 @@ class MenuGui(object):
         self.info_box.draw(surface)
         self.selection_box.draw(surface)
         self.arrow.draw(surface)
+

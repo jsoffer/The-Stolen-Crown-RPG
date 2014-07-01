@@ -40,8 +40,8 @@ class Battle(tools._State):
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
         self.background = self.make_background()
-        self.info_box = battlegui.InfoBox(game_data, 
-                                          self.experience_points, 
+        self.info_box = battlegui.InfoBox(game_data,
+                                          self.experience_points,
                                           self.new_gold)
         self.arrow = battlegui.SelectArrow(self.enemy_pos_list,
                                            self.info_box)
@@ -447,7 +447,7 @@ class Battle(tools._State):
             transition_image.fill(c.TRANSITION_COLOR)
             transition_image.set_alpha(self.transition_alpha)
             surface.blit(transition_image, self.transition_rect)
-            self.transition_alpha -= c.TRANSITION_SPEED 
+            self.transition_alpha -= c.TRANSITION_SPEED
             if self.transition_alpha <= 0:
                 self.state = c.SELECT_ACTION
                 self.transition_alpha = 0
@@ -457,7 +457,7 @@ class Battle(tools._State):
             transition_image.fill(c.TRANSITION_COLOR)
             transition_image.set_alpha(self.transition_alpha)
             surface.blit(transition_image, self.transition_rect)
-            self.transition_alpha += c.TRANSITION_SPEED 
+            self.transition_alpha += c.TRANSITION_SPEED
             if self.transition_alpha >= 255:
                 self.done = True
 
@@ -789,3 +789,4 @@ class Battle(tools._State):
                 if self.action_selected:
                     self.enter_select_action_state()
                     self.action_selected = False
+
