@@ -301,8 +301,9 @@ class Gui(object):
             self.player_inventory['GOLD']['quantity'] += item['price']
             self.state = 'reject'
         else:
-            if (item['type'] in self.player_inventory and
-                        not self.name == c.POTION_SHOP):
+            if (
+                    item['type'] in self.player_inventory and
+                    not self.name == c.POTION_SHOP):
                 self.state = 'hasitem'
                 self.player_inventory['GOLD']['quantity'] += item['price']
             else:

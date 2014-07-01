@@ -147,7 +147,7 @@ class Battle(tools._State):
 
         if self.game_data['battle type']:
             enemy = person.Enemy('evilwizard', 0, 0,
-                                  'down', 'battle resting')
+                                 'down', 'battle resting')
             enemy_group.add(enemy)
         else:
             if self.game_data['start of game']:
@@ -158,7 +158,7 @@ class Battle(tools._State):
             else:
                 for enemy in range(random.randint(1, 6)):
                     enemy_group.add(person.Enemy('devil', 0, 0,
-                                                  'down', 'battle resting'))
+                                                 'down', 'battle resting'))
 
         for i, enemy in enumerate(enemy_group):
             enemy.rect.topleft = pos_list[i]
@@ -216,63 +216,66 @@ class Battle(tools._State):
         """
         Check user input to navigate GUI.
         """
-        if self.allow_input:
-            if keys[pg.K_SPACE]:
-                if self.state == c.SELECT_ACTION:
-                    self.notify(c.CLICK2)
-                    enter_state_function = self.select_action_state_dict[
-                        self.arrow.rect.topleft]
-                    enter_state_function()
 
-                elif self.state == c.SELECT_ENEMY:
-                    self.notify(c.CLICK2)
-                    self.player_actions.append(c.PLAYER_ATTACK)
-                    self.enemies_to_attack.append(self.get_enemy_to_attack())
+        if not self.allow_input:
+            print("NOT ALLOWING INPUT...")
+            if keys[pg.K_RETURN] == False and keys[pg.K_SPACE] == False:
+                self.allow_input = True
+                print("ENABLING INPUT...")
+            return
+
+        if not keys[pg.K_SPACE]:
+            return
+
+        inventory = self.game_data['player inventory']
+
+        print(self.state)
+
+        if self.state == c.SELECT_ACTION:
+            self.notify(c.CLICK2)
+            enter_state_function = self.select_action_state_dict[
+                self.arrow.rect.topleft]
+            enter_state_function()
+
+        elif self.state == c.SELECT_ENEMY:
+            self.notify(c.CLICK2)
+            self.player_actions.append(c.PLAYER_ATTACK)
+            self.enemies_to_attack.append(self.get_enemy_to_attack())
+            self.action_selected = True
+
+        elif self.state == c.SELECT_ITEM:
+            selected = self.info_box.item_text_list[self.arrow.index]
+            self.notify(c.CLICK2)
+            if self.arrow.index == (len(self.arrow.pos_list) - 1):
+                self.enter_select_action_state()
+            elif selected.startswith('Healing Potion'):
+                if 'Healing Potion' in self.game_data['player inventory']:
+                    self.player_actions.append(c.DRINK_HEALING_POTION)
+                    self.action_selected = True
+            elif selected.startswith('Ether'):
+                if 'Ether Potion' in self.game_data['player inventory']:
+                    self.player_actions.append(c.DRINK_ETHER_POTION)
                     self.action_selected = True
 
-                elif self.state == c.SELECT_ITEM:
-                    self.notify(c.CLICK2)
-                    if self.arrow.index == (len(self.arrow.pos_list) - 1):
-                        self.enter_select_action_state()
-                    elif self.info_box.item_text_list[
-                        self.arrow.index][
-                            :14] == 'Healing Potion':
-                        if 'Healing Potion' in self.game_data[
-                                'player inventory']:
-                            self.player_actions.append(c.DRINK_HEALING_POTION)
-                            self.action_selected = True
-                    elif self.info_box.item_text_list[
-                        self.arrow.index][
-                            :5] == 'Ether':
-                        if 'Ether Potion' in self.game_data[
-                                'player inventory']:
-                            self.player_actions.append(c.DRINK_ETHER_POTION)
-                            self.action_selected = True
-                elif self.state == c.SELECT_MAGIC:
-                    self.notify(c.CLICK2)
-                    if self.arrow.index == (len(self.arrow.pos_list) - 1):
-                        self.enter_select_action_state()
-                    elif self.info_box.magic_text_list[
-                        self.arrow.index] == 'Cure':
-                        magic_points = self.game_data[
-                            'player inventory']['Cure']['magic points']
-                        if self.temp_magic >= magic_points:
-                            self.temp_magic -= magic_points
-                            self.player_actions.append(c.CURE_SPELL)
-                            self.action_selected = True
-                    elif self.info_box.magic_text_list[
-                        self.arrow.index] == 'Fire Blast':
-                        magic_points = self.game_data[
-                            'player inventory']['Fire Blast']['magic points']
-                        if self.temp_magic >= magic_points:
-                            self.temp_magic -= magic_points
-                            self.player_actions.append(c.FIRE_SPELL)
-                            self.action_selected = True
+        elif self.state == c.SELECT_MAGIC:
+            selected = self.info_box.magic_text_list[self.arrow.index]
+            self.notify(c.CLICK2)
+            if self.arrow.index == (len(self.arrow.pos_list) - 1):
+                self.enter_select_action_state()
+            elif selected == 'Cure':
+                magic_points = inventory['Cure']['magic points']
+                if self.temp_magic >= magic_points:
+                    self.temp_magic -= magic_points
+                    self.player_actions.append(c.CURE_SPELL)
+                    self.action_selected = True
+            elif selected == 'Fire Blast':
+                magic_points = inventory['Fire Blast']['magic points']
+                if self.temp_magic >= magic_points:
+                    self.temp_magic -= magic_points
+                    self.player_actions.append(c.FIRE_SPELL)
+                    self.action_selected = True
 
-            self.allow_input = False
-
-        if keys[pg.K_RETURN] == False and keys[pg.K_SPACE] == False:
-            self.allow_input = True
+        self.allow_input = False
 
     def check_timed_events(self):
         """
