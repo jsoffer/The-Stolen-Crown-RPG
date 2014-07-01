@@ -121,7 +121,7 @@ class QuickStats(pg.sprite.Sprite):
         Make the surface for the gold box.
         """
         stat_list = ['GOLD', 'health', 'magic'] 
-        magic_health_list  = ['health', 'magic']
+        magic_health_list = ['health', 'magic']
         image = setup.GFX['goldbox']
         rect = image.get_rect(left=10, top=244)
 
@@ -373,7 +373,7 @@ class InfoBox(pg.sprite.Sprite):
 
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
-        surface.blit(image, (0,0))
+        surface.blit(image, (0, 0))
 
         title_image = self.title_font.render(title, True, c.NEAR_BLACK)
         title_rect = title_image.get_rect(centerx=centerx, y=30)

@@ -348,7 +348,7 @@ class Gui(object):
         elif item_type == 'room':
             player_health['current'] = player_health['maximum']
             player_magic['current'] = player_magic['maximum']
-            pickle.dump(self.game_data, open( "save.p", "wb"))
+            pickle.dump(self.game_data, open("save.p", "wb"))
 
     def confirm_sell(self, keys, current_time):
         """

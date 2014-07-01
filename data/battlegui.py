@@ -35,7 +35,7 @@ class InfoBox(object):
         """
         Make dictionary of states Battle info can be in.
         """
-        state_dict   = {
+        state_dict = {
             c.SELECT_ACTION: 'Select an action.',
             c.SELECT_MAGIC: 'Select a magic spell.',
             c.SELECT_ITEM: 'Select an item.',
@@ -450,7 +450,7 @@ class PlayerHealth(object):
             buffer = ''
         health_string = "Health: {}{}/{}".format(
             buffer, current_health, max_health)
-        health_surface =  self.title_font.render(
+        health_surface = self.title_font.render(
             health_string, True, c.NEAR_BLACK)
         health_rect = health_surface.get_rect(x=20, y=9)
 

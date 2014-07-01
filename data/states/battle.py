@@ -102,7 +102,7 @@ class Battle(tools._State):
         experience_total = 0
 
         for enemy in self.enemy_list:
-            experience_total += (random.randint(5,10))
+            experience_total += (random.randint(5, 10))
 
         return experience_total
 
@@ -693,7 +693,7 @@ class Battle(tools._State):
         self.set_timer_to_current_time()
         self.player_damaged(player_damage)
         if player_damage:
-            sfx_num = random.randint(1,3)
+            sfx_num = random.randint(1, 3)
             self.notify('punch{}'.format(sfx_num))
             self.player.damaged = True
             self.player.enter_knock_back_state()

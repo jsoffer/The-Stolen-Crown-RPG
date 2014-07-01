@@ -71,8 +71,8 @@ class Menu(tools._State):
         """
         self.level_surface.blit(self.map_image, self.viewport, self.viewport)
         self.level_surface.blit(self.title_box, self.title_rect)
-        surface.blit(self.level_surface, (0,0), self.viewport)
-        surface.blit(self.transition_surface, (0,0))
+        surface.blit(self.level_surface, (0, 0), self.viewport)
+        surface.blit(self.transition_surface, (0, 0))
         
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
@@ -190,8 +190,8 @@ class Instructions(tools._State):
         self.level_surface.blit(self.map_image, self.viewport, self.viewport)
         self.level_surface.blit(self.title_box, self.title_rect)
         self.draw_arrow()
-        surface.blit(self.level_surface, (0,0), self.viewport)
-        surface.blit(self.transition_surface, (0,0))
+        surface.blit(self.level_surface, (0, 0), self.viewport)
+        surface.blit(self.transition_surface, (0, 0))
 
     def draw_arrow(self):
         pass

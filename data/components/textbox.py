@@ -241,10 +241,10 @@ class TextHandler(object):
         inventory = self.game_data['player inventory']
         potions = ['Healing Potion', 'Ether Potion']
         if item in potions:
-            inventory[item] = dict([('quantity',1),
-                                    ('value',15)])
+            inventory[item] = dict([('quantity', 1),
+                                    ('value', 15)])
         elif item == 'ELIXIR':
-            inventory[item] = dict([('quantity',1)])
+            inventory[item] = dict([('quantity', 1)])
         elif item == 'Fire Blast':
             inventory[item] = dict([('magic points', 40),
                                     ('power', 15)])
