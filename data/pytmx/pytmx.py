@@ -99,7 +99,7 @@ class TiledMap(TiledElement):
             raise TypeError
 
         try:
-            assert (x >= 0 and y >= 0)
+            assert x >= 0 and y >= 0
         except AssertionError:
             raise ValueError
 
@@ -114,7 +114,7 @@ class TiledMap(TiledElement):
 
     def getTileImageByGid(self, gid):
         try:
-            assert (gid >= 0)
+            assert gid >= 0
             return self.images[gid]
         except (IndexError, ValueError, AssertionError):
             msg = "Invalid GID specified: {}"
@@ -535,7 +535,7 @@ class TiledLayer(TiledElement):
 
         compression = data_node.get("compression", None)
         if compression == "gzip":
-            from StringIO import StringIO
+            from io import StringIO
             import gzip
 
             fh = gzip.GzipFile(fileobj=StringIO(data))

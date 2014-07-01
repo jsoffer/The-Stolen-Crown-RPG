@@ -4,7 +4,7 @@ Game Over / 'Restart from last save point?' pseudo-"room"
 
 """
 
-import pickle, sys, os
+import pickle, os
 import pygame as pg
 from .. import setup, tools
 from .. import observer

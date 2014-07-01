@@ -1,6 +1,4 @@
-import random
 import pygame as pg
-from . import constants as c
 
 class CollisionHandler(object):
     """Handles collisions between the user, blockers and computer
@@ -98,7 +96,7 @@ class CollisionHandler(object):
     def reset_after_collision(self, sprite):
         """Put player back to original position"""
         if sprite.x_vel != 0:
-                sprite.rect.x -= sprite.x_vel
+            sprite.rect.x -= sprite.x_vel
         else:
             sprite.rect.y -= sprite.y_vel
 

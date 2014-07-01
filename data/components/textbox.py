@@ -1,5 +1,5 @@
 __author__ = 'justinarmstrong'
-import copy
+
 import pygame as pg
 from .. import setup, observer, tools
 from .. import constants as c

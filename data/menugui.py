@@ -4,7 +4,7 @@
 This class controls all the GUI for the player
 menu screen.
 """
-import sys
+
 import pygame as pg
 from . import setup, observer
 from . import constants as c
@@ -544,7 +544,7 @@ class MenuGui(object):
 
         if (posx, posy) in self.info_box.slots:
             if self.info_box.slots[(posx, posy)][:4] == 'Cure':
-               self.use_cure_spell()
+                self.use_cure_spell()
 
     def use_cure_spell(self):
         """

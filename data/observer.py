@@ -4,7 +4,6 @@ Module for all game observers.
 import pygame as pg
 from . import constants as c
 from . import setup
-from .components import attackitems
 from . import setup
 
 class Battle(object):

@@ -1,6 +1,6 @@
 from __future__ import division
 #from itertools import izip
-import math, random, copy, sys
+import math, random, copy
 import pygame as pg
 from .. import setup, observer
 from .. import constants as c

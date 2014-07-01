@@ -1,6 +1,6 @@
 """This is the state that handles battles against
 monsters"""
-import random, sys
+import random
 import pygame as pg
 from .. import tools, battlegui, observer, setup
 from .. components import person, attack, attackitems

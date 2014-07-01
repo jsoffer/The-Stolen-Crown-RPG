@@ -1,16 +1,9 @@
-import pickle, sys, os
+import pickle, os
 import pygame as pg
 from .. import setup, tools, tilerender
 from .. import observer
 from .. import constants as c
 from . import death
-
-
-#Python 2/3 compatibility.
-if sys.version_info[0] == 2:
-    import cPickle
-    pickle = cPickle
-
 
 class Menu(tools._State):
     def __init__(self):

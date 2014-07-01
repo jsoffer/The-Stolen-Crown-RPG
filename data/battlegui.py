@@ -1,7 +1,7 @@
 """
 GUI components for battle states.
 """
-import sys
+
 import pygame as pg
 from . import setup, observer
 from . import constants as c

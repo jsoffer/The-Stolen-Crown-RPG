@@ -5,7 +5,7 @@ differentiated by self.name and self.tmx_map.
 This class inherits from the generic state class
 found in the tools.py module.
 """
-import copy, sys
+import copy
 import pygame as pg
 from .. import tools, collision
 from .. import constants as c

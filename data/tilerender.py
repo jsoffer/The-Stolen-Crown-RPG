@@ -44,3 +44,4 @@ class Renderer(object):
         self.render(temp_surface)
         temp_surface = pg.transform.scale2x(temp_surface)
         return temp_surface
+

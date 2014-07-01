@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from pygame import Rect
 
-from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY, 
+from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY,
                         TRANS_FLIPX, TRANS_FLIPY,
                         GID_TRANS_ROT, TRANS_ROT)
 
@@ -213,7 +213,7 @@ def simplify(all_points, tilewidth, tileheight):
                 if ex is None:
                     ex = x - 1
 
-                if ((ox, y+1) in points):
+                if (ox, y+1) in points:
                     if x == ex + 1:
                         y += 1
                         x = ox
