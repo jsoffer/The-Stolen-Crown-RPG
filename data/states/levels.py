@@ -56,7 +56,7 @@ class LevelState(tools._State):
                                                             self)
         self.dialogue_handler = textbox.TextHandler(self)
         self.state_dict = self.make_state_dict()
-        self.menu_screen = player_menu.Player_Menu(game_data, self)
+        self.menu_screen = player_menu.PlayerMenu(game_data, self)
         self.transition_rect = setup.SCREEN.get_rect()
         self.transition_alpha = 255
 

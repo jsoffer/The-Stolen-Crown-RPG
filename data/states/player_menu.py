@@ -8,7 +8,7 @@ from .. import tools, setup, menugui
 from .. import constants as c
 
 
-class Player_Menu(object):
+class PlayerMenu(object):
     def __init__(self, game_data, level):
         inventory = game_data['player inventory']
         stats = game_data['player stats']
