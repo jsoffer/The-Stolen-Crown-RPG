@@ -24,11 +24,11 @@
  </layer>
  <layer name="Tile Layer 3" width="25" height="19">
   <data encoding="base64" compression="zlib">
-   eJztzckNgEAMBMHBJhGORDgSgSXxXQiElojBvNxSfWekLPuqJjXceCzmo3PJ4Og95mNgd8SEOehjYXfFhj3o42D3RMEV9JFl2T+9ywQG6w==
+   eJztj7kKwkAURZ9JQFvX3uUHXHuXH3DtXX5QQf9DQXsX0Na19gRSTKPkYUIaL1zmMZx374xINJpbIgvLP7+EXSl4V2v4jWJnC7tTdlzhb4qdJ+xL2ZG0RVK2fz4Lm1PwrsrwFW9nz/sO+IhPH95ah20oO7rwPW8nxmlhGztGzp2+h9c55H6k7DCVZ7eAi7hk5KSZMz/kmmqS08Jt3DEyq8y1gDrG5EzwFM+MzD7zIKCOKHXmD5eQ/xF3RBJOuB1//fVNb9B/GJk=
   </data>
  </layer>
  <objectgroup name="Object Layer 1" width="25" height="19">
-  <object name="sprite" type="oldman" gid="115" x="240" y="128">
+  <object name="sprite" type="oldman" gid="115" x="256" y="192">
    <properties>
     <property name="dialogue length" value="5"/>
     <property name="dialogue0" value="I am very sick.   cough... cough..."/>
@@ -38,7 +38,7 @@
     <property name="dialogue4" value="I will be forever in your debt."/>
    </properties>
   </object>
-  <object name="start point" gid="123" x="176" y="224">
+  <object name="start point" gid="123" x="176" y="192">
    <properties>
     <property name="direction" value="up"/>
     <property name="state" value="town"/>
@@ -62,18 +62,18 @@
   <object name="blocker" gid="120" x="80" y="112"/>
   <object name="blocker" gid="120" x="80" y="96"/>
   <object name="blocker" gid="120" x="96" y="96"/>
-  <object name="blocker" gid="120" x="112" y="96"/>
-  <object name="blocker" gid="120" x="112" y="112"/>
-  <object name="blocker" gid="120" x="112" y="128"/>
-  <object name="blocker" gid="120" x="112" y="128"/>
-  <object name="blocker" gid="120" x="112" y="144"/>
-  <object name="blocker" gid="120" x="112" y="144"/>
-  <object name="blocker" gid="120" x="112" y="160"/>
-  <object name="blocker" gid="120" x="128" y="160"/>
-  <object name="blocker" gid="120" x="128" y="128"/>
-  <object name="blocker" gid="120" x="128" y="144"/>
-  <object name="blocker" gid="120" x="128" y="96"/>
-  <object name="blocker" gid="120" x="128" y="112"/>
+  <object name="blocker" gid="120" x="144" y="96"/>
+  <object name="blocker" gid="120" x="144" y="112"/>
+  <object name="blocker" gid="120" x="144" y="128"/>
+  <object name="blocker" gid="120" x="144" y="128"/>
+  <object name="blocker" gid="120" x="144" y="144"/>
+  <object name="blocker" gid="120" x="144" y="144"/>
+  <object name="blocker" gid="120" x="144" y="160"/>
+  <object name="blocker" gid="120" x="160" y="160"/>
+  <object name="blocker" gid="120" x="160" y="128"/>
+  <object name="blocker" gid="120" x="160" y="144"/>
+  <object name="blocker" gid="120" x="160" y="96"/>
+  <object name="blocker" gid="120" x="160" y="112"/>
   <object name="blocker" gid="120" x="160" y="80"/>
   <object name="blocker" gid="120" x="144" y="80"/>
   <object name="blocker" gid="120" x="176" y="80"/>
@@ -102,5 +102,15 @@
   <object name="blocker" gid="120" x="240" y="240"/>
   <object name="blocker" gid="120" x="224" y="240"/>
   <object name="blocker" gid="120" x="208" y="240"/>
+  <object name="blocker" gid="120" x="224" y="192"/>
+  <object name="blocker" gid="120" x="240" y="192"/>
+  <object name="blocker" gid="120" x="240" y="208"/>
+  <object name="blocker" gid="120" x="224" y="208"/>
+  <object name="blocker" gid="120" x="128" y="96"/>
+  <object name="blocker" gid="120" x="112" y="96"/>
+  <object name="blocker" gid="120" x="224" y="128"/>
+  <object name="blocker" gid="120" x="240" y="144"/>
+  <object name="blocker" gid="120" x="224" y="144"/>
+  <object name="blocker" gid="120" x="240" y="128"/>
  </objectgroup>
 </map>
