@@ -10,6 +10,23 @@ import os
 import pygame as pg
 from . import constants as c
 
+class Timer(object):
+    """
+    Is initialized with a number of milliseconds, answers "done" when that
+    time has passed; can be reset
+
+    """
+
+    def __init__(self, milliseconds):
+        self.milliseconds = milliseconds
+        self.start_time = pg.time.get_ticks()
+
+    def done(self):
+        return (pg.time.get_ticks() - self.start_time) > self.milliseconds
+
+    def reset(self):
+        self.start_time = pg.time.get_ticks()
+
 class Control(object):
     """
     Control class for entire project.  Contains the game loop, and contains
@@ -25,7 +42,6 @@ class Control(object):
         # clock
         self.clock = pg.time.Clock()
         self.show_fps = False
-        self.current_time = 0.0
         # all keys' pressed-or-not-pressed state
         self.keys = pg.key.get_pressed()
         # (derived from) _State
@@ -49,12 +65,12 @@ class Control(object):
 
         """
 
-        self.current_time = pg.time.get_ticks()
+        #self.current_time = pg.time.get_ticks()
         if self.state.quit:
             self.done = True
         elif self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.keys, self.current_time)
+        self.state.update(self.screen, self.keys)
 
     def flip_state(self):
         """ Choose a new state from the pool; if the state changed,
@@ -68,7 +84,7 @@ class Control(object):
         self.state = self.state_dict[self.state_name]
         self.state.previous = previous
         self.state.previous_music = previous_music
-        self.state.startup(self.current_time, persist)
+        self.state.startup(persist)
         self.set_music()
 
     def set_music(self):
@@ -119,7 +135,6 @@ class _State(object):
     """Base class for all game states"""
     def __init__(self):
         self.start_time = 0.0
-        self.current_time = 0.0
         self.done = False
         self.quit = False
         self.next = None
@@ -132,17 +147,16 @@ class _State(object):
     def get_event(self, event):
         pass
 
-    def startup(self, current_time, game_data):
+    def startup(self, game_data):
         self.game_data = game_data
-        self.start_time = current_time
+        #self.start_time = current_time
 
     def cleanup(self):
         self.done = False
         return self.game_data
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys):
         pass
-
 
 def load_all_gfx(directory,
                  colorkey=(255, 0, 255),

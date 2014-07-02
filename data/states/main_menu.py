@@ -16,7 +16,7 @@ class Menu(tools._State):
         self.name = c.MAIN_MENU
         self.startup(0, 0)
 
-    def startup(self, *args):
+    def startup(self, *_):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
@@ -50,7 +50,7 @@ class Menu(tools._State):
 
         return state_dict
 
-    def update(self, surface, *args):
+    def update(self, surface, *_):
         """
         Update scene.
         """
@@ -105,7 +105,7 @@ class Instructions(tools._State):
         self.music = None
         self.music_title = None
 
-    def startup(self, *args):
+    def startup(self, *_):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
@@ -168,7 +168,7 @@ class Instructions(tools._State):
 
         return state_dict
 
-    def update(self, surface, keys, *args):
+    def update(self, surface, keys, *_):
         """
         Update scene.
         """
@@ -193,7 +193,7 @@ class Instructions(tools._State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def transition_in(self, *args):
+    def transition_in(self, *_):
         """
         Transition into scene with a fade.
         """
@@ -203,7 +203,7 @@ class Instructions(tools._State):
             self.alpha = 0
             self.state = c.NORMAL
 
-    def transition_out(self, *args):
+    def transition_out(self, *_):
         """
         Transition out of scene with a fade.
         """

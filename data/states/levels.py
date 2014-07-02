@@ -26,13 +26,12 @@ class LevelState(tools._State):
         self.volume = None
         self.portal = None
 
-    def startup(self, current_time, game_data):
+    def startup(self, game_data):
         """
         Call when the State object is flipped to.
         """
         self.game_data = game_data
         self.music, self.volume = self.set_music()
-        self.current_time = current_time
         self.state = 'transition_in'
         self.reset_dialogue = ()
         self.switch_to_battle = False
@@ -341,18 +340,18 @@ class LevelState(tools._State):
 
         return portal_group
 
-    def running_normally(self, surface, keys, current_time):
+    def running_normally(self, surface, keys):
         """
         Update level normally.
         """
         self.check_for_dialogue()
-        self.player.update(keys, current_time)
-        self.sprites.update(current_time)
-        self.collision_handler.update(keys, current_time)
+        self.player.update(keys)
+        self.sprites.update()
+        self.collision_handler.update(keys)
         self.check_for_battle()
         self.check_for_portals()
         self.check_for_end_of_game()
-        self.dialogue_handler.update(keys, current_time)
+        self.dialogue_handler.update(keys)
         self.check_for_menu(keys)
         self.viewport_update()
         self.draw_level(surface)
@@ -426,14 +425,14 @@ class LevelState(tools._State):
         elif direction == 'right':
             location[0] -= 1
 
-    def handling_dialogue(self, surface, keys, current_time):
+    def handling_dialogue(self, surface, keys):
         """
         Update only dialogue boxes.
         """
-        self.dialogue_handler.update(keys, current_time)
+        self.dialogue_handler.update(keys)
         self.draw_level(surface)
 
-    def goto_menu(self, surface, keys, *args):
+    def goto_menu(self, surface, keys, *_):
         """
         Go to menu screen.
         """
@@ -447,7 +446,7 @@ class LevelState(tools._State):
         if self.dialogue_handler.textbox:
             self.state = 'dialogue'
 
-    def transition_out(self, surface, *args):
+    def transition_out(self, surface, *_):
         """
         Transition level to new scene.
         """
@@ -461,7 +460,7 @@ class LevelState(tools._State):
             self.transition_alpha = 255
             self.done = True
 
-    def slow_fade_out(self, surface, *args):
+    def slow_fade_out(self, surface, *_):
         """
         Transition level to new scene.
         """
@@ -475,7 +474,7 @@ class LevelState(tools._State):
             self.transition_alpha = 255
             self.done = True
 
-    def transition_in(self, surface, *args):
+    def transition_in(self, surface, *_):
         """
         Transition into level.
         """
@@ -490,12 +489,12 @@ class LevelState(tools._State):
             self.state = 'normal'
             self.transition_alpha = 0
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys):
         """
         Update state.
         """
         state_function = self.state_dict[self.state]
-        state_function(surface, keys, current_time)
+        state_function(surface, keys)
 
     def viewport_update(self):
         """

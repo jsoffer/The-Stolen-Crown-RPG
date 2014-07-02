@@ -222,7 +222,6 @@ class InfoBox(pg.sprite.Sprite):
         stat_list = ['Level', 'experience to next level',
                      'health', 'magic', 'Attack Power',
                      'Defense Power', 'gold']
-        attack_power = 5
         surface, rect = self.make_blank_info_box(title)
 
         for i, stat in enumerate(stat_list):
@@ -258,7 +257,7 @@ class InfoBox(pg.sprite.Sprite):
         potions = ['POTIONS']
         weapons = ['WEAPONS']
         armor = ['ARMOR']
-        for i, item in enumerate(self.inventory):
+        for item in self.inventory:
             if item in self.possible_weapons:
                 if item == self.inventory['equipped weapon']:
                     item += " (E)"
@@ -290,7 +289,7 @@ class InfoBox(pg.sprite.Sprite):
         self.rect = rect
 
 
-    def assign_slots(self, item_list, starty, weapon_or_armor=False):
+    def assign_slots(self, item_list, starty):
         """Assign each item to a slot in the menu"""
         if len(item_list) > 3:
             for i, item in enumerate(item_list[:3]):
@@ -537,13 +536,17 @@ class MenuGui(object):
         """
         Select spell from magic menu.
         """
-        health = self.game_data['player stats']['health']
-        magic = self.game_data['player stats']['magic']
+        # 'do not heal healty' is handled somewhere else
+        # health = self.game_data['player stats']['health']
+
+        # ?
+        # magic = self.game_data['player stats']['magic']
+
         posx = self.arrow.rect.x - 190
         posy = self.arrow.rect.y - 39
 
         if (posx, posy) in self.info_box.slots:
-            if self.info_box.slots[(posx, posy)][:4] == 'Cure':
+            if self.info_box.slots[(posx, posy)].startswith('Cure'):
                 self.use_cure_spell()
 
     def use_cure_spell(self):

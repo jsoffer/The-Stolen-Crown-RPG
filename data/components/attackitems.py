@@ -38,13 +38,14 @@ class Sword(object):
         new_rect.right -= 16
         return new_rect
 
-    def update(self, current_time):
-        if (current_time - self.timer) > 60:
-            self.timer = current_time
-            if self.index == 0:
-                self.index += 1
-            else:
-                self.index -= 1
+    def update(self):
+        pass
+        #if (current_time - self.timer) > 60:
+        #    self.timer = current_time
+        #    if self.index == 0:
+        #        self.index += 1
+        #    else:
+        #        self.index -= 1
 
     def draw(self, surface):
         """

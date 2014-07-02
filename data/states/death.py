@@ -63,7 +63,7 @@ class DeathScene(tools._State):
         self.volume = 0.5
         self.music_title = 'shop_theme'
 
-    def startup(self, current_time, game_data):
+    def startup(self, game_data):
         self.game_data = game_data
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.background = pg.Surface(setup.SCREEN_RECT.size)

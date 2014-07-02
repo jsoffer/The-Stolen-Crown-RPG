@@ -21,10 +21,9 @@ class Shop(tools._State):
         self.music = setup.MUSIC['shop_theme']
         self.volume = 0.4
 
-    def startup(self, current_time, game_data):
+    def startup(self, game_data):
         """Startup state"""
         self.game_data = game_data
-        self.current_time = current_time
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
         self.next = c.TOWN
@@ -123,18 +122,18 @@ class Shop(tools._State):
 
         return sprite
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys):
         """
         Update scene.
         """
         state_function = self.state_dict[self.state]
-        state_function(surface, keys, current_time)
+        state_function(surface, keys)
 
-    def normal_update(self, surface, keys, current_time):
+    def normal_update(self, surface, keys):
         """
         Update level normally.
         """
-        self.gui.update(keys, current_time)
+        self.gui.update(keys)
         self.draw_level(surface)
 
     def transition_in(self, surface, *_):

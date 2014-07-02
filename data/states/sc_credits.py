@@ -22,7 +22,6 @@ class CreditEntry(object):
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.timer = 0.0
-        self.current_time = 0.0
         self.level = level
 
     def make_credits(self):
@@ -96,7 +95,7 @@ class CreditEntry(object):
         if self.alpha >= 255:
             self.alpha = 255
             self.state = c.NORMAL
-            self.timer = self.current_time
+            #self.timer = self.current_time
 
     def transition_out(self):
         for credit in self.current_credit:
@@ -117,11 +116,12 @@ class CreditEntry(object):
             self.state = c.TRANSITION_IN
 
     def normal_update(self):
-        if (self.current_time - self.timer) > 4500:
-            self.state = c.TRANSITION_OUT
+        pass
+        #if (self.current_time - self.timer) > 4500:
+        #    self.state = c.TRANSITION_OUT
 
-    def update(self, current_time):
-        self.current_time = current_time
+    def update(self):
+        #self.current_time = current_time
         update_method = self.state_dict[self.state]
         update_method()
 
@@ -147,23 +147,23 @@ class Credits(tools._State):
         self.credit = None
         self.background = None
 
-    def startup(self, current_time, game_data):
+    def startup(self, game_data):
         """
         Initialize data at scene start.
         """
         self.game_data = game_data
         self.music = setup.MUSIC['overworld']
         self.volume = 0.4
-        self.current_time = current_time
+        #self.current_time = current_time
         self.background = pg.Surface(setup.SCREEN_RECT.size)
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)
 
-    def update(self, surface, keys, current_time):
+    def update(self, surface, keys):
         """
         Update scene.
         """
-        self.credit.update(current_time)
+        self.credit.update()
         self.draw_scene(surface)
 
     def draw_scene(self, surface):

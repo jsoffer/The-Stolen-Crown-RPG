@@ -166,7 +166,7 @@ class Gui(object):
 
         return state_dict
 
-    def control_dialogue(self, keys, current_time):
+    def control_dialogue(self, keys):
         """Control the dialogue boxes"""
         self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
 
@@ -192,7 +192,7 @@ class Gui(object):
 
         return state
 
-    def make_selection(self, keys, current_time):
+    def make_selection(self, keys):
         """Control the selection"""
         choices = []
         for item in self.items:
@@ -251,7 +251,7 @@ class Gui(object):
 
 
 
-    def confirm_purchase(self, keys, current_time):
+    def confirm_purchase(self, keys):
         """Confirm selection state for GUI"""
         dialogue = ['Are you sure?']
         choices = ['Yes', 'No']
@@ -344,7 +344,7 @@ class Gui(object):
             player_magic['current'] = player_magic['maximum']
             pickle.dump(self.game_data, open("save.p", "wb"))
 
-    def confirm_sell(self, keys, current_time):
+    def confirm_sell(self, keys):
         """
         Confirm player wants to sell item.
         """
@@ -417,7 +417,7 @@ class Gui(object):
         else:
             del self.player_inventory[self.item_to_be_sold['type']]
 
-    def reject_insufficient_gold(self, keys, current_time):
+    def reject_insufficient_gold(self, keys):
         """Reject player selection if they do not have enough gold"""
         dialogue = ["You don't have enough gold!"]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
@@ -431,7 +431,7 @@ class Gui(object):
         if not keys[pg.K_SPACE]:
             self.allow_input = True
 
-    def accept_purchase(self, keys, current_time):
+    def accept_purchase(self, keys):
         """Accept purchase and confirm with message"""
         self.dialogue_box = self.make_dialogue_box(self.accept_dialogue, 0)
         self.gold_box = self.make_gold_box()
@@ -445,7 +445,7 @@ class Gui(object):
         if not keys[pg.K_SPACE]:
             self.allow_input = True
 
-    def accept_sale(self, keys, current_time):
+    def accept_sale(self, keys):
         """Confirm to player that item was sold"""
         self.dialogue_box = self.make_dialogue_box(self.accept_sale_dialogue, 0)
         self.gold_box = self.make_gold_box()
@@ -460,7 +460,7 @@ class Gui(object):
             self.allow_input = True
 
 
-    def has_item(self, keys, current_time):
+    def has_item(self, keys):
         """Tell player he has item already"""
         dialogue = ["You have that item already."]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
@@ -475,7 +475,7 @@ class Gui(object):
             self.allow_input = True
 
 
-    def buy_sell(self, keys, current_time):
+    def buy_sell(self, keys):
         """Ask player if they want to buy or sell something"""
         dialogue = ["Would you like to buy or sell an item?"]
         choices = ['Buy', 'Sell', 'Leave']
@@ -527,7 +527,7 @@ class Gui(object):
         else:
             return False
 
-    def sell_items(self, keys, current_time):
+    def sell_items(self, keys):
         """Have player select items to sell"""
         dialogue = ["What would you like to sell?"]
         choices = []
@@ -583,7 +583,7 @@ class Gui(object):
             self.allow_input = True
 
 
-    def cant_sell(self, keys, current_time):
+    def cant_sell(self, keys):
         """Do not allow player to sell anything"""
         dialogue = ["You don't have anything to sell!"]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
@@ -597,7 +597,7 @@ class Gui(object):
         if not keys[pg.K_SPACE]:
             self.allow_input = True
 
-    def cant_sell_equipped_weapon(self, keys, *args):
+    def cant_sell_equipped_weapon(self, keys, *_):
         """
         Do not sell weapon the player has equipped.
         """
@@ -612,7 +612,7 @@ class Gui(object):
         if not keys[pg.K_SPACE]:
             self.allow_input = True
 
-    def cant_sell_equipped_armor(self, keys, *args):
+    def cant_sell_equipped_armor(self, keys, *_):
         """
         Do not sell armor the player has equipped.
         """
@@ -628,15 +628,15 @@ class Gui(object):
 
 
 
-    def update(self, keys, current_time):
+    def update(self, keys):
         """Updates the shop GUI"""
         state_function = self.state_dict[self.state]
-        state_function(keys, current_time)
+        state_function(keys)
 
 
     def draw(self, surface):
         """Draw GUI to level surface"""
-        state_list1 = ['dialogue', 'reject', 'accept', 'hasitem']
+        #state_list1 = ['dialogue', 'reject', 'accept', 'hasitem']
         state_list2 = [
             'select', 'confirmpurchase', 'buysell', 'sell', 'confirmsell']
 

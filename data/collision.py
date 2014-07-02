@@ -25,7 +25,7 @@ class CollisionHandler(object):
 
         return blocker_list
 
-    def update(self, keys, current_time):
+    def update(self, unused_keys):
         """
         Check for collisions between game objects.
         """

@@ -372,7 +372,7 @@ class SelectArrow(object):
         return pos_list
 
 
-    def become_invisible_surface(self, *args):
+    def become_invisible_surface(self, *_):
         """
         Make image attribute an invisible surface.
         """

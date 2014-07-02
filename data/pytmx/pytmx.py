@@ -469,7 +469,7 @@ class TiledTileset(TiledElement):
             p = parse_properties(child)
             p['width'] = self.tilewidth
             p['height'] = self.tileheight
-            for gid, flags in self.parent.map_gid(real_gid + self.firstgid):
+            for gid, _ in self.parent.map_gid(real_gid + self.firstgid):
                 self.parent.setTileProperties(gid, p)
 
         image_node = node.find('image')
@@ -506,7 +506,7 @@ class TiledLayer(TiledElement):
         """
         parse a layer element
         """
-        from data.pytmx.utils import group
+
         from itertools import product
         from struct import unpack
         import array
@@ -574,7 +574,7 @@ class TiledLayer(TiledElement):
         # so detailed.
         [self.data.append(array.array("H")) for i in range(self.height)]
 
-        for (y, x) in product(range(self.height), range(self.width)):
+        for (y, _) in product(range(self.height), range(self.width)):
             self.data[y].append(
                 self.parent.register_gid(*decode_gid(next(next_gid))))
 

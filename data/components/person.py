@@ -4,6 +4,7 @@ import math, random, copy
 import pygame as pg
 from .. import setup, observer
 from .. import constants as c
+from ..tools import Timer
 
 class Person(pg.sprite.Sprite):
     """Base class for all world characters
@@ -29,7 +30,6 @@ class Person(pg.sprite.Sprite):
         self.y_vel = 0
         self.timer = 0.0
         self.move_timer = 0.0
-        self.current_time = 0.0
         self.state = state
         self.blockers = self.set_blockers()
         self.location = self.get_tile_location()
@@ -41,6 +41,8 @@ class Person(pg.sprite.Sprite):
         self.health = 0
         self.death_image = pg.transform.scale2x(self.image)
         self.battle = None
+
+        self.anim_timer = Timer(100)
 
     def create_spritesheet_dict(self, sheet_key):
         """
@@ -118,12 +120,11 @@ class Person(pg.sprite.Sprite):
 
         return vector_dict
 
-    def update(self, current_time, *args):
+    def update(self):
         """
         Update sprite.
         """
         self.blockers = self.set_blockers()
-        self.current_time = current_time
         self.image_list = self.animation_dict[self.direction]
         state_function = self.state_dict[self.state]
         state_function()
@@ -226,16 +227,17 @@ class Person(pg.sprite.Sprite):
     def animated_resting(self):
         self.animation(500)
 
-    def animation(self, freq=100):
+    def animation(self):
         """
         Adjust sprite image frame based on timer.
         """
-        if (self.current_time - self.timer) > freq:
+        #if (self.current_time - self.timer) > freq:
+        if self.anim_timer.done():
             if self.index < (len(self.image_list) - 1):
                 self.index += 1
             else:
                 self.index = 0
-            self.timer = self.current_time
+            self.anim_timer.reset()
 
         self.image = self.image_list[self.index]
 
@@ -245,8 +247,8 @@ class Person(pg.sprite.Sprite):
         """
         self.direction = direction
         self.image_list = self.animation_dict[direction]
-        self.timer = self.current_time
-        self.move_timer = self.current_time
+        #self.timer = self.current_time
+        #self.move_timer = self.current_time
         self.state = 'moving'
 
         if self.rect.x % 32 == 0:
@@ -267,12 +269,13 @@ class Person(pg.sprite.Sprite):
         """
         Transition sprite to a automatic moving state.
         """
+        print("begin auto moving")
         self.direction = direction
         self.image_list = self.animation_dict[direction]
         self.state = 'automoving'
         self.x_vel = self.vector_dict[direction][0]
         self.y_vel = self.vector_dict[direction][1]
-        self.move_timer = self.current_time
+        #self.move_timer = self.current_time
 
     def begin_auto_resting(self):
         """
@@ -281,7 +284,7 @@ class Person(pg.sprite.Sprite):
         self.state = 'autoresting'
         self.index = 1
         self.x_vel = self.y_vel = 0
-        self.move_timer = self.current_time
+        #self.move_timer = self.current_time
 
 
     def auto_resting(self):
@@ -297,12 +300,12 @@ class Person(pg.sprite.Sprite):
         if self.rect.x % 32 != 0:
             self.correct_position(self.rect.x)
 
-        if (self.current_time - self.move_timer) > 2000:
+        #if (self.current_time - self.move_timer) > 2000:
             direction_list = ['up', 'down', 'left', 'right']
             random.shuffle(direction_list)
             direction = direction_list[0]
             self.begin_auto_moving(direction)
-            self.move_timer = self.current_time
+            #self.move_timer = self.current_time
 
     def correct_position(self, rect_pos):
         """
@@ -436,7 +439,8 @@ class Person(pg.sprite.Sprite):
         self.image_list = []
         for image in self.small_image_list:
             self.image_list.append(pg.transform.scale2x(image))
-        self.animation(500)
+        #self.animation(500)
+        self.animation()
 
     def knock_back(self):
         """
@@ -523,9 +527,9 @@ class Player(Person):
 
         return vector_dict
 
-    def update(self, keys, current_time):
+    def update(self, keys):
         """Updates player behavior"""
-        self.current_time = current_time
+        #self.current_time = current_time
         self.damage_animation()
         self.healing_animation()
         self.blockers = self.set_blockers()
@@ -650,10 +654,10 @@ class Chest(Person):
 
         return image_list
 
-    def update(self, current_time, *args):
+    def update(self):
         """Implemented by inheriting classes"""
         self.blockers = self.set_blockers()
-        self.current_time = current_time
+        #self.current_time = current_time
         state_function = self.state_dict[self.state]
         state_function()
         self.location = self.get_tile_location()

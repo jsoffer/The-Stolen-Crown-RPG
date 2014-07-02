@@ -50,13 +50,13 @@ class DialogueBox(object):
 
         return image
 
-    def update(self, keys, current_time):
+    def update(self, keys):
         """Updates scrolling text"""
-        self.current_time = current_time
-        self.draw_box(current_time)
+        #self.current_time = current_time
+        self.draw_box()
         self.terminate_check(keys)
 
-    def draw_box(self, current_time, x=400):
+    def draw_box(self):
         """Reveal dialogue on textbox"""
         self.image = self.make_dialogue_box_image()
         self.check_to_draw_arrow()
@@ -92,11 +92,12 @@ class TextHandler(object):
         self.observers = [observer.SoundEffects()]
         self.notify = tools.notify_observers
 
-    def update(self, keys, current_time):
+    def update(self, keys):
         """Checks for the creation of Dialogue boxes"""
         if keys[pg.K_SPACE] and not self.textbox and self.allow_input:
             for sprite in self.sprites:
-                if (current_time - self.last_textbox_timer) > 300:
+                #if (current_time - self.last_textbox_timer) > 300:
+                if True:
                     if self.player.state == 'resting':
                         self.allow_input = False
                         self.check_for_dialogue(sprite)
@@ -105,7 +106,7 @@ class TextHandler(object):
             if self.talking_sprite.name == 'treasurechest':
                 self.open_chest(self.talking_sprite)
 
-            self.textbox.update(keys, current_time)
+            self.textbox.update(keys)
 
             if self.textbox.done:
 
@@ -118,7 +119,7 @@ class TextHandler(object):
                     self.check_for_item()
                 elif self.talking_sprite.battle:
                     self.game_data['battle type'] = self.talking_sprite.battle
-                    self.end_dialogue(current_time)
+                    self.end_dialogue()
                     self.level.switch_to_battle = True
                 elif self.talking_sprite.name == 'oldmanbrother' and \
                         self.game_data['talked to sick brother'] and \
@@ -143,7 +144,7 @@ class TextHandler(object):
                                     'I do not have much time left.']
                         self.talking_sprite.dialogue = dialogue
                     else:
-                        self.end_dialogue(current_time)
+                        self.end_dialogue()
                 elif self.talking_sprite.name == 'king':
 
                     if not self.game_data['talked to king']:
@@ -153,27 +154,27 @@ class TextHandler(object):
                             'The sorceror who lives there has my crown.',
                             'Please retrieve it for me.']
                         self.talking_sprite.dialogue = new_dialogue
-                        self.end_dialogue(current_time)
+                        self.end_dialogue()
                     elif self.game_data['crown quest']:
                         self.game_data['delivered crown'] = True
-                        self.end_dialogue(current_time)
+                        self.end_dialogue()
                     else:
-                        self.end_dialogue(current_time)
+                        self.end_dialogue()
                 else:
-                    self.end_dialogue(current_time)
+                    self.end_dialogue()
 
 
         if not keys[pg.K_SPACE]:
             self.allow_input = True
 
-    def end_dialogue(self, current_time):
+    def end_dialogue(self):
         """
         End dialogue state for level.
         """
         self.talking_sprite = None
         self.level.state = 'normal'
         self.textbox = None
-        self.last_textbox_timer = current_time
+        #self.last_textbox_timer = current_time
         self.reset_sprite_direction()
         self.notify(self, c.CLICK)
 
@@ -266,16 +267,6 @@ class TextHandler(object):
         """Draws textbox to surface"""
         if self.textbox:
             surface.blit(self.textbox.image, self.textbox.rect)
-
-
-    def make_textbox(self, name, dialogue, item=None):
-        """Make textbox on demand"""
-        if name == 'dialoguebox':
-            textbox = DialogueBox(dialogue)
-        else:
-            textbox = None
-
-        return textbox
 
     def open_chest(self, sprite):
         if sprite.name == 'treasurechest':
