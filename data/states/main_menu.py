@@ -168,7 +168,7 @@ class Instructions(tools._State):
 
         return state_dict
 
-    def update(self, surface, keys, *_):
+    def update(self, surface, keys):
         """
         Update scene.
         """
@@ -212,7 +212,7 @@ class Instructions(tools._State):
         if self.alpha >= 255:
             self.done = True
 
-    def normal_update(self, *args):
+    def normal_update(self, keys):
         pass
 
 

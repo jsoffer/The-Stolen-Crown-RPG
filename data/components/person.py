@@ -122,9 +122,12 @@ class Person(pg.sprite.Sprite):
 
         return vector_dict
 
-    def update(self):
+    def update(self, unused_keys=None):
         """
         Update sprite.
+
+        "unused_keys" is a template for derived classes
+
         """
         self.blockers = self.set_blockers()
         self.image_list = self.animation_dict[self.direction]
@@ -575,9 +578,11 @@ class Player(Person):
             elif self.keys[pg.K_RIGHT]:
                 self.begin_moving('right')
 
-    def calculate_hit(self):
+    def calculate_hit(self, unused_armor_list=None, unused_inventory=None):
         """
         Calculate hit strength based on attack stats.
+
+
         """
         weapon = self.game_data['player inventory']['equipped weapon']
         weapon_power = self.game_data['player inventory'][weapon]['power']
@@ -628,7 +633,7 @@ class Chest(Person):
 
         return image_list
 
-    def update(self):
+    def update(self, unused_keys=None):
         """Implemented by inheriting classes"""
         self.blockers = self.set_blockers()
         state_function = self.state_dict[self.state]

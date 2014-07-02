@@ -17,7 +17,8 @@ class TiledElement(object):
         """
 
         # set the attributes reserved for tiled
-        [setattr(self, k, types[str(k)](v)) for (k, v) in node.items()]
+        for (k, v) in node.items():
+            setattr(self, k, types[str(k)](v))
 
         # set the attributes that are derived from tiled 'properties'
         for k, v in parse_properties(node).items():
@@ -92,7 +93,7 @@ class TiledMap(TiledElement):
         """
 
         try:
-            x, y, layer = map(int, (x, y, layer))
+            x, y, layer = [int(k) for k in (k, y, layer)]
         except TypeError:
             msg = "Tile indexes/layers must be specified as integers."
             print(msg)
@@ -227,10 +228,7 @@ class TiledMap(TiledElement):
 
         props = []
         for gid in layergids:
-            try:
-                props.append((gid, self.tile_properties[gid]))
-            except:
-                continue
+            props.append((gid, self.tile_properties[gid]))
 
         return props
 
@@ -500,9 +498,11 @@ class TiledLayer(TiledElement):
             data = decodestring(data_node.text.strip().encode())
 
         elif encoding == "csv":
-            next_gid = map(int, "".join(
-                line.strip() for line in data_node.text.strip()
-            ).split(","))
+
+            next_gid = (int(k) for k in
+                        "".join(
+                            line.strip() for line in data_node.text.strip()
+                        ).split(","))
 
         elif encoding:
             msg = "TMX encoding type: {0} is not supported."
@@ -541,13 +541,14 @@ class TiledLayer(TiledElement):
             #print(unpack("<L", data[:4])[0])
             # data is a list of gids. cast as 32-bit ints to format properly
             # create iterator to efficiently parse data
-            next_gid = map(lambda k: unpack("<L", data[k:k+4])[0],
-                           range(0, len(data), 4))
+            next_gid = (
+                unpack("<L", data[k:k+4])[0] for k in range(0, len(data), 4))
 
         # using bytes here limits the layer to 256 unique tiles
         # may be a limitation for very detailed maps, but most maps are not
         # so detailed.
-        [self.data.append(array.array("H")) for i in range(self.height)]
+        for i in range(self.height):
+            self.data.append(array.array("H"))
 
         for (y, _) in product(range(self.height), range(self.width)):
             self.data[y].append(

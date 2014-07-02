@@ -8,9 +8,7 @@ from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY,
                         GID_TRANS_ROT, TRANS_ROT)
 
 def read_points(text):
-    return [tuple(map(int, i.split(',')))
-            for i in text.split()]
-
+    return [tuple([int(j) for j in i.split(',')]) for i in text.split()]
 
 def parse_properties(node):
     """
@@ -44,23 +42,26 @@ def decode_gid(raw_gid):
 
 
 def handle_bool(text):
+    """
+    Somewhat sketchy way to convert strings to bool objects by abusing the
+    exception system
+
+    """
+
     # properly convert strings to a bool
     try:
         return bool(int(text))
-    except:
+    except ValueError:
         pass
 
-    try:
-        text = str(text).lower()
-        if text == "true": return True
-        if text == "yes": return True
-        if text == "false": return False
-        if text == "no": return False
-    except:
-        pass
+    text = str(text).lower()
 
-    raise ValueError
+    if text == "true": return True
+    if text == "yes": return True
+    if text == "false": return False
+    if text == "no": return False
 
+    raise ValueError("handle_bool failed to convert %s to bool" % (text))
 
 # used to change the unicode string returned from xml to proper python
 # variable types.
@@ -233,7 +234,9 @@ def simplify(all_points, tilewidth, tileheight):
 
         rect = Rect(ox, oy, ex-ox+1, y-oy+1)
         kill = [p for p in points if rect.collidepoint(p)]
-        [points.remove(i) for i in kill]
+
+        for i in kill:
+            points.remove(i)
 
         if points:
             pick_rect(points, rects)
