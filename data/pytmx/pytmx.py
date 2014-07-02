@@ -537,8 +537,6 @@ class TiledLayer(TiledElement):
             next_gid = get_children(data_node)
 
         elif data:
-            print(len(data))
-            #print(unpack("<L", data[:4])[0])
             # data is a list of gids. cast as 32-bit ints to format properly
             # create iterator to efficiently parse data
             next_gid = (
@@ -547,8 +545,8 @@ class TiledLayer(TiledElement):
         # using bytes here limits the layer to 256 unique tiles
         # may be a limitation for very detailed maps, but most maps are not
         # so detailed.
-        for i in range(self.height):
-            self.data.append(array.array("H"))
+
+        self.data += [array.array('H') for k in range(self.height)]
 
         for (y, _) in product(range(self.height), range(self.width)):
             self.data[y].append(
