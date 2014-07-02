@@ -21,8 +21,11 @@ class Timer(object):
         self.milliseconds = milliseconds
         self.start_time = pg.time.get_ticks()
 
-    def done(self):
-        return (pg.time.get_ticks() - self.start_time) > self.milliseconds
+    def done(self, target=None):
+        if target is None:
+            return (pg.time.get_ticks() - self.start_time) > self.milliseconds
+        else:
+            return (pg.time.get_ticks() - self.start_time) > target
 
     def reset(self):
         self.start_time = pg.time.get_ticks()
@@ -65,7 +68,6 @@ class Control(object):
 
         """
 
-        #self.current_time = pg.time.get_ticks()
         if self.state.quit:
             self.done = True
         elif self.state.done:
@@ -149,7 +151,6 @@ class _State(object):
 
     def startup(self, game_data):
         self.game_data = game_data
-        #self.start_time = current_time
 
     def cleanup(self):
         self.done = False

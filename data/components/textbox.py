@@ -52,7 +52,6 @@ class DialogueBox(object):
 
     def update(self, keys):
         """Updates scrolling text"""
-        #self.current_time = current_time
         self.draw_box()
         self.terminate_check(keys)
 
@@ -92,12 +91,13 @@ class TextHandler(object):
         self.observers = [observer.SoundEffects()]
         self.notify = tools.notify_observers
 
+        self.wait_timer = tools.Timer(300)
+
     def update(self, keys):
         """Checks for the creation of Dialogue boxes"""
         if keys[pg.K_SPACE] and not self.textbox and self.allow_input:
             for sprite in self.sprites:
-                #if (current_time - self.last_textbox_timer) > 300:
-                if True:
+                if self.wait_timer.done():
                     if self.player.state == 'resting':
                         self.allow_input = False
                         self.check_for_dialogue(sprite)
@@ -174,7 +174,7 @@ class TextHandler(object):
         self.talking_sprite = None
         self.level.state = 'normal'
         self.textbox = None
-        #self.last_textbox_timer = current_time
+        self.wait_timer.reset()
         self.reset_sprite_direction()
         self.notify(self, c.CLICK)
 

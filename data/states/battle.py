@@ -5,6 +5,7 @@ import pygame as pg
 from .. import tools, battlegui, observer, setup
 from .. components import person, attack, attackitems
 from .. import constants as c
+from ..tools import Timer
 
 class Battle(tools._State):
     def __init__(self):
@@ -12,6 +13,9 @@ class Battle(tools._State):
         self.name = 'battle'
         self.music = setup.MUSIC['high_action']
         self.volume = 0.4
+
+        self.action_timer = Timer(1500)
+        self.restore_timer = Timer(600)
 
     def startup(self, game_data):
         """
@@ -147,7 +151,7 @@ class Battle(tools._State):
                                                  'down', 'battle resting'))
                 self.game_data['start of game'] = False
             else:
-                for enemy in range(random.randint(1, 6)):
+                for enemy in range(random.randint(4, 7)):
                     enemy_group.add(person.Enemy('devil', 0, 0,
                                                  'down', 'battle resting'))
 
@@ -279,8 +283,7 @@ class Battle(tools._State):
         long_delay = timed_states[1:]
 
         if self.state in long_delay:
-            #if (self.current_time - self.timer) > 1000:
-            if True:
+            if self.action_timer.done(1000):
                 if self.state == c.ENEMY_DAMAGED:
                     if self.player_actions:
                         self.player_action_dict[self.player_actions[0]]()
@@ -301,11 +304,10 @@ class Battle(tools._State):
                             self.enter_enemy_attack_state()
                         else:
                             self.enter_battle_won_state()
-                #self.timer = self.current_time
+                self.action_timer.reset()
 
         elif self.state == c.FIRE_SPELL or self.state == c.CURE_SPELL:
-            #if (self.current_time - self.timer) > 1500:
-            if True:
+            if self.action_timer.done():
                 if self.player_actions:
                     if not len(self.enemy_list):
                         self.enter_battle_won_state()
@@ -317,39 +319,33 @@ class Battle(tools._State):
                         self.enter_enemy_attack_state()
                     else:
                         self.enter_battle_won_state()
-                #self.timer = self.current_time
+                self.action_timer.reset()
 
         elif self.state == c.RUN_AWAY:
-            #if (self.current_time - self.timer) > 1500:
-            if True:
+            if self.action_timer.done():
                 self.end_battle()
 
         elif self.state == c.BATTLE_WON:
-            #if (self.current_time - self.timer) > 1800:
-            if True:
+            if self.action_timer.done(1800):
                 self.enter_show_gold_state()
 
         elif self.state == c.SHOW_GOLD:
-            #if (self.current_time - self.timer) > 1800:
-            if True:
+            if self.action_timer.done(1800):
                 self.enter_show_experience_state()
 
         elif self.state == c.LEVEL_UP:
-            #if (self.current_time - self.timer) > 2200:
-            if True:
+            if self.action_timer.done(2200):
                 if self.game_data['player stats']['Level'] == 3:
                     self.enter_two_actions_per_turn_state()
                 else:
                     self.end_battle()
 
         elif self.state == c.TWO_ACTIONS:
-            #if (self.current_time - self.timer) > 3000:
-            if True:
+            if self.action_timer.done(3000):
                 self.end_battle()
 
         elif self.state == c.SHOW_EXPERIENCE:
-            #if (self.current_time - self.timer) > 2200:
-            if True:
+            if self.action_timer.done(2200):
                 player_stats = self.game_data['player stats']
                 player_stats['experience to next level'] -= (
                     self.experience_points)
@@ -370,8 +366,7 @@ class Battle(tools._State):
                     self.end_battle()
 
         elif self.state == c.PLAYER_DAMAGED:
-            #if (self.current_time - self.timer) > 600:
-            if True:
+            if self.action_timer.done(600):
                 if self.enemy_index == (len(self.enemy_list) - 1):
                     if self.run_away:
                         self.enter_run_away_state()
@@ -379,7 +374,7 @@ class Battle(tools._State):
                         self.enter_select_action_state()
                 else:
                     self.switch_enemy()
-                #self.timer = self.current_time
+                self.action_timer.reset()
 
     def check_if_battle_won(self):
         """
@@ -516,10 +511,6 @@ class Battle(tools._State):
         if not self.game_data['player inventory']['Ether Potion']['quantity']:
             del self.game_data['player inventory']['Ether Potion']
 
-    #def set_timer_to_current_time(self):
-    #    """Set the timer to the current time."""
-    #    self.timer = self.current_time
-
     def cast_fire_blast(self):
         """
         Cast fire blast on all enemies.
@@ -548,7 +539,7 @@ class Battle(tools._State):
         self.enemy_index = 0
         self.arrow.index = 0
         self.arrow.state = 'invisible'
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def cast_cure(self):
         """
@@ -558,7 +549,7 @@ class Battle(tools._State):
         HEAL_AMOUNT = self.inventory['Cure']['power']
         MAGIC_POINTS = self.inventory['Cure']['magic points']
         self.player.healing = True
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
         self.arrow.state = 'invisible'
         self.enemy_index = 0
         self.damage_points.add(
@@ -643,7 +634,7 @@ class Battle(tools._State):
         """
         self.state = self.info_box.state = c.DRINK_HEALING_POTION
         self.player.healing = True
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
         self.arrow.state = 'invisible'
         self.enemy_index = 0
         self.damage_points.add(
@@ -667,7 +658,7 @@ class Battle(tools._State):
                                      False,
                                      True))
         self.magic_boost(30)
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
         self.notify(c.POWERUP)
 
     def enter_select_action_state(self):
@@ -692,7 +683,7 @@ class Battle(tools._State):
             attackitems.HealthPoints(player_damage,
                                      self.player.rect.topright))
         self.info_box.set_player_damage(player_damage)
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
         self.player_damaged(player_damage)
         if player_damage:
             sfx_num = random.randint(1, 3)
@@ -716,7 +707,7 @@ class Battle(tools._State):
 
         self.arrow.index = 0
         self.attack_enemy(enemy_damage)
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def switch_enemy(self):
         """
@@ -733,7 +724,7 @@ class Battle(tools._State):
         self.state = self.info_box.state = c.RUN_AWAY
         self.arrow.state = 'invisible'
         self.player.state = c.RUN_AWAY
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
         self.notify(c.RUN_AWAY)
 
     def enter_battle_won_state(self):
@@ -743,7 +734,7 @@ class Battle(tools._State):
         self.notify(c.BATTLE_WON)
         self.state = self.info_box.state = c.BATTLE_WON
         self.player.state = c.VICTORY_DANCE
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def enter_show_gold_state(self):
         """
@@ -751,14 +742,14 @@ class Battle(tools._State):
         """
         self.inventory['GOLD']['quantity'] += self.new_gold
         self.state = self.info_box.state = c.SHOW_GOLD
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def enter_show_experience_state(self):
         """
         Transition battle into the show experience state.
         """
         self.state = self.info_box.state = c.SHOW_EXPERIENCE
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def enter_level_up_state(self):
         """
@@ -766,11 +757,11 @@ class Battle(tools._State):
         """
         self.state = self.info_box.state = c.LEVEL_UP
         self.info_box.reset_level_up_message()
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def enter_two_actions_per_turn_state(self):
         self.state = self.info_box.state = c.TWO_ACTIONS
-        #self.set_timer_to_current_time()
+        self.action_timer.reset()
 
     def execute_player_actions(self):
         """

@@ -7,8 +7,11 @@ from .. import constants as c
 from ..tools import Timer
 
 class Person(pg.sprite.Sprite):
-    """Base class for all world characters
-    controlled by the computer"""
+    """
+    Base class for all world characters
+    controlled by the computer
+
+    """
 
     def __init__(self, sheet_key, x, y,
                  direction='down', state='resting', index=0):
@@ -28,8 +31,6 @@ class Person(pg.sprite.Sprite):
         self.vector_dict = self.create_vector_dict()
         self.x_vel = 0
         self.y_vel = 0
-        self.timer = 0.0
-        self.move_timer = 0.0
         self.state = state
         self.blockers = self.set_blockers()
         self.location = self.get_tile_location()
@@ -43,6 +44,7 @@ class Person(pg.sprite.Sprite):
         self.battle = None
 
         self.anim_timer = Timer(100)
+        self.move_timer = Timer(2000)
 
     def create_spritesheet_dict(self, sheet_key):
         """
@@ -231,7 +233,6 @@ class Person(pg.sprite.Sprite):
         """
         Adjust sprite image frame based on timer.
         """
-        #if (self.current_time - self.timer) > freq:
         if self.anim_timer.done():
             if self.index < (len(self.image_list) - 1):
                 self.index += 1
@@ -247,8 +248,6 @@ class Person(pg.sprite.Sprite):
         """
         self.direction = direction
         self.image_list = self.animation_dict[direction]
-        #self.timer = self.current_time
-        #self.move_timer = self.current_time
         self.state = 'moving'
 
         if self.rect.x % 32 == 0:
@@ -269,13 +268,11 @@ class Person(pg.sprite.Sprite):
         """
         Transition sprite to a automatic moving state.
         """
-        print("begin auto moving")
         self.direction = direction
         self.image_list = self.animation_dict[direction]
         self.state = 'automoving'
         self.x_vel = self.vector_dict[direction][0]
         self.y_vel = self.vector_dict[direction][1]
-        #self.move_timer = self.current_time
 
     def begin_auto_resting(self):
         """
@@ -284,7 +281,6 @@ class Person(pg.sprite.Sprite):
         self.state = 'autoresting'
         self.index = 1
         self.x_vel = self.y_vel = 0
-        #self.move_timer = self.current_time
 
 
     def auto_resting(self):
@@ -300,12 +296,12 @@ class Person(pg.sprite.Sprite):
         if self.rect.x % 32 != 0:
             self.correct_position(self.rect.x)
 
-        #if (self.current_time - self.move_timer) > 2000:
+        if self.move_timer.done():
             direction_list = ['up', 'down', 'left', 'right']
             random.shuffle(direction_list)
             direction = direction_list[0]
             self.begin_auto_moving(direction)
-            #self.move_timer = self.current_time
+            self.move_timer.reset()
 
     def correct_position(self, rect_pos):
         """
@@ -529,7 +525,6 @@ class Player(Person):
 
     def update(self, keys):
         """Updates player behavior"""
-        #self.current_time = current_time
         self.damage_animation()
         self.healing_animation()
         self.blockers = self.set_blockers()
@@ -657,7 +652,6 @@ class Chest(Person):
     def update(self):
         """Implemented by inheriting classes"""
         self.blockers = self.set_blockers()
-        #self.current_time = current_time
         state_function = self.state_dict[self.state]
         state_function()
         self.location = self.get_tile_location()

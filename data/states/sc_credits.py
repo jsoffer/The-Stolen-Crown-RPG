@@ -21,7 +21,7 @@ class CreditEntry(object):
         self.current_credit = self.credit_sprites[self.index]
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
-        self.timer = 0.0
+        self.transition_timer = tools.Timer(4500)
         self.level = level
 
     def make_credits(self):
@@ -95,7 +95,6 @@ class CreditEntry(object):
         if self.alpha >= 255:
             self.alpha = 255
             self.state = c.NORMAL
-            #self.timer = self.current_time
 
     def transition_out(self):
         for credit in self.current_credit:
@@ -116,12 +115,11 @@ class CreditEntry(object):
             self.state = c.TRANSITION_IN
 
     def normal_update(self):
-        pass
-        #if (self.current_time - self.timer) > 4500:
-        #    self.state = c.TRANSITION_OUT
+        if self.transition_timer.done():
+            self.state = c.TRANSITION_OUT
+            self.transition_timer.reset()
 
     def update(self):
-        #self.current_time = current_time
         update_method = self.state_dict[self.state]
         update_method()
 
@@ -154,7 +152,6 @@ class Credits(tools._State):
         self.game_data = game_data
         self.music = setup.MUSIC['overworld']
         self.volume = 0.4
-        #self.current_time = current_time
         self.background = pg.Surface(setup.SCREEN_RECT.size)
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)

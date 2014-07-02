@@ -16,7 +16,7 @@ class Sword(object):
         self.sprite_sheet = setup.GFX['shopsigns']
         self.image_list = self.make_image_list()
         self.index = 0
-        self.timer = 0.0
+        self.timer = tools.Timer(60)
 
     def make_image_list(self):
         """
@@ -39,13 +39,12 @@ class Sword(object):
         return new_rect
 
     def update(self):
-        pass
-        #if (current_time - self.timer) > 60:
-        #    self.timer = current_time
-        #    if self.index == 0:
-        #        self.index += 1
-        #    else:
-        #        self.index -= 1
+        if self.timer.done():
+            if self.index == 0:
+                self.index += 1
+            else:
+                self.index -= 1
+            self.timer.reset()
 
     def draw(self, surface):
         """
@@ -117,12 +116,4 @@ class HealthPoints(pg.sprite.Sprite):
             self.alpha -= 15
             if self.alpha <= 0:
                 self.kill()
-
-
-
-
-
-
-
-
 
