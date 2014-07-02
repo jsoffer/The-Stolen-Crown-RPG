@@ -8,7 +8,7 @@ from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY,
                         GID_TRANS_ROT, TRANS_ROT)
 
 def read_points(text):
-    return [tuple(map(lambda x: int(x), i.split(',')))
+    return [tuple(map(int, i.split(',')))
             for i in text.split()]
 
 

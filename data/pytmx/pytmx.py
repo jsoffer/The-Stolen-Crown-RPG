@@ -137,27 +137,6 @@ class TiledMap(TiledElement):
             msg = "Coords: ({0},{1}) in layer {2} is invalid"
             raise Exception(msg.format(x, y, layer))
 
-    def getDrawOrder(self):
-        """
-        return a list of objects in the order that they should be drawn
-        this will also exclude any layers that are not set to visible
-
-        may be useful if you have objects and want to control rendering
-        from tiled
-        """
-
-        raise NotImplementedError
-
-    def getTileImages(self, r, layer):
-        """
-        return a group of tiles in an area
-        expects a pygame rect or rect-like list/tuple
-
-        useful if you don't want to repeatedly call getTileImage
-        """
-
-        raise NotImplementedError
-
     def getObjects(self):
         """
         Return iterator of all the objects associated with this map
@@ -289,9 +268,6 @@ class TiledMap(TiledElement):
         except TypeError:
             msg = "GIDs must be an integer"
             raise TypeError(msg)
-
-    def loadTileImages(self, filename):
-        raise NotImplementedError
 
     def load(self):
         """
@@ -507,7 +483,6 @@ class TiledLayer(TiledElement):
         parse a layer element
         """
 
-        from itertools import product
         from struct import unpack
         import array
 
@@ -586,7 +561,8 @@ class TiledObjectGroup(TiledElement, list):
                 " opacity object properties").split()
 
     def __init__(self, parent, node):
-        TiledElement.__init__(self)
+        super(TiledObjectGroup, self).__init__(self)
+
         self.parent = parent
 
         # defaults from the specification

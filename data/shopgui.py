@@ -524,8 +524,7 @@ class Gui(object):
         for item in self.player_inventory:
             if item in self.sellable_items:
                 return True
-        else:
-            return False
+        return False
 
     def sell_items(self, keys):
         """Have player select items to sell"""
