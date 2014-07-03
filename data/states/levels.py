@@ -41,7 +41,7 @@ class LevelState(tools.State):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
 
-        self.viewport = self.make_viewport(self.map_image)
+        self.viewport = make_viewport(self.map_image)
         self.level_surface = self.make_level_surface(self.map_image)
         self.level_rect = self.level_surface.get_rect()
         self.portals = self.make_level_portals()
@@ -86,13 +86,6 @@ class LevelState(tools.State):
             return setup.MUSIC[music], volume
         else:
             return None, None
-
-    def make_viewport(self, map_image):
-        """
-        Create the viewport to view the level through.
-        """
-        map_rect = map_image.get_rect()
-        return setup.SCREEN.get_rect(bottom=map_rect.bottom)
 
     def make_level_surface(self, map_image):
         """
@@ -522,4 +515,15 @@ class LevelState(tools.State):
 
         surface.blit(self.level_surface, (0, 0), self.viewport)
         self.dialogue_handler.draw(surface)
+
+def make_viewport(map_image):
+    """
+    Create the viewport to view the level through.
+
+    Was a method of LevelState; uses no 'self' and is reused on main_menu
+
+    """
+
+    map_rect = map_image.get_rect()
+    return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
 

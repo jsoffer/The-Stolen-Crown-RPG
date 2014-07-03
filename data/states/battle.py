@@ -35,7 +35,7 @@ class Battle(tools.State):
             self.make_enemies())
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
-        self.background = self.make_background()
+        self.background = make_background()
         self.info_box = battlegui.InfoBox(game_data,
                                           self.experience_points,
                                           self.new_gold)
@@ -74,18 +74,8 @@ class Battle(tools.State):
 
         return action_dict
 
-    def make_enemy_level_dict(self):
-        new_dict = {c.OVERWORLD: 1,
-                    c.DUNGEON: 2,
-                    c.DUNGEON2: 2,
-                    c.DUNGEON3: 2,
-                    c.DUNGEON4: 2,
-                    c.DUNGEON5: 4}
-
-        return new_dict
-
     def set_enemy_level(self, enemy_list):
-        dungeon_level_dict = self.make_enemy_level_dict()
+        dungeon_level_dict = make_enemy_level_dict()
 
         for enemy in enemy_list:
             enemy.level = dungeon_level_dict[self.previous]
@@ -114,19 +104,6 @@ class Battle(tools.State):
             gold += (random.randint(1, max_gold))
 
         return gold
-
-    def make_background(self):
-        """
-        Make the blue/black background.
-        """
-        background = pg.sprite.Sprite()
-        surface = pg.Surface(c.SCREEN_SIZE).convert()
-        surface.fill(c.BLACK_BLUE)
-        background.image = surface
-        background.rect = background.image.get_rect()
-        background_group = pg.sprite.Group(background)
-
-        return background_group
 
     def make_enemies(self):
         """
@@ -161,7 +138,7 @@ class Battle(tools.State):
             enemy.rect.topleft = pos_list[i]
             enemy.image = pg.transform.scale2x(enemy.image)
             enemy.index = i
-            enemy.level = self.make_enemy_level_dict()[self.previous]
+            enemy.level = make_enemy_level_dict()[self.previous]
             if enemy.name == 'evilwizard':
                 enemy.health = 100
             else:
@@ -790,4 +767,38 @@ class Battle(tools.State):
                 if self.action_selected:
                     self.enter_select_action_state()
                     self.action_selected = False
+
+def make_enemy_level_dict():
+    """
+    Hard coded map filler
+
+    Was method of Battle; uses no 'self'
+
+    """
+
+    new_dict = {c.OVERWORLD: 1,
+                c.DUNGEON: 2,
+                c.DUNGEON2: 2,
+                c.DUNGEON3: 2,
+                c.DUNGEON4: 2,
+                c.DUNGEON5: 4}
+
+    return new_dict
+
+def make_background():
+    """
+    Make the blue/black background.
+
+    Was method of Battle; uses no 'self'
+
+    """
+
+    background = pg.sprite.Sprite()
+    surface = pg.Surface(c.SCREEN_SIZE).convert()
+    surface.fill(c.BLACK_BLUE)
+    background.image = surface
+    background.rect = background.image.get_rect()
+    background_group = pg.sprite.Group(background)
+
+    return background_group
 

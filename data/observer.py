@@ -4,7 +4,6 @@ Module for all game observers.
 import pygame as pg
 from . import constants as c
 from . import setup
-from . import setup
 
 class Battle(object):
     """
@@ -70,14 +69,7 @@ class MusicChange(object):
     Observer for special music events.
     """
     def __init__(self):
-        self.event_dict = self.make_event_dict()
-
-    def make_event_dict(self):
-        """
-        Make a dictionary with events keyed to new music.
-        """
-        new_dict = {c.BATTLE_WON: 'enchanted_festival'}
-        return new_dict
+        self.event_dict = {c.BATTLE_WON: 'enchanted_festival'}
 
     def on_notify(self, event):
         """

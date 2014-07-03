@@ -5,6 +5,8 @@ from .. import observer
 from .. import constants as c
 from . import death
 
+from .levels import make_viewport
+
 class Menu(tools.State):
     def __init__(self):
         super(Menu, self).__init__()
@@ -14,13 +16,13 @@ class Menu(tools.State):
         self.next = c.INSTRUCTIONS
         self.tmx_map = setup.TMX['title']
         self.name = c.MAIN_MENU
-        self.startup(0, 0)
+        self.startup()
 
-    def startup(self, *_):
+    def startup(self, unused_game_data=None):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
-        self.viewport = self.make_viewport(self.map_image)
+        self.viewport = make_viewport(self.map_image)
         self.level_surface = pg.Surface(self.map_rect.size)
         self.title_box = setup.GFX['title_box']
         self.title_rect = self.title_box.get_rect()
@@ -32,13 +34,6 @@ class Menu(tools.State):
         self.transition_surface = pg.Surface(setup.SCREEN_RECT.size)
         self.transition_surface.fill(c.BLACK_BLUE)
         self.transition_surface.set_alpha(self.alpha)
-
-    def make_viewport(self, map_image):
-        """
-        Create the viewport to view the level through.
-        """
-        map_rect = map_image.get_rect()
-        return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
 
     def make_state_dict(self):
         """
@@ -105,18 +100,18 @@ class Instructions(tools.State):
         self.music = None
         self.music_title = None
 
-    def startup(self, *_):
+    def startup(self, unused_game_data=None):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
-        self.viewport = self.make_viewport(self.map_image)
+        self.viewport = make_viewport(self.map_image)
         self.level_surface = pg.Surface(self.map_rect.size)
         self.title_box = self.set_image()
         self.title_rect = self.title_box.get_rect()
         self.title_rect.midbottom = self.viewport.midbottom
         self.title_rect.y -= 30
         self.game_data = tools.create_game_data_dict()
-        self.next = self.set_next_scene()
+        self.next = set_next_scene()
         self.state_dict = self.make_state_dict()
         self.name = c.MAIN_MENU
         self.state = c.TRANSITION_IN
@@ -133,30 +128,11 @@ class Instructions(tools.State):
         for listener in self.observers:
             listener.on_notify(event)
 
-    def set_next_scene(self):
-        """
-        Check if there is a saved game. If not, start
-        game at begining.  Otherwise go to load game scene.
-        """
-        if not os.path.isfile("save.p"):
-            next_scene = c.OVERWORLD
-        else:
-            next_scene = c.LOADGAME
-
-        return next_scene
-
     def set_image(self):
         """
         Set image for message box.
         """
         return setup.GFX['instructions_box']
-
-    def make_viewport(self, map_image):
-        """
-        Create the viewport to view the level through.
-        """
-        map_rect = map_image.get_rect()
-        return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
 
     def make_state_dict(self):
         """
@@ -214,6 +190,21 @@ class Instructions(tools.State):
 
     def normal_update(self, keys):
         pass
+
+def set_next_scene():
+    """
+    Check if there is a saved game. If not, start
+    game at begining.  Otherwise go to load game scene.
+
+    Was a method of Instructions; uses no 'self'
+
+    """
+    if not os.path.isfile("save.p"):
+        next_scene = c.OVERWORLD
+    else:
+        next_scene = c.LOADGAME
+
+    return next_scene
 
 
 class LoadGame(Instructions):

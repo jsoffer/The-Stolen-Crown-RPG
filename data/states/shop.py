@@ -30,7 +30,7 @@ class Shop(tools.State):
         self.get_image = tools.get_image
         self.dialogue = self.make_dialogue()
         self.accept_dialogue = self.make_accept_dialogue()
-        self.accept_sale_dialogue = self.make_accept_sale_dialogue()
+        self.accept_sale_dialogue = ['Item sold.']
         self.items = self.make_purchasable_items()
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)
@@ -58,12 +58,6 @@ class Shop(tools.State):
         Make the dialogue for when the player buys an item.
         """
         return ['Item purchased.']
-
-    def make_accept_sale_dialogue(self):
-        """
-        Make the dialogue for when the player sells an item.
-        """
-        return ['Item sold.']
 
     def make_purchasable_items(self):
         """
