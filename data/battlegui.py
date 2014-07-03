@@ -193,9 +193,10 @@ class SelectBox(object):
     """
     Box to select whether to attack, use item, use magic or run away.
     """
+
     def __init__(self):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.slots = self.make_slots()
+        self.slots = make_slots()
         self.image = self.make_image()
         self.rect = self.image.get_rect(bottom=608,
                                         right=800)
@@ -218,18 +219,22 @@ class SelectBox(object):
 
         return surface
 
-    def make_slots(self):
-        """
-        Make the slots that hold the text selections, and locations.
-        """
-        slot_dict = {}
-        selections = ['Attack', 'Items', 'Magic', 'Run']
+def make_slots():
+    """
+    Make the slots that hold the text selections, and locations.
 
-        for i, text in enumerate(selections):
-            slot_dict[text] = {'x': 150,
-                               'y': (i*34)+10}
+    Was a method of SelectBox; uses no 'self'
 
-        return slot_dict
+    """
+
+    slot_dict = {}
+    selections = ['Attack', 'Items', 'Magic', 'Run']
+
+    for i, text in enumerate(selections):
+        slot_dict[text] = {'x': 150,
+                           'y': (i*34)+10}
+
+    return slot_dict
 
 
 class SelectArrow(object):
@@ -240,7 +245,7 @@ class SelectArrow(object):
         self.rect = self.image.get_rect()
         self.state = 'select action'
         self.state_dict = self.make_state_dict()
-        self.pos_list = self.make_select_action_pos_list()
+        self.pos_list = make_select_action_pos_list()
         self.index = 0
         self.rect.topleft = self.pos_list[self.index]
         self.allow_input = False
@@ -268,25 +273,12 @@ class SelectArrow(object):
         """
         Select what action the player should take.
         """
-        self.pos_list = self.make_select_action_pos_list()
+        self.pos_list = make_select_action_pos_list()
         if self.index > (len(self.pos_list) - 1):
             print(self.pos_list, self.index)
         self.rect.topleft = self.pos_list[self.index]
 
         self.check_input(keys)
-
-    def make_select_action_pos_list(self):
-        """
-        Make the list of positions the arrow can be in.
-        """
-        pos_list = []
-
-        for row in range(4):
-            pos_x = 590
-            pos_y = (row * 34) + 472
-            pos_list.append((pos_x, pos_y))
-
-        return pos_list
 
     def select_enemy(self, keys):
         """
@@ -418,6 +410,22 @@ class SelectArrow(object):
         enemy_pos = list(enemy.rect.topleft)
 
         self.enemy_pos_list = [pos for pos in enemy_list if pos != enemy_pos]
+
+def make_select_action_pos_list():
+    """
+    Make the list of positions the arrow can be in.
+
+    Was a method of SelectArrow; uses no 'self'
+
+    """
+    pos_list = []
+
+    for row in range(4):
+        pos_x = 590
+        pos_y = (row * 34) + 472
+        pos_list.append((pos_x, pos_y))
+
+    return pos_list
 
 
 class PlayerHealth(object):

@@ -104,7 +104,8 @@ class TextHandler(object):
 
         if self.textbox:
             if self.talking_sprite.name == 'treasurechest':
-                self.open_chest(self.talking_sprite)
+                # open chest (that's exactly what self.open_chest() did)
+                self.talking_sprite.index = 1
 
             self.textbox.update(keys)
 
@@ -267,8 +268,3 @@ class TextHandler(object):
         """Draws textbox to surface"""
         if self.textbox:
             surface.blit(self.textbox.image, self.textbox.rect)
-
-    def open_chest(self, sprite):
-        if sprite.name == 'treasurechest':
-            sprite.index = 1
-

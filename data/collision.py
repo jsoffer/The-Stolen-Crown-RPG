@@ -6,31 +6,17 @@ class CollisionHandler(object):
     def __init__(self, player, blockers, sprites, portals, level):
         self.player = player
         self.static_blockers = blockers
-        self.blockers = self.make_blocker_list(blockers, sprites)
+        self.blockers = make_blocker_list(blockers, sprites)
         self.sprites = sprites
         self.portals = portals
         self.level = level
-
-    def make_blocker_list(self, blockers, sprites):
-        """
-        Return a combined list of sprite blockers and object blockers.
-        """
-        blocker_list = []
-
-        for blocker in blockers:
-            blocker_list.append(blocker)
-
-        for sprite in sprites:
-            blocker_list.extend(sprite.blockers)
-
-        return blocker_list
 
     def update(self, unused_keys):
         """
         Check for collisions between game objects.
         """
-        self.blockers = self.make_blocker_list(self.static_blockers,
-                                               self.sprites)
+        self.blockers = make_blocker_list(self.static_blockers,
+                                          self.sprites)
         self.player.rect.move_ip(self.player.x_vel, self.player.y_vel)
         self.check_for_blockers()
 
@@ -71,7 +57,7 @@ class CollisionHandler(object):
                 player_collided = True
 
         if player_collided:
-            self.reset_after_collision(self.player)
+            reset_after_collision(self.player)
             self.player.begin_resting()
 
         for sprite in self.sprites:
@@ -88,17 +74,9 @@ class CollisionHandler(object):
                 if sprite.rect.colliderect(blocker):
                     sprite_collided_list.append(sprite)
 
-
         for sprite in sprite_collided_list:
-            self.reset_after_collision(sprite)
+            reset_after_collision(sprite)
             sprite.begin_auto_resting()
-
-    def reset_after_collision(self, sprite):
-        """Put player back to original position"""
-        if sprite.x_vel != 0:
-            sprite.rect.x -= sprite.x_vel
-        else:
-            sprite.rect.y -= sprite.y_vel
 
     def check_for_battle(self):
         """
@@ -109,5 +87,33 @@ class CollisionHandler(object):
             if self.level.game_data['battle counter'] <= 0:
                 self.level.switch_to_battle = True
 
+def make_blocker_list(blockers, sprites):
+    """
+    Return a combined list of sprite blockers and object blockers.
 
+    Was method of CollisionHandler; uses no 'self'
+
+    """
+
+    blocker_list = []
+
+    for blocker in blockers:
+        blocker_list.append(blocker)
+
+    for sprite in sprites:
+        blocker_list.extend(sprite.blockers)
+
+    return blocker_list
+
+def reset_after_collision(sprite):
+    """
+    Put player back to original position
+
+    Was method of CollisionHandler; uses no 'self'
+
+    """
+    if sprite.x_vel != 0:
+        sprite.rect.x -= sprite.x_vel
+    else:
+        sprite.rect.y -= sprite.y_vel
 

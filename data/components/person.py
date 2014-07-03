@@ -28,7 +28,14 @@ class Person(pg.sprite.Sprite):
         self.rect = self.image.get_rect(left=pos_x, top=pos_y)
         self.origin_pos = self.rect.topleft
         self.state_dict = self.create_state_dict()
-        self.vector_dict = self.create_vector_dict()
+
+        # create_vector_dict was a no-self-use method, but couldn't
+        # be separated because classes inherited from Person reimplemented
+        # it, and the reimplementation was called at __init__. Now it fills
+        # vector_dict internally. Not the best scheme.
+        self.vector_dict = None
+        self.create_vector_dict()
+
         self.x_vel = 0
         self.y_vel = 0
         self.state = state
@@ -115,12 +122,10 @@ class Person(pg.sprite.Sprite):
         Return a dictionary of x and y velocities set to
         direction keys.
         """
-        vector_dict = {'up': (0, -1),
-                       'down': (0, 1),
-                       'left': (-1, 0),
-                       'right': (1, 0)}
-
-        return vector_dict
+        self.vector_dict = {'up': (0, -1),
+                            'down': (0, 1),
+                            'left': (-1, 0),
+                            'right': (1, 0)}
 
     def update(self, unused_keys=None):
         """
@@ -499,12 +504,10 @@ class Player(Person):
     def create_vector_dict(self):
         """Return a dictionary of x and y velocities set to
         direction keys."""
-        vector_dict = {'up': (0, -2),
-                       'down': (0, 2),
-                       'left': (-2, 0),
-                       'right': (2, 0)}
-
-        return vector_dict
+        self.vector_dict = {'up': (0, -2),
+                            'down': (0, 2),
+                            'left': (-2, 0),
+                            'right': (2, 0)}
 
     def update(self, keys=None):
         """Updates player behavior"""

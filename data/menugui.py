@@ -36,57 +36,48 @@ class SmallArrow(pg.sprite.Sprite):
     def navigate_select_menu(self, pos_index):
         """
         Nav the select menu.
+
+        Positions are hardcoded.
+
         """
-        self.pos_list = self.make_select_menu_pos_list()
+
+        self.pos_list = []
+        for row in range(3):
+            pos = (35, 443 + (row * 45))
+            self.pos_list.append(pos)
+
         self.rect.topleft = self.pos_list[pos_index]
 
     def navigate_item_submenu(self, pos_index):
-        """Nav the item submenu"""
-        self.pos_list = self.make_item_menu_pos_list()
+        """
+        Nav the item submenu
+
+        Positions are hardcoded.
+
+        """
+        self.pos_list = [(300, 173),
+                         (300, 223),
+                         (300, 323),
+                         (300, 373),
+                         (300, 478),
+                         (300, 528),
+                         (535, 478),
+                         (535, 528)]
+
         self.rect.topleft = self.pos_list[pos_index]
 
     def navigate_magic_submenu(self, pos_index):
         """
         Nav the magic submenu.
+
+        Positions are hardcoded.
+
         """
-        self.pos_list = self.make_magic_menu_pos_list()
+
+        self.pos_list = [(310, 119),
+                         (310, 169)]
+
         self.rect.topleft = self.pos_list[pos_index]
-
-    def make_magic_menu_pos_list(self):
-        """
-        Make the list of possible arrow positions for magic submenu.
-        """
-        pos_list = [(310, 119),
-                    (310, 169)]
-
-        return pos_list
-
-    def make_select_menu_pos_list(self):
-        """
-        Make the list of possible arrow positions.
-        """
-        pos_list = []
-
-        for i in range(3):
-            pos = (35, 443 + (i * 45))
-            pos_list.append(pos)
-
-        return pos_list
-
-    def make_item_menu_pos_list(self):
-        """
-        Make the list of arrow positions in the item submenu.
-        """
-        pos_list = [(300, 173),
-                    (300, 223),
-                    (300, 323),
-                    (300, 373),
-                    (300, 478),
-                    (300, 528),
-                    (535, 478),
-                    (535, 528)]
-
-        return pos_list
 
     def update(self, pos_index):
         """

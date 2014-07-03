@@ -184,7 +184,13 @@ class Battle(tools.State):
         """
         Make a dictionary of states with arrow coordinates as keys.
         """
-        pos_list = self.arrow.make_select_action_pos_list()
+
+        # can't just get '.pos_list' from the SelectArrow object because
+        # it jumps between menu and enemies; maybe can be synced, maybe
+        # should be rewritten with different pos_lists for each context
+        from ..battlegui import make_select_action_pos_list
+
+        pos_list = make_select_action_pos_list()
         state_list = [
             self.enter_select_enemy_state, self.enter_select_item_state,
             self.enter_select_magic_state, self.try_to_run_away]
