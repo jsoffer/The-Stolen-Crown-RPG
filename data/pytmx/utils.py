@@ -33,9 +33,15 @@ def decode_gid(raw_gid):
     # as of 0.8.0 bit 30 determines if GID is rotated
 
     flags = 0
-    if raw_gid & GID_TRANS_FLIPX == GID_TRANS_FLIPX: flags += TRANS_FLIPX
-    if raw_gid & GID_TRANS_FLIPY == GID_TRANS_FLIPY: flags += TRANS_FLIPY
-    if raw_gid & GID_TRANS_ROT == GID_TRANS_ROT: flags += TRANS_ROT
+    if raw_gid & GID_TRANS_FLIPX == GID_TRANS_FLIPX:
+        flags += TRANS_FLIPX
+
+    if raw_gid & GID_TRANS_FLIPY == GID_TRANS_FLIPY:
+        flags += TRANS_FLIPY
+
+    if raw_gid & GID_TRANS_ROT == GID_TRANS_ROT:
+        flags += TRANS_ROT
+
     gid = raw_gid & ~(GID_TRANS_FLIPX | GID_TRANS_FLIPY | GID_TRANS_ROT)
 
     return gid, flags
@@ -56,10 +62,17 @@ def handle_bool(text):
 
     text = str(text).lower()
 
-    if text == "true": return True
-    if text == "yes": return True
-    if text == "false": return False
-    if text == "no": return False
+    if text == "true":
+        return True
+
+    if text == "yes":
+        return True
+
+    if text == "false":
+        return False
+
+    if text == "no":
+        return False
 
     raise ValueError("handle_bool failed to convert %s to bool" % (text))
 
