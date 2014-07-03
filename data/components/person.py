@@ -13,7 +13,7 @@ class Person(pg.sprite.Sprite):
 
     """
 
-    def __init__(self, sheet_key, x, y,
+    def __init__(self, sheet_key, pos_x, pos_y,
                  direction='down', state='resting', index=0):
         super(Person, self).__init__()
         self.alpha = 255
@@ -25,7 +25,7 @@ class Person(pg.sprite.Sprite):
         self.direction = direction
         self.image_list = self.animation_dict[self.direction]
         self.image = self.image_list[self.index]
-        self.rect = self.image.get_rect(left=x, top=y)
+        self.rect = self.image.get_rect(left=pos_x, top=pos_y)
         self.origin_pos = self.rect.topleft
         self.state_dict = self.create_state_dict()
         self.vector_dict = self.create_vector_dict()
@@ -189,18 +189,19 @@ class Person(pg.sprite.Sprite):
         Make a list of rects that surround the initial location
         of a sprite to limit his/her wandering.
         """
-        x = int(self.location[0])
-        y = int(self.location[1])
+
+        tile_x = int(self.location[0])
+        tile_y = int(self.location[1])
         box_list = []
         box_rects = []
 
-        for i in range(x-3, x+4):
-            box_list.append([i, y-3])
-            box_list.append([i, y+3])
+        for i in range(tile_x - 3, tile_x + 4):
+            box_list.append([i, tile_y - 3])
+            box_list.append([i, tile_y + 3])
 
-        for i in range(y-2, y+3):
-            box_list.append([x-3, i])
-            box_list.append([x+3, i])
+        for i in range(tile_y - 2, tile_y + 3):
+            box_list.append([tile_x - 3, i])
+            box_list.append([tile_x + 3, i])
 
         for box in box_list:
             left = box[0]*32
@@ -316,16 +317,16 @@ class Person(pg.sprite.Sprite):
         """
         Player does an attack animation.
         """
-        FAST_FORWARD = -5
-        FAST_BACK = 5
+        fast_forward = -5
+        fast_back = 5
 
         self.rect.x += self.x_vel
 
-        if self.x_vel == FAST_FORWARD:
+        if self.x_vel == fast_forward:
             self.image = self.spritesheet_dict['facing left 1']
             self.image = pg.transform.scale2x(self.image)
             if self.rect.x <= self.origin_pos[0] - 110:
-                self.x_vel = FAST_BACK
+                self.x_vel = fast_back
                 self.notify(c.ENEMY_DAMAGED)
         else:
             if self.rect.x >= self.origin_pos[0]:
@@ -349,25 +350,25 @@ class Person(pg.sprite.Sprite):
         """
         Enemy does an attack animation.
         """
-        FAST_LEFT = -5
-        FAST_RIGHT = 5
-        STARTX = self.origin_pos[0]
+        fast_left = -5
+        fast_right = 5
+        start_x = self.origin_pos[0]
 
         self.rect.x += self.x_vel
 
         if self.move_counter == 3:
             self.x_vel = 0
             self.state = 'battle resting'
-            self.rect.x = STARTX
+            self.rect.x = start_x
             self.notify(c.PLAYER_DAMAGED)
 
-        elif self.x_vel == FAST_LEFT:
-            if self.rect.x <= (STARTX - 15):
-                self.x_vel = FAST_RIGHT
-        elif self.x_vel == FAST_RIGHT:
-            if self.rect.x >= (STARTX + 15):
+        elif self.x_vel == fast_left:
+            if self.rect.x <= (start_x - 15):
+                self.x_vel = fast_right
+        elif self.x_vel == fast_right:
+            if self.rect.x >= (start_x + 15):
                 self.move_counter += 1
-                self.x_vel = FAST_LEFT
+                self.x_vel = fast_left
 
     def auto_moving(self):
         """
@@ -400,8 +401,8 @@ class Person(pg.sprite.Sprite):
         """
         Run away from battle state.
         """
-        X_VEL = 5
-        self.rect.x += X_VEL
+        x_vel = 5
+        self.rect.x += x_vel
         self.direction = 'right'
         self.small_image_list = self.animation_dict[self.direction]
         self.image_list = []
@@ -424,13 +425,13 @@ class Person(pg.sprite.Sprite):
         """
         Knock back when hit.
         """
-        FORWARD_VEL = -2
+        forward_vel = -2
 
         self.rect.x += self.x_vel
 
         if self.name == 'player':
             if self.rect.x >= (self.origin_pos[0] + 10):
-                self.x_vel = FORWARD_VEL
+                self.x_vel = forward_vel
             elif self.rect.x <= self.origin_pos[0]:
                 self.rect.x = self.origin_pos[0]
                 self.state = 'battle resting'
@@ -606,13 +607,13 @@ class Chest(Person):
     """
     Treasure chest that contains items to collect.
     """
-    def __init__(self, x, y, id):
+    def __init__(self, x, y, identifier):
         super(Chest, self).__init__('treasurechest', x, y)
         self.spritesheet_dict = self.make_image_dict()
         self.image_list = self.make_image_list()
         self.image = self.image_list[self.index]
         self.rect = self.image.get_rect(x=x, y=y)
-        self.id = id
+        self.identifier = identifier
 
     def make_image_dict(self):
         """

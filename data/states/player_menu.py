@@ -33,10 +33,14 @@ class PlayerMenu(object):
 
         return background
 
-    def make_sprite(self, key, coordx, coordy, x=40, y=25):
+    def make_sprite(self, key, coordx, coordy, pos_x=40, pos_y=25):
         """
         Get the image for the player.
+
+        duplicated at shop
+
         """
+
         spritesheet = setup.GFX[key]
         surface = pg.Surface((32, 32))
         surface.set_colorkey(c.BLACK)
@@ -45,7 +49,7 @@ class PlayerMenu(object):
         surface.blit(image, rect)
 
         surface = pg.transform.scale(surface, (192, 192))
-        rect = surface.get_rect(left=x, top=y)
+        rect = surface.get_rect(left=pos_x, top=pos_y)
         sprite = pg.sprite.Sprite()
         sprite.image = surface
         sprite.rect = rect

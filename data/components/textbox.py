@@ -252,7 +252,7 @@ class TextHandler(object):
 
     def update_game_items_info(self, sprite):
         if sprite.name == 'treasurechest':
-            self.game_data['treasure{}'.format(sprite.id)] = False
+            self.game_data['treasure{}'.format(sprite.identifier)] = False
         elif sprite.name == 'oldmanbrother':
             self.game_data['brother elixir'] = False
 

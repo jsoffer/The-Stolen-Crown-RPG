@@ -66,11 +66,11 @@ class Battle(tools._State):
         Make the dict to execute player actions.
         """
         action_dict = {
-            c.PLAYER_ATTACK: self.enter_player_attack_state,
+            c.PLAYER_ATTACK: self.player_attack,
             c.CURE_SPELL: self.cast_cure,
             c.FIRE_SPELL: self.cast_fire_blast,
-            c.DRINK_HEALING_POTION: self.enter_drink_healing_potion_state,
-            c.DRINK_ETHER_POTION: self.enter_drink_ether_potion_state}
+            c.DRINK_HEALING_POTION: self.drink_healing_potion,
+            c.DRINK_ETHER_POTION: self.drink_ether_potion}
 
         return action_dict
 
@@ -98,6 +98,8 @@ class Battle(tools._State):
         experience_total = sum([random.randint(5, 10)
                                 for enemy
                                 in self.enemy_list])
+
+        #experience_total = 60
 
         return experience_total
 
@@ -134,9 +136,9 @@ class Battle(tools._State):
 
         for column in range(3):
             for row in range(3):
-                x = (column * 100) + 100
-                y = (row * 100) + 100
-                pos_list.append([x, y])
+                pos_x = (column * 100) + 100
+                pos_y = (row * 100) + 100
+                pos_list.append([pos_x, pos_y])
 
         enemy_group = pg.sprite.Group()
 
@@ -151,7 +153,7 @@ class Battle(tools._State):
                                                  'down', 'battle resting'))
                 self.game_data['start of game'] = False
             else:
-                for enemy in range(random.randint(4, 7)):
+                for enemy in range(random.randint(1, 2)):
                     enemy_group.add(person.Enemy('devil', 0, 0,
                                                  'down', 'battle resting'))
 
@@ -336,7 +338,7 @@ class Battle(tools._State):
         elif self.state == c.LEVEL_UP:
             if self.action_timer.done(2200):
                 if self.game_data['player stats']['Level'] == 3:
-                    self.enter_two_actions_per_turn_state()
+                    self.msg_two_actions()
                 else:
                     self.end_battle()
 
@@ -517,14 +519,14 @@ class Battle(tools._State):
         """
         self.notify(c.FIRE)
         self.state = self.info_box.state = c.FIRE_SPELL
-        POWER = self.inventory['Fire Blast']['power']
-        MAGIC_POINTS = self.inventory['Fire Blast']['magic points']
-        self.game_data['player stats']['magic']['current'] -= MAGIC_POINTS
+        power = self.inventory['Fire Blast']['power']
+        magic_points = self.inventory['Fire Blast']['magic points']
+        self.game_data['player stats']['magic']['current'] -= magic_points
         for enemy in self.enemy_list:
-            DAMAGE = random.randint(POWER//2, POWER)
+            damage = random.randint(power//2, power)
             self.damage_points.add(
-                attackitems.HealthPoints(DAMAGE, enemy.rect.topright))
-            enemy.health -= DAMAGE
+                attackitems.HealthPoints(damage, enemy.rect.topright))
+            enemy.health -= damage
             posx = enemy.rect.x - 32
             posy = enemy.rect.y - 64
             fire_sprite = attack.Fire(posx, posy)
@@ -546,16 +548,16 @@ class Battle(tools._State):
         Cast cure spell on player.
         """
         self.state = c.CURE_SPELL
-        HEAL_AMOUNT = self.inventory['Cure']['power']
-        MAGIC_POINTS = self.inventory['Cure']['magic points']
+        heal_amount = self.inventory['Cure']['power']
+        magic_points = self.inventory['Cure']['magic points']
         self.player.healing = True
         self.action_timer.reset()
         self.arrow.state = 'invisible'
         self.enemy_index = 0
         self.damage_points.add(
             attackitems.HealthPoints(
-                HEAL_AMOUNT, self.player.rect.topright, False))
-        self.player_healed(HEAL_AMOUNT, MAGIC_POINTS)
+                heal_amount, self.player.rect.topright, False))
+        self.player_healed(heal_amount, magic_points)
         self.info_box.state = c.DRINK_HEALING_POTION
         self.notify(c.POWERUP)
 
@@ -597,7 +599,7 @@ class Battle(tools._State):
         enemy = self.enemy_list[self.enemy_index]
         enemy.enter_enemy_attack_state()
 
-    def enter_player_attack_state(self):
+    def player_attack(self):
         """
         Transition battle into the Player attack state.
         """
@@ -628,7 +630,7 @@ class Battle(tools._State):
         return enemy_to_attack
 
 
-    def enter_drink_healing_potion_state(self):
+    def drink_healing_potion(self):
         """
         Transition battle into the Drink Healing Potion state.
         """
@@ -644,7 +646,7 @@ class Battle(tools._State):
         self.player_healed(30)
         self.notify(c.POWERUP)
 
-    def enter_drink_ether_potion_state(self):
+    def drink_ether_potion(self):
         """
         Transition battle into the Drink Ether Potion state.
         """
@@ -759,7 +761,7 @@ class Battle(tools._State):
         self.info_box.reset_level_up_message()
         self.action_timer.reset()
 
-    def enter_two_actions_per_turn_state(self):
+    def msg_two_actions(self):
         self.state = self.info_box.state = c.TWO_ACTIONS
         self.action_timer.reset()
 

@@ -15,8 +15,8 @@ class Gui(object):
         self.level = level
         self.game_data = self.level.game_data
         self.level.game_data['last direction'] = 'down'
-        self.SFX_observer = observer.SoundEffects()
-        self.observers = [self.SFX_observer]
+        self.sfx_observer = observer.SoundEffects()
+        self.observers = [self.sfx_observer]
         self.sellable_items = level.sell_items
         self.player_inventory = level.game_data['player inventory']
         self.name = level.name

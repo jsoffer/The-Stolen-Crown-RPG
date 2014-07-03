@@ -15,13 +15,12 @@ class Arrow(pg.sprite.Sprite):
     """
     Arrow to select restart or saved gamed.
     """
-    def __init__(self, x, y):
+    def __init__(self, pos_x, pos_y):
         super(Arrow, self).__init__()
         self.image = setup.GFX['smallarrow']
-        self.rect = self.image.get_rect(x=x,
-                                        y=y)
+        self.rect = self.image.get_rect(x=pos_x, y=pos_y)
         self.index = 0
-        self.pos_list = [y, y+34]
+        self.pos_list = [pos_y, pos_y+34]
         self.allow_input = False
         self.observers = [observer.SoundEffects()]
 

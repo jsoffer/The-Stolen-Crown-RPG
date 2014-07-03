@@ -97,19 +97,19 @@ class InfoBox(object):
         """
         sprite_group = pg.sprite.Group()
 
-        for i, text in enumerate(text_list):
+        for index, text in enumerate(text_list):
             sprite = pg.sprite.Sprite()
 
-            if i == 0:
-                x = 195
-                y = 10
+            if index == 0:
+                pos_x = 195
+                pos_y = 10
                 surface = self.title_font.render(text, True, c.NEAR_BLACK)
-                rect = surface.get_rect(x=x, y=y)
+                rect = surface.get_rect(x=pos_x, y=pos_y)
             else:
-                x = 100
-                y = (i * 30) + 20
+                pos_x = 100
+                pos_y = (index * 30) + 20
                 surface = self.font.render(text, True, c.NEAR_BLACK)
-                rect = surface.get_rect(x=x, y=y)
+                rect = surface.get_rect(x=pos_x, y=pos_y)
             sprite.image = surface
             sprite.rect = rect
             sprite_group.add(sprite)
@@ -281,10 +281,10 @@ class SelectArrow(object):
         """
         pos_list = []
 
-        for i in range(4):
-            x = 590
-            y = (i * 34) + 472
-            pos_list.append((x, y))
+        for row in range(4):
+            pos_x = 590
+            pos_y = (row * 34) + 472
+            pos_list.append((pos_x, pos_y))
 
         return pos_list
 

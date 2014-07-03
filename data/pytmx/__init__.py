@@ -1,6 +1,4 @@
-#from data.pytmx.tmxloader import load_pygame, load_tmx
 from data.pytmx.tmxloader import load_pygame
-from data.pytmx.utils import buildDistributionRects
 from data.pytmx.pytmx import *
 
 __version__ = '2.16.4'

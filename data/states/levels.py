@@ -121,7 +121,7 @@ class LevelState(tools._State):
             player.rect.y = self.game_data['last location'][1] * 32
 
         else:
-            for object in self.renderer.tmx_data.getObjects():
+            for object in self.renderer.tmx_data.get_objects():
                 properties = object.__dict__
                 if properties['name'] == 'start point':
                     if last_state == properties['state']:
@@ -140,7 +140,7 @@ class LevelState(tools._State):
         """
         blockers = []
 
-        for object in self.renderer.tmx_data.getObjects():
+        for object in self.renderer.tmx_data.get_objects():
             properties = object.__dict__
             if properties['name'] == 'blocker':
                 left = properties['x'] * 2
@@ -156,7 +156,7 @@ class LevelState(tools._State):
         """
         sprites = pg.sprite.Group()
 
-        for object in self.renderer.tmx_data.getObjects():
+        for object in self.renderer.tmx_data.get_objects():
             properties = object.__dict__
             if properties['name'] == 'sprite':
                 if 'direction' in properties:
@@ -175,9 +175,9 @@ class LevelState(tools._State):
                     item = None
 
                 if 'id' in properties:
-                    id = properties['id']
+                    identifier = properties['id']
                 else:
-                    id = None
+                    identifier = None
 
                 if 'battle' in properties:
                     battle = properties['battle']
@@ -190,28 +190,36 @@ class LevelState(tools._State):
                     sprite_state = None
 
 
-                x = properties['x'] * 2
-                y = ((properties['y']) * 2) - 32
+                pos_x = properties['x'] * 2
+                pos_y = ((properties['y']) * 2) - 32
 
                 sprite_dict = {'oldman': person.Person('oldman',
-                                                       x, y, direction),
+                                                       pos_x, pos_y,
+                                                       direction),
                                'bluedressgirl': person.Person('femalevillager',
-                                                              x, y, direction,
+                                                              pos_x, pos_y,
+                                                              direction,
                                                               'resting', 1),
                                'femalewarrior': person.Person('femvillager2',
-                                                              x, y, direction,
+                                                              pos_x, pos_y,
+                                                              direction,
                                                               'autoresting'),
-                               'devil': person.Person('devil', x, y,
+                               'devil': person.Person('devil', pos_x, pos_y,
                                                       'down', 'autoresting'),
                                'oldmanbrother': person.Person('oldmanbrother',
-                                                              x, y, direction),
+                                                              pos_x, pos_y,
+                                                              direction),
                                'soldier': person.Person('soldier',
-                                                        x, y, direction,
+                                                        pos_x, pos_y,
+                                                        direction,
                                                         'resting', index),
-                               'king': person.Person('king', x, y, direction),
-                               'evilwizard': person.Person(
-                                   'evilwizard', x, y, direction),
-                               'treasurechest': person.Chest(x, y, id)}
+                               'king': person.Person('king', pos_x, pos_y,
+                                                     direction),
+                               'evilwizard': person.Person('evilwizard',
+                                                           pos_x, pos_y,
+                                                           direction),
+                               'treasurechest': person.Chest(pos_x, pos_y,
+                                                             identifier)}
 
                 sprite = sprite_dict[properties['type']]
                 if sprite_state:
@@ -305,7 +313,7 @@ class LevelState(tools._State):
 
     def check_for_opened_chest(self, sprite):
         if sprite.name == 'treasurechest':
-            if not self.game_data['treasure{}'.format(sprite.id)]:
+            if not self.game_data['treasure{}'.format(sprite.identifier)]:
                 sprite.dialogue = ['Empty.']
                 sprite.item = None
                 sprite.index = 1
@@ -329,7 +337,7 @@ class LevelState(tools._State):
         """
         portal_group = pg.sprite.Group()
 
-        for object in self.renderer.tmx_data.getObjects():
+        for object in self.renderer.tmx_data.get_objects():
             properties = object.__dict__
             if properties['name'] == 'portal':
                 posx = properties['x'] * 2

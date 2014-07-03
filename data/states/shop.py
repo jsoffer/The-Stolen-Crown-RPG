@@ -94,6 +94,9 @@ class Shop(tools._State):
     def make_sprite(self, key, coordx, coordy, left, center_y=304):
         """
         Get the image for the player.
+
+        duplicated at player_menu
+
         """
         spritesheet = setup.GFX[key]
         surface = pg.Surface((32, 32))

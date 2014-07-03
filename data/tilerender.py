@@ -29,12 +29,12 @@ class Renderer(object):
 
         tile_width = self.tmx_data.tilewidth
         tile_height = self.tmx_data.tileheight
-        get_tile = self.tmx_data.getTileImageByGid
+        get_tile = self.tmx_data.get_tile_image_by_gid
 
         if self.tmx_data.background_color:
             surface.fill(self.tmx_data.background_color)
 
-        for layer in self.tmx_data.visibleLayers:
+        for layer in self.tmx_data.visible_layers:
             if isinstance(layer, pytmx.TiledLayer):
                 for tile_x, tile_y, gid in layer:
                     tile = get_tile(gid)

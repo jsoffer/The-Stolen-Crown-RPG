@@ -135,10 +135,9 @@ class QuickStats(pg.sprite.Sprite):
             elif stat == 'GOLD':
                 text = "Gold: {}".format(self.inventory[stat]['quantity'])
             render = self.small_font.render(text, True, c.NEAR_BLACK)
-            x = 26
-            y = 45 + (i*30)
-            text_rect = render.get_rect(x=x,
-                                        centery=y)
+            pos_x = 26
+            center_y = 45 + (i*30)
+            text_rect = render.get_rect(x=pos_x, centery=center_y)
             surface.blit(render, text_rect)
 
         if self.game_data['crown quest']:
