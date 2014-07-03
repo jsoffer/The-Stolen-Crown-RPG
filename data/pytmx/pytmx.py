@@ -1,7 +1,7 @@
 from itertools import chain, product
 from xml.etree import ElementTree
 
-from .utils import decode_gid, parse_properties, read_points, TYPES
+from .utils import decode_gid, parse_properties, TYPES
 
 
 __all__ = [

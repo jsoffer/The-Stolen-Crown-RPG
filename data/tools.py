@@ -47,7 +47,7 @@ class Control(object):
         self.show_fps = False
         # all keys' pressed-or-not-pressed state
         self.keys = pg.key.get_pressed()
-        # (derived from) _State
+        # (derived from) State
         # .state is the .state_name'ish member of .state_dict
         self.state_dict = {}
         self.state_name = None
@@ -64,7 +64,7 @@ class Control(object):
         self.set_music()
 
     def update(self):
-        """ Update self.state... maybe better in _State itself?
+        """ Update self.state... maybe better in State itself?
 
         """
 
@@ -133,7 +133,7 @@ class Control(object):
                 pg.display.set_caption(with_fps)
 
 
-class _State(object):
+class State(object):
     """Base class for all game states"""
     def __init__(self):
         self.start_time = 0.0

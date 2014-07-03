@@ -131,7 +131,7 @@ class CreditEntry(object):
             surface.blit(credit_sprite.image, credit_sprite.rect)
 
 
-class Credits(tools._State):
+class Credits(tools.State):
     """
     End Credits Scene.
     """

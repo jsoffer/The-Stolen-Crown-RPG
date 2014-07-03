@@ -28,8 +28,9 @@ class Arrow(pg.sprite.Sprite):
         """
         Notify all observers of event.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def update(self, keys):
         """
@@ -50,8 +51,7 @@ class Arrow(pg.sprite.Sprite):
         if not keys[pg.K_DOWN] and not keys[pg.K_UP]:
             self.allow_input = True
 
-
-class DeathScene(tools._State):
+class DeathScene(tools.State):
     """
     Scene when the player has died.
     """
@@ -89,8 +89,8 @@ class DeathScene(tools._State):
         """
         Notify all observers of event.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def make_message_box(self):
         """

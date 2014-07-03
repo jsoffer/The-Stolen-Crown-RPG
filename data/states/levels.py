@@ -14,7 +14,7 @@ from . import player_menu
 from .. import tilerender
 from .. import setup
 
-class LevelState(tools._State):
+class LevelState(tools.State):
     def __init__(self, name, battles=False):
         super(LevelState, self).__init__()
         self.name = name

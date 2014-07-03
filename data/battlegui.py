@@ -251,8 +251,8 @@ class SelectArrow(object):
         """
         Notify all observers of events.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def make_state_dict(self):
         """Make state dictionary"""

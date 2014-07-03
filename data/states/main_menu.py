@@ -5,7 +5,7 @@ from .. import observer
 from .. import constants as c
 from . import death
 
-class Menu(tools._State):
+class Menu(tools.State):
     def __init__(self):
         super(Menu, self).__init__()
         self.music = setup.MUSIC['kings_theme']
@@ -95,7 +95,7 @@ class Menu(tools._State):
         pass
 
 
-class Instructions(tools._State):
+class Instructions(tools.State):
     """
     Instructions page.
     """
@@ -130,8 +130,8 @@ class Instructions(tools._State):
         """
         Notify all observers of event.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def set_next_scene(self):
         """

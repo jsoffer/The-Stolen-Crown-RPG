@@ -495,8 +495,8 @@ class MenuGui(object):
         """
         Notify all observers of event.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def select_item(self):
         """

@@ -383,8 +383,8 @@ class Person(pg.sprite.Sprite):
         """
         Notify all observers of events.
         """
-        for observer in self.observers:
-            observer.on_notify(event)
+        for listener in self.observers:
+            listener.on_notify(event)
 
     def calculate_hit(self, armor_list, inventory):
         """

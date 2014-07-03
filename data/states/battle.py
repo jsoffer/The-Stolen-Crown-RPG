@@ -7,7 +7,7 @@ from .. components import person, attack, attackitems
 from .. import constants as c
 from ..tools import Timer
 
-class Battle(tools._State):
+class Battle(tools.State):
     def __init__(self):
         super(Battle, self).__init__()
         self.name = 'battle'

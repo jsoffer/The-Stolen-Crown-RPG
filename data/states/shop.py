@@ -12,7 +12,7 @@ from .. import tools, setup, shopgui
 from .. import constants as c
 
 
-class Shop(tools._State):
+class Shop(tools.State):
     """Basic shop state"""
     def __init__(self):
         super(Shop, self).__init__()

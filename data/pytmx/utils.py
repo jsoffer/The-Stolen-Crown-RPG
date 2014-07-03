@@ -1,7 +1,4 @@
-from itertools import tee, islice, product
 from collections import defaultdict
-
-from pygame import Rect
 
 from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY,
                         TRANS_FLIPX, TRANS_FLIPY,
