@@ -121,8 +121,8 @@ class LevelState(tools.State):
             player.rect.y = self.game_data['last location'][1] * 32
 
         else:
-            for object in self.renderer.tmx_data.get_objects():
-                properties = object.__dict__
+            for obj in self.renderer.tmx_data.get_objects():
+                properties = obj.__dict__
                 if properties['name'] == 'start point':
                     if last_state == properties['state']:
                         posx = properties['x'] * 2
@@ -140,8 +140,8 @@ class LevelState(tools.State):
         """
         blockers = []
 
-        for object in self.renderer.tmx_data.get_objects():
-            properties = object.__dict__
+        for obj in self.renderer.tmx_data.get_objects():
+            properties = obj.__dict__
             if properties['name'] == 'blocker':
                 left = properties['x'] * 2
                 top = ((properties['y']) * 2) - 32
@@ -156,8 +156,8 @@ class LevelState(tools.State):
         """
         sprites = pg.sprite.Group()
 
-        for object in self.renderer.tmx_data.get_objects():
-            properties = object.__dict__
+        for obj in self.renderer.tmx_data.get_objects():
+            properties = obj.__dict__
             if properties['name'] == 'sprite':
                 if 'direction' in properties:
                     direction = properties['direction']
@@ -337,8 +337,8 @@ class LevelState(tools.State):
         """
         portal_group = pg.sprite.Group()
 
-        for object in self.renderer.tmx_data.get_objects():
-            properties = object.__dict__
+        for obj in self.renderer.tmx_data.get_objects():
+            properties = obj.__dict__
             if properties['name'] == 'portal':
                 posx = properties['x'] * 2
                 posy = (properties['y'] * 2) - 32

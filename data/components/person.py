@@ -506,7 +506,7 @@ class Player(Person):
 
         return vector_dict
 
-    def update(self, keys):
+    def update(self, keys=None):
         """Updates player behavior"""
         self.damage_animation()
         self.healing_animation()

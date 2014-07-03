@@ -404,7 +404,6 @@ class TiledLayer(TiledElement):
 
         # if data is None, then it was not decoded or decompressed, so
         # we assume here that it is going to be a bunch of tile elements
-        # TODO: this will probably raise an exception if there are no tiles
         if encoding == next_gid is None:
             def get_children(parent):
                 for child in parent.findall('tile'):

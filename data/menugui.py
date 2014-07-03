@@ -129,9 +129,9 @@ class QuickStats(pg.sprite.Sprite):
             rest_of_letters = stat[1:]
             if stat in magic_health_list:
                 current = self.stats[stat]['current']
-                max = self.stats[stat]['maximum']
+                maximum = self.stats[stat]['maximum']
                 text = "{}{}: {}/{}".format(
-                    first_letter, rest_of_letters, current, max)
+                    first_letter, rest_of_letters, current, maximum)
             elif stat == 'GOLD':
                 text = "Gold: {}".format(self.inventory[stat]['quantity'])
             render = self.small_font.render(text, True, c.NEAR_BLACK)
