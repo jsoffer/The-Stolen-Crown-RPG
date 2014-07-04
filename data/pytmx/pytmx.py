@@ -67,8 +67,6 @@ class TiledMap(TiledElement):
         self.images = []
 
         # defaults from the TMX specification
-        self.version = 0.0
-        self.orientation = None
         self.width = 0       # width of map in tiles
         self.height = 0      # height of map in tiles
         self.tilewidth = 0   # width of a tile in pixels
@@ -103,21 +101,6 @@ class TiledMap(TiledElement):
         """
 
         return chain(*(i for i in self.objectgroups))
-
-    def get_layer_data(self, layer):
-        """
-        Return the data for a layer.
-
-        Data is an array of arrays.
-
-        >>> pos = data[y][x]
-        """
-
-        try:
-            return self.tilelayers[layer].data
-        except IndexError:
-            msg = "Layer {0} does not exist."
-            raise ValueError(msg.format(layer))
 
     def get_tile_properties_by_gid(self, gid):
         try:
@@ -269,8 +252,6 @@ class TiledTileset(TiledElement):
         self.tileheight = 0
         self.spacing = 0
         self.margin = 0
-        self.tiles = {}
-        self.trans = None
         self.width = 0
         self.height = 0
 
@@ -324,7 +305,6 @@ class TiledTileset(TiledElement):
 
         image_node = node.find('image')
         self.source = image_node.get('source')
-        self.trans = image_node.get("trans", None)
 
 
 class TiledLayer(TiledElement):
@@ -441,7 +421,6 @@ class TiledObjectGroup(TiledElement, list):
 
         # defaults from the specification
         self.name = None
-        self.color = None
         self.opacity = 1
         self.visible = 1
         self.parse(node)
@@ -473,7 +452,6 @@ class TiledObject(TiledElement):
         self.type = None
         self.width = 0
         self.height = 0
-        self.rotation = 0
         self.gid = 0
         self.visible = 1
 
@@ -496,7 +474,6 @@ class TiledImageLayer(TiledElement):
         TiledElement.__init__(self)
         self.parent = parent
         self.source = None
-        self.trans = None
 
         # unify the structure of layers
         self.gid = 0
@@ -517,4 +494,3 @@ class TiledImageLayer(TiledElement):
 
         image_node = node.find('image')
         self.source = image_node.get('source')
-        self.trans = image_node.get('trans', None)

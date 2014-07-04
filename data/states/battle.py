@@ -24,7 +24,6 @@ class Battle(tools.State):
         self.select_action_state_dict = None
         self.enemy_index = None
         self.player_level = None
-        self.just_leveled_up = None
         self.sword = None
         self.observers = None
         self.arrow = None
@@ -44,7 +43,6 @@ class Battle(tools.State):
         self.volume = 0.4
 
         self.action_timer = Timer(1500)
-        self.restore_timer = Timer(600)
 
     def startup(self, game_data):
         """
@@ -85,7 +83,6 @@ class Battle(tools.State):
         self.player_level = self.game_data['player stats']['Level']
         self.enemies_to_attack = []
         self.action_selected = False
-        self.just_leveled_up = False
         self.transition_rect = setup.screen().get_rect()
         self.transition_alpha = 255
         self.temp_magic = self.game_data['player stats']['magic']['current']
@@ -102,12 +99,6 @@ class Battle(tools.State):
             c.DRINK_ETHER_POTION: self.drink_ether_potion}
 
         return action_dict
-
-    def set_enemy_level(self, enemy_list):
-        dungeon_level_dict = make_enemy_level_dict()
-
-        for enemy in enemy_list:
-            enemy.level = dungeon_level_dict[self.previous]
 
     def get_experience_points(self):
         """
@@ -373,7 +364,6 @@ class Battle(tools.State):
                     player_stats['experience to next level'] = (
                         new_experience - extra_experience)
                     self.enter_level_up_state()
-                    self.just_leveled_up = True
                 else:
                     self.end_battle()
 

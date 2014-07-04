@@ -20,7 +20,6 @@ class DialogueBox(object):
         self.item = item
         self.bground = setup.gfx()[image_key]
         self.rect = self.bground.get_rect(centerx=400)
-        self.arrow_timer = 0.0
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.dialogue_list = dialogue
         self.index = index
@@ -86,7 +85,6 @@ class TextHandler(object):
         self.textbox = None
         self.allow_input = False
         self.level = level
-        self.last_textbox_timer = 0.0
         self.game_data = level.game_data
         self.observers = [observer.SoundEffects()]
         self.notify = tools.notify_observers
@@ -235,7 +233,7 @@ class TextHandler(object):
                 self.game_data['has brother elixir'] = True
                 self.game_data['old man gift'] = 'Fire Blast'
                 dialogue = ['Hurry! There is precious little time.']
-                self.level.reset_dialogue = self.talking_sprite, dialogue
+                #self.level.reset_dialogue = self.talking_sprite, dialogue
 
     def add_new_item_to_inventory(self, item):
         inventory = self.game_data['player inventory']

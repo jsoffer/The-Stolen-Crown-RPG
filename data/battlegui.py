@@ -379,18 +379,6 @@ class SelectArrow(object):
         self.index = 0
         self.state = c.SELECT_MAGIC
 
-    def enter_select_action(self):
-        """
-        Assign values for the select action state.
-        """
-        pass
-
-    def enter_select_enemy(self):
-        """
-        Assign values for the select enemy state.
-        """
-        pass
-
     def update(self, keys):
         """
         Update arrow position.

@@ -156,10 +156,7 @@ class InfoBox(pg.sprite.Sprite):
         super(InfoBox, self).__init__()
         self.inventory = inventory
         self.player_stats = player_stats
-        self.attack_power = self.get_attack_power()
-        self.defense_power = self.get_defense_power()
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
-        self.big_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 24)
         self.title_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
@@ -173,11 +170,9 @@ class InfoBox(pg.sprite.Sprite):
         self.possible_armor = ['Wooden Shield', 'Chain Mail']
         self.possible_weapons = ['Long Sword', 'Rapier']
         self.possible_magic = ['Fire Blast', 'Cure']
-        self.quantity_items = ['Healing Potion', 'ELIXIR', 'Ether Potion']
         self.slots = {}
         self.state = 'invisible'
         self.state_dict = self.make_state_dict()
-        self.print_slots = True
 
         self.image = None
         self.rect = None

@@ -4,9 +4,6 @@ from .constants import (GID_TRANS_FLIPX, GID_TRANS_FLIPY,
                         TRANS_FLIPX, TRANS_FLIPY,
                         GID_TRANS_ROT, TRANS_ROT)
 
-def read_points(text):
-    return [tuple([int(j) for j in i.split(',')]) for i in text.split()]
-
 def parse_properties(node):
     """
     parse a node and return a dict that represents a tiled "property"

@@ -28,7 +28,7 @@ class LevelState(tools.State):
         self.player = None
         self.viewport = None
         self.collision_handler = None
-        self.reset_dialogue = None
+        #self.reset_dialogue = None
         self.cut_off_bottom_map = None
         self.state_dict = None
         self.sprites = None
@@ -53,7 +53,7 @@ class LevelState(tools.State):
         self.game_data = game_data
         self.music, self.volume = self.set_music()
         self.state = 'transition_in'
-        self.reset_dialogue = ()
+        #self.reset_dialogue = ()
         self.switch_to_battle = False
         self.use_portal = False
         self.allow_input = False
@@ -288,8 +288,9 @@ class LevelState(tools.State):
             elif self.game_data['talked to sick brother']:
                 sprite.dialogue = quest_in_process_dialogue
 
-            elif not self.game_data['talked to sick brother']:
-                self.reset_dialogue = (sprite, quest_in_process_dialogue)
+            #elif not self.game_data['talked to sick brother']:
+                #self.reset_dialogue = (sprite, quest_in_process_dialogue)
+
         elif sprite.name == 'oldmanbrother':
             if self.game_data['has brother elixir']:
                 if self.game_data['elixir received']:
@@ -317,7 +318,7 @@ class LevelState(tools.State):
                     self.game_data['crown quest'] and not
                     self.game_data['delivered crown']):
                 sprite.dialogue = retrieved_crown_dialogue
-                self.reset_dialogue = (sprite, thank_you_dialogue)
+                #self.reset_dialogue = (sprite, thank_you_dialogue)
             elif self.game_data['delivered crown']:
                 sprite.dialogue = thank_you_dialogue
 
