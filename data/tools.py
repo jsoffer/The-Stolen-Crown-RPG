@@ -166,6 +166,42 @@ class State(object):
     def update(self, surface, keys):
         pass
 
+    def make_state_dict(self):
+        """
+        Make the dicitonary of state methods for the scene.
+        """
+        state_dict = {c.TRANSITION_IN: self.transition_in,
+                      c.TRANSITION_OUT: self.transition_out,
+                      c.NORMAL: self.normal_update}
+
+        return state_dict
+
+    def make_sprite(self, key, coords, pos, resize=None):
+        """
+        Get the image for a character.
+
+        """
+
+        (coordx, coordy) = coords
+        (pos_x, pos_y) = pos
+
+        spritesheet = setup.gfx()[key]
+        surface = pg.Surface((32, 32))
+        surface.set_colorkey(c.BLACK)
+        image = self.get_image(coordx, coordy, 32, 32, spritesheet)
+        rect = image.get_rect()
+        surface.blit(image, rect)
+
+        if resize is not None:
+            surface = pg.transform.scale(surface, (resize, resize))
+
+        rect = surface.get_rect(left=pos_x, top=pos_y)
+        sprite = pg.sprite.Sprite()
+        sprite.image = surface
+        sprite.rect = rect
+
+        return sprite
+
     def transition_in(self, surface=None, unused_keys=None):
         """
         Transition into level.
@@ -192,8 +228,6 @@ class State(object):
         self.transition_alpha += c.TRANSITION_SPEED
         if self.transition_alpha >= 255:
             self.done = True
-
-
 
 def get_image(pos_x, pos_y, width, height, sprite_sheet):
     """ Extracts image from sprite sheet """
@@ -282,3 +316,17 @@ def create_game_data_dict():
                  'brother item': 'ELIXIR'}
 
     return data_dict
+
+def empty_background():
+    """
+    Creates a generic surface to blit on and use as a "dark color" background
+
+    """
+
+    background = pg.sprite.Sprite()
+    surface = pg.Surface(c.SCREEN_SIZE).convert()
+    surface.fill(c.BLACK_BLUE)
+    background.image = surface
+    background.rect = background.image.get_rect()
+
+    return background

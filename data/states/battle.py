@@ -5,7 +5,7 @@ import pygame as pg
 from .. import tools, battlegui, observer, setup
 from .. components import person, attack, attackitems
 from .. import constants as c
-from ..tools import Timer
+from ..tools import Timer, empty_background
 
 class Battle(tools.State):
     def __init__(self):
@@ -789,11 +789,8 @@ def make_background():
 
     """
 
-    background = pg.sprite.Sprite()
-    surface = pg.Surface(c.SCREEN_SIZE).convert()
-    surface.fill(c.BLACK_BLUE)
-    background.image = surface
-    background.rect = background.image.get_rect()
+    background = empty_background()
+
     background_group = pg.sprite.Group(background)
 
     return background_group

@@ -19,7 +19,9 @@ class CreditEntry(object):
         self.credit_sprites = self.make_credits()
         self.index = 0
         self.current_credit = self.credit_sprites[self.index]
-        self.state_dict = self.make_state_dict()
+        self.state_dict = {c.TRANSITION_IN: self.transition_in,
+                           c.TRANSITION_OUT: self.transition_out,
+                           c.NORMAL: self.normal_update}
         self.state = c.TRANSITION_IN
         self.transition_timer = tools.Timer(4500)
         self.level = level
@@ -73,16 +75,6 @@ class CreditEntry(object):
             credit_sprites.append(subcredit_list)
 
         return credit_sprites
-
-    def make_state_dict(self):
-        """
-        Make the dictionary of state methods used to update credit.
-        """
-        state_dict = {c.TRANSITION_IN: self.transition_in,
-                      c.TRANSITION_OUT: self.transition_out,
-                      c.NORMAL: self.normal_update}
-
-        return state_dict
 
     def transition_in(self):
         for credit in self.current_credit:

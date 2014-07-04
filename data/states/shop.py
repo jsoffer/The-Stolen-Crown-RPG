@@ -67,14 +67,12 @@ class Shop(tools.State):
         """
         Make the level surface.
         """
-        background = pg.sprite.Sprite()
-        surface = pg.Surface(c.SCREEN_SIZE).convert()
-        surface.fill(c.BLACK_BLUE)
-        background.image = surface
-        background.rect = background.image.get_rect()
+        background = tools.empty_background()
 
-        player = self.make_sprite('player', 96, 32, 150)
-        shop_owner = self.make_sprite(self.key, 32, 32, 600)
+        player = self.make_sprite(
+            'player', (96, 32), (150, 200), resize=200)
+        shop_owner = self.make_sprite(
+            self.key, (32, 32), (600, 200), resize=200)
         counter = self.make_counter()
 
         background.image.blit(player.image, player.rect)
@@ -82,28 +80,6 @@ class Shop(tools.State):
         background.image.blit(counter.image, counter.rect)
 
         return background
-
-    def make_sprite(self, key, coordx, coordy, left, center_y=304):
-        """
-        Get the image for the player.
-
-        duplicated at player_menu
-
-        """
-        spritesheet = setup.gfx()[key]
-        surface = pg.Surface((32, 32))
-        surface.set_colorkey(c.BLACK)
-        image = self.get_image(coordx, coordy, 32, 32, spritesheet)
-        rect = image.get_rect()
-        surface.blit(image, rect)
-
-        surface = pg.transform.scale(surface, (96, 96))
-        rect = surface.get_rect(left=left, centery=center_y)
-        sprite = pg.sprite.Sprite()
-        sprite.image = surface
-        sprite.rect = rect
-
-        return sprite
 
     def make_counter(self):
         """

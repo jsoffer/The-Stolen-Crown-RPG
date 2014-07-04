@@ -35,16 +35,6 @@ class Menu(tools.State):
         self.transition_surface.fill(c.BLACK_BLUE)
         self.transition_surface.set_alpha(self.alpha)
 
-    def make_state_dict(self):
-        """
-        Make the dictionary of state methods for the level.
-        """
-        state_dict = {c.TRANSITION_IN: self.transition_in,
-                      c.TRANSITION_OUT: self.transition_out,
-                      c.NORMAL: self.normal_update}
-
-        return state_dict
-
     def update(self, surface, unused_keys):
         """
         Update scene.
@@ -110,16 +100,6 @@ class Instructions(tools.State):
         Set image for message box.
         """
         return setup.gfx()['instructions_box']
-
-    def make_state_dict(self):
-        """
-        Make the dictionary of state methods for the level.
-        """
-        state_dict = {c.TRANSITION_IN: self.transition_in,
-                      c.TRANSITION_OUT: self.transition_out,
-                      c.NORMAL: self.normal_update}
-
-        return state_dict
 
     def update(self, surface, keys):
         """

@@ -2,14 +2,14 @@
 This is the state where the player can look at
 his inventory, equip items and check stats.
 Most of the logic is in menugui.MenuGUI()
+
 """
-import pygame as pg
-from .. import tools, setup, menugui
-from .. import constants as c
+from .. import tools, menugui
 
 
-class PlayerMenu(object):
+class PlayerMenu(tools.State):
     def __init__(self, game_data, level):
+        super(PlayerMenu, self).__init__()
         inventory = game_data['player inventory']
         stats = game_data['player stats']
         self.get_image = tools.get_image
@@ -21,40 +21,13 @@ class PlayerMenu(object):
         """
         Makes the generic black/blue background.
         """
-        background = pg.sprite.Sprite()
-        surface = pg.Surface(c.SCREEN_SIZE).convert()
-        surface.fill(c.BLACK_BLUE)
-        background.image = surface
-        background.rect = background.image.get_rect()
+        background = tools.empty_background()
 
-        player = self.make_sprite('player', 96, 32)
+        player = self.make_sprite('player', (96, 32), (30, 40), resize=150)
 
         background.image.blit(player.image, player.rect)
 
         return background
-
-    def make_sprite(self, key, coordx, coordy, pos_x=40, pos_y=25):
-        """
-        Get the image for the player.
-
-        duplicated at shop
-
-        """
-
-        spritesheet = setup.gfx()[key]
-        surface = pg.Surface((32, 32))
-        surface.set_colorkey(c.BLACK)
-        image = self.get_image(coordx, coordy, 32, 32, spritesheet)
-        rect = image.get_rect()
-        surface.blit(image, rect)
-
-        surface = pg.transform.scale(surface, (192, 192))
-        rect = surface.get_rect(left=pos_x, top=pos_y)
-        sprite = pg.sprite.Sprite()
-        sprite.image = surface
-        sprite.rect = rect
-
-        return sprite
 
     def update(self, surface, keys):
         self.gui.update(keys)
