@@ -10,6 +10,35 @@ from ..tools import Timer, empty_background
 class Battle(tools.State):
     def __init__(self):
         super(Battle, self).__init__()
+
+        self.enemy_list = None
+        self.player_actions = None
+        self.allow_input = None
+        self.enemy_pos_list = None
+        self.attack_animations = None
+        self.player_action_dict = None
+        self.enemies_to_attack = None
+        self.temp_magic = None
+        self.new_gold = None
+        self.enemy_group = None
+        self.select_action_state_dict = None
+        self.enemy_index = None
+        self.player_level = None
+        self.just_leveled_up = None
+        self.sword = None
+        self.observers = None
+        self.arrow = None
+        self.info_box = None
+        self.run_away = None
+        self.background = None
+        self.inventory = None
+        self.player_health_box = None
+        self.action_selected = None
+        self.select_box = None
+        self.player = None
+        self.damage_points = None
+        self.experience_points = None
+
         self.name = 'battle'
         self.music = setup.music()['high_action']
         self.volume = 0.4

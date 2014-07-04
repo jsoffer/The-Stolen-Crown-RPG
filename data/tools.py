@@ -153,6 +153,8 @@ class State(object):
         self.transition_rect = setup.screen().get_rect()
         self.transition_alpha = 255
 
+        self.state = None
+
     def get_event(self, event):
         pass
 

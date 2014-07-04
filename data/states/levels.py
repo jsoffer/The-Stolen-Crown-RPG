@@ -17,6 +17,26 @@ from .. import setup
 class LevelState(tools.State):
     def __init__(self, name, battles=False):
         super(LevelState, self).__init__()
+
+        self.switch_to_battle = None
+        self.menu_screen = None
+        self.level_rect = None
+        self.use_portal = None
+        self.level_surface = None
+        self.blockers = None
+        self.dialogue_handler = None
+        self.player = None
+        self.viewport = None
+        self.collision_handler = None
+        self.reset_dialogue = None
+        self.cut_off_bottom_map = None
+        self.state_dict = None
+        self.sprites = None
+        self.allow_input = None
+        self.map_image = None
+        self.renderer = None
+        self.portals = None
+
         self.name = name
         self.tmx_map = setup.tmx()[name]
         self.allow_battles = battles

@@ -53,6 +53,11 @@ class Person(pg.sprite.Sprite):
         self.anim_timer = Timer(100)
         self.move_timer = Timer(2000)
 
+        self.small_image_list = None
+        self.move_counter = None
+        self.attacked_enemy = None
+        self.keys = None
+
     def create_spritesheet_dict(self, sheet_key):
         """
         Make a dictionary of images from sprite sheet.

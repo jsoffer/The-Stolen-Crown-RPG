@@ -16,8 +16,18 @@ class Shop(tools.State):
     """Basic shop state"""
     def __init__(self):
         super(Shop, self).__init__()
+
+        self.state_dict = None
+        self.get_image = None
+        self.dialogue = None
+        self.gui = None
+        self.background = None
+        self.accept_sale_dialogue = None
+        self.accept_dialogue = None
+        self.items = None
         self.key = None
         self.sell_items = None
+
         self.music = setup.music()['shop_theme']
         self.volume = 0.4
 

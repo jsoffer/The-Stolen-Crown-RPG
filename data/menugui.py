@@ -179,6 +179,9 @@ class InfoBox(pg.sprite.Sprite):
         self.state_dict = self.make_state_dict()
         self.print_slots = True
 
+        self.image = None
+        self.rect = None
+
     def get_attack_power(self):
         """
         Calculate the current attack power based on equipped weapons.

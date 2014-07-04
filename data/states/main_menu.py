@@ -10,6 +10,17 @@ from .levels import make_viewport
 class Menu(tools.State):
     def __init__(self):
         super(Menu, self).__init__()
+
+        self.title_rect = None
+        self.title_box = None
+        self.map_rect = None
+        self.viewport = None
+        self.map_image = None
+        self.level_surface = None
+        self.alpha = None
+        self.state_dict = None
+        self.renderer = None
+
         self.music = setup.music()['kings_theme']
         self.music_title = 'kings_theme'
         self.volume = 0.4
@@ -66,9 +77,24 @@ class Instructions(tools.State):
     """
     def __init__(self):
         super(Instructions, self).__init__()
+
+        self.title_rect = None
+        self.title_box = None
+        self.map_rect = None
+        self.title_rect = None
+        self.level_surface = None
+        self.map_image = None
+        self.name = None
+        self.state_dict = None
+        self.observers = None
+        self.viewport = None
+        self.alpha = None
+        self.renderer = None
+
         self.tmx_map = setup.tmx()['title']
         self.music = None
         self.music_title = None
+
 
     def startup(self, unused_game_data=None):
         self.renderer = tilerender.Renderer(self.tmx_map)
