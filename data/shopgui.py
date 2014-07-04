@@ -24,7 +24,7 @@ class Gui(object):
         self.no_selling = ['Inn', 'magic shop']
         self.weapon_list = ['Long Sword', 'Rapier']
         self.armor_list = ['Chain Mail', 'Wooden Shield']
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.index = 0
         self.timer = 0.0
         self.allow_input = False
@@ -67,7 +67,7 @@ class Gui(object):
         """
         Make the sprite that controls the dialogue.
         """
-        image = setup.GFX['dialoguebox']
+        image = setup.gfx()['dialoguebox']
         rect = image.get_rect()
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
@@ -93,7 +93,7 @@ class Gui(object):
 
     def make_gold_box(self):
         """Make the box to display total gold"""
-        image = setup.GFX['goldbox']
+        image = setup.gfx()['goldbox']
         rect = image.get_rect(bottom=608, right=800)
 
         surface = pg.Surface(rect.size)
@@ -114,7 +114,7 @@ class Gui(object):
 
     def make_selection_box(self, choices):
         """Make the box for the player to select options"""
-        image = setup.GFX['shopbox']
+        image = setup.gfx()['shopbox']
         rect = image.get_rect(bottom=608)
 
         surface = pg.Surface(rect.size)

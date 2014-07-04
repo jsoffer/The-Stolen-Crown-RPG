@@ -11,7 +11,7 @@ class Battle(tools.State):
     def __init__(self):
         super(Battle, self).__init__()
         self.name = 'battle'
-        self.music = setup.MUSIC['high_action']
+        self.music = setup.music()['high_action']
         self.volume = 0.4
 
         self.action_timer = Timer(1500)
@@ -57,7 +57,7 @@ class Battle(tools.State):
         self.enemies_to_attack = []
         self.action_selected = False
         self.just_leveled_up = False
-        self.transition_rect = setup.SCREEN.get_rect()
+        self.transition_rect = setup.screen().get_rect()
         self.transition_alpha = 255
         self.temp_magic = self.game_data['player stats']['magic']['current']
 
@@ -212,9 +212,7 @@ class Battle(tools.State):
 
         if self.state == c.SELECT_ACTION:
             self.notify(c.CLICK2)
-            enter_state_function = self.select_action_state_dict[
-                self.arrow.rect.topleft]
-            enter_state_function()
+            self.select_action_state_dict[self.arrow.rect.topleft]()
 
         elif self.state == c.SELECT_ENEMY:
             self.notify(c.CLICK2)
@@ -754,13 +752,11 @@ class Battle(tools.State):
         """
         if self.player_level < 3:
             if self.player_actions:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
+                self.player_action_dict[self.player_actions[0]]()
                 self.player_actions.pop(0)
         else:
             if len(self.player_actions) == 2:
-                enter_state = self.player_action_dict[self.player_actions[0]]
-                enter_state()
+                self.player_action_dict[self.player_actions[0]]()
                 self.player_actions.pop(0)
                 self.action_selected = False
             else:

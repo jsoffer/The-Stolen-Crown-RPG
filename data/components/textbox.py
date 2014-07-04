@@ -9,7 +9,7 @@ class NextArrow(pg.sprite.Sprite):
     """Flashing arrow indicating more dialogue"""
     def __init__(self):
         super(NextArrow, self).__init__()
-        self.image = setup.GFX['fancyarrow']
+        self.image = setup.gfx()['fancyarrow']
         self.rect = self.image.get_rect(right=780,
                                         bottom=135)
 
@@ -18,10 +18,10 @@ class DialogueBox(object):
     """Text box used for dialogue"""
     def __init__(self, dialogue, index=0, image_key='dialoguebox', item=None):
         self.item = item
-        self.bground = setup.GFX[image_key]
+        self.bground = setup.gfx()[image_key]
         self.rect = self.bground.get_rect(centerx=400)
         self.arrow_timer = 0.0
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.dialogue_list = dialogue
         self.index = index
         self.image = self.make_dialogue_box_image()

@@ -16,9 +16,9 @@ class InfoBox(object):
         self.enemy_damage = 0
         self.player_damage = 0
         self.state = c.SELECT_ACTION
-        self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.title_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.title_font.set_underline(True)
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 18)
         self.experience_points = experience
         self.gold_earned = gold
         self.state_dict = self.make_state_dict()
@@ -120,7 +120,7 @@ class InfoBox(object):
         """
         Make image out of box and message.
         """
-        image = setup.GFX['shopbox']
+        image = setup.gfx()['shopbox']
         rect = image.get_rect(bottom=608)
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
@@ -195,7 +195,7 @@ class SelectBox(object):
     """
 
     def __init__(self):
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.slots = make_slots()
         self.image = self.make_image()
         self.rect = self.image.get_rect(bottom=608,
@@ -205,7 +205,7 @@ class SelectBox(object):
         """
         Make the box image for
         """
-        image = setup.GFX['goldbox']
+        image = setup.gfx()['goldbox']
         rect = image.get_rect(bottom=608)
         surface = pg.Surface(rect.size)
         surface.set_colorkey(c.BLACK)
@@ -241,7 +241,7 @@ class SelectArrow(object):
     """Small arrow for menu"""
     def __init__(self, enemy_pos_list, info_box):
         self.info_box = info_box
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.gfx()['smallarrow']
         self.rect = self.image.get_rect()
         self.state = 'select action'
         self.state_dict = self.make_state_dict()
@@ -395,7 +395,7 @@ class SelectArrow(object):
         """
         Update arrow position.
         """
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.gfx()['smallarrow']
         state_function = self.state_dict[self.state]
         state_function(keys)
 
@@ -435,7 +435,7 @@ class PlayerHealth(object):
     def __init__(self, select_box_rect, game_data):
         self.health_stats = game_data['player stats']['health']
         self.magic_stats = game_data['player stats']['magic']
-        self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.title_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.posx = select_box_rect.centerx
         self.posy = select_box_rect.y - 5
 
@@ -472,7 +472,7 @@ class PlayerHealth(object):
             magic_string, True, c.NEAR_BLACK)
         magic_rect = magic_surface.get_rect(x=20, top=health_rect.bottom)
 
-        box_surface = setup.GFX['battlestatbox']
+        box_surface = setup.gfx()['battlestatbox']
         box_rect = box_surface.get_rect()
 
         parent_surface = pg.Surface(box_rect.size)

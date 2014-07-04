@@ -13,7 +13,7 @@ class Sword(object):
     """
     def __init__(self, player):
         self.player = player
-        self.sprite_sheet = setup.GFX['shopsigns']
+        self.sprite_sheet = setup.gfx()['shopsigns']
         self.image_list = self.make_image_list()
         self.index = 0
         self.timer = tools.Timer(60)
@@ -23,7 +23,7 @@ class Sword(object):
         Make the list of two images for animation.
         """
         image_list = [tools.get_image(48, 0, 16, 16, self.sprite_sheet),
-                      tools.get_image(0, 0, 22, 16, setup.GFX['sword2'])]
+                      tools.get_image(0, 0, 22, 16, setup.gfx()['sword2'])]
         return image_list
 
     @property
@@ -62,7 +62,7 @@ class HealthPoints(pg.sprite.Sprite):
         super(HealthPoints, self).__init__()
         self.ether = ether
         self.damage = damage
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 27)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 27)
         self.text_image = self.make_surface(points)
         self.rect = self.text_image.get_rect(x=topleft_pos[0]+20,
                                              bottom=topleft_pos[1]+10)

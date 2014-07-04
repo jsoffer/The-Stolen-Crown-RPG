@@ -16,7 +16,7 @@ class SmallArrow(pg.sprite.Sprite):
     """
     def __init__(self, info_box):
         super(SmallArrow, self).__init__()
-        self.image = setup.GFX['smallarrow']
+        self.image = setup.gfx()['smallarrow']
         self.rect = self.image.get_rect()
         self.state = 'selectmenu'
         self.state_dict = self.make_state_dict()
@@ -98,8 +98,8 @@ class QuickStats(pg.sprite.Sprite):
         self.game_data = game_data
         self.health = game_data['player stats']['health']
         self.stats = self.game_data['player stats']
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.small_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 18)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
+        self.small_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 18)
         self.image, self.rect = self.make_image()
 
     def make_image(self):
@@ -108,7 +108,7 @@ class QuickStats(pg.sprite.Sprite):
         """
         stat_list = ['GOLD', 'health', 'magic']
         magic_health_list = ['health', 'magic']
-        image = setup.GFX['goldbox']
+        image = setup.gfx()['goldbox']
         rect = image.get_rect(left=10, top=244)
 
         surface = pg.Surface(rect.size)
@@ -132,7 +132,7 @@ class QuickStats(pg.sprite.Sprite):
             surface.blit(render, text_rect)
 
         if self.game_data['crown quest']:
-            crown = setup.GFX['crown']
+            crown = setup.gfx()['crown']
             crown_rect = crown.get_rect(x=178, y=40)
             surface.blit(crown, crown_rect)
 
@@ -158,17 +158,17 @@ class InfoBox(pg.sprite.Sprite):
         self.player_stats = player_stats
         self.attack_power = self.get_attack_power()
         self.defense_power = self.get_defense_power()
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
-        self.big_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 24)
-        self.title_font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 28)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
+        self.big_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 24)
+        self.title_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 28)
         self.title_font.set_underline(True)
         self.get_tile = tools.get_tile
         self.sword = self.get_tile((48, 0),
-                                   setup.GFX['shopsigns'], (16, 16), 2)
+                                   setup.gfx()['shopsigns'], (16, 16), 2)
         self.shield = self.get_tile((32, 0),
-                                    setup.GFX['shopsigns'], (16, 16), 2)
+                                    setup.gfx()['shopsigns'], (16, 16), 2)
         self.potion = self.get_tile((16, 0),
-                                    setup.GFX['shopsigns'], (16, 16), 2)
+                                    setup.gfx()['shopsigns'], (16, 16), 2)
         self.possible_potions = ['Healing Potion', 'ELIXIR', 'Ether Potion']
         self.possible_armor = ['Wooden Shield', 'Chain Mail']
         self.possible_weapons = ['Long Sword', 'Rapier']
@@ -351,7 +351,7 @@ class InfoBox(pg.sprite.Sprite):
 
     def make_blank_info_box(self, title):
         """Make an info box with title, otherwise blank"""
-        image = setup.GFX['playerstatsbox']
+        image = setup.gfx()['playerstatsbox']
         rect = image.get_rect(left=285, top=35)
         centerx = rect.width / 2
 
@@ -378,12 +378,12 @@ class InfoBox(pg.sprite.Sprite):
 
 class SelectionBox(pg.sprite.Sprite):
     def __init__(self):
-        self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
+        self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.image, self.rect = self.make_image()
 
     def make_image(self):
         choices = ['Items', 'Magic', 'Stats']
-        image = setup.GFX['goldbox']
+        image = setup.gfx()['goldbox']
         rect = image.get_rect(left=10, top=425)
 
         surface = pg.Surface(rect.size)

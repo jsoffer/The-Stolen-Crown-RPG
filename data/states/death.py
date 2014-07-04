@@ -77,9 +77,6 @@ class DeathScene(tools.State):
         self.state = c.TRANSITION_IN
         self.alpha = 255
         self.name = c.DEATH_SCENE
-        self.transition_surface = pg.Surface(setup.SCREEN_RECT.size)
-        self.transition_surface.fill(c.BLACK_BLUE)
-        self.transition_surface.set_alpha(self.alpha)
         if not os.path.isfile("save.p"):
             game_data = tools.create_game_data_dict()
             pickle.dump(game_data, open("save.p", "wb"))
@@ -142,25 +139,6 @@ class DeathScene(tools.State):
         update_level = self.state_dict[self.state]
         update_level(keys)
         self.draw_level(surface)
-
-    def transition_in(self, *_):
-        """
-        Transition into scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha -= c.TRANSITION_SPEED
-        if self.alpha <= 0:
-            self.alpha = 0
-            self.state = c.NORMAL
-
-    def transition_out(self, *_):
-        """
-        Transition out of scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha += c.TRANSITION_SPEED
-        if self.alpha >= 255:
-            self.done = True
 
     def normal_update(self, keys):
         self.arrow.update(keys)

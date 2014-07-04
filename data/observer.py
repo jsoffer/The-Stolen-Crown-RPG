@@ -61,8 +61,8 @@ class SoundEffects(object):
         """
         Observer is notified of SFX event.
         """
-        if event in setup.SFX:
-            setup.SFX[event].play()
+        if event in setup.sfx():
+            setup.sfx()[event].play()
 
 class MusicChange(object):
     """
@@ -77,8 +77,8 @@ class MusicChange(object):
         """
         if event in self.event_dict:
             new_music = self.event_dict[event]
-            if new_music in setup.MUSIC:
-                music_file = setup.MUSIC[new_music]
+            if new_music in setup.music():
+                music_file = setup.music()[new_music]
                 pg.mixer.music.load(music_file)
                 pg.mixer.music.play(-1)
 

@@ -6,12 +6,12 @@ Entry point
 
 from data.states import shop, levels, battle, main_menu, death
 from data.states import sc_credits
-from . import setup, tools
+from . import tools
 from . import constants as c
 
 def main():
     """Add states to control here"""
-    run_it = tools.Control(setup.ORIGINAL_CAPTION)
+    run_it = tools.Control(c.ORIGINAL_CAPTION)
     state_dict = {
         c.MAIN_MENU: main_menu.Menu(),
         c.TOWN: levels.LevelState(c.TOWN),

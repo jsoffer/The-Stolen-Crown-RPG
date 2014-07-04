@@ -18,7 +18,7 @@ class LevelState(tools.State):
     def __init__(self, name, battles=False):
         super(LevelState, self).__init__()
         self.name = name
-        self.tmx_map = setup.TMX[name]
+        self.tmx_map = setup.tmx()[name]
         self.allow_battles = battles
         self.music_title = None
         self.previous_music = None
@@ -57,8 +57,6 @@ class LevelState(tools.State):
         self.dialogue_handler = textbox.TextHandler(self)
         self.state_dict = self.make_state_dict()
         self.menu_screen = player_menu.PlayerMenu(game_data, self)
-        self.transition_rect = setup.SCREEN.get_rect()
-        self.transition_alpha = 255
 
     def set_music(self):
         """
@@ -78,12 +76,12 @@ class LevelState(tools.State):
         if self.game_data['crown quest'] and (
                 self.name == c.TOWN or self.name == c.CASTLE):
             self.music_title = 'kings_theme'
-            return setup.MUSIC['kings_theme'], .4
+            return setup.music()['kings_theme'], .4
         elif self.name in music_dict:
             music = music_dict[self.name][0]
             volume = music_dict[self.name][1]
             self.music_title = music
-            return setup.MUSIC[music], volume
+            return setup.music()[music], volume
         else:
             return None, None
 
@@ -447,20 +445,6 @@ class LevelState(tools.State):
         if self.dialogue_handler.textbox:
             self.state = 'dialogue'
 
-    def transition_out(self, surface, *_):
-        """
-        Transition level to new scene.
-        """
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        self.draw_level(surface)
-        surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha += c.TRANSITION_SPEED
-        if self.transition_alpha >= 255:
-            self.transition_alpha = 255
-            self.done = True
-
     def slow_fade_out(self, surface, *_):
         """
         Transition level to new scene.
@@ -474,21 +458,6 @@ class LevelState(tools.State):
         if self.transition_alpha >= 255:
             self.transition_alpha = 255
             self.done = True
-
-    def transition_in(self, surface, *_):
-        """
-        Transition into level.
-        """
-        self.viewport_update()
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        self.draw_level(surface)
-        surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha -= c.TRANSITION_SPEED
-        if self.transition_alpha <= 0:
-            self.state = 'normal'
-            self.transition_alpha = 0
 
     def update(self, surface, keys):
         """
@@ -525,5 +494,5 @@ def make_viewport(map_image):
     """
 
     map_rect = map_image.get_rect()
-    return setup.SCREEN.get_rect(bottomright=map_rect.bottomright)
+    return setup.screen().get_rect(bottomright=map_rect.bottomright)
 

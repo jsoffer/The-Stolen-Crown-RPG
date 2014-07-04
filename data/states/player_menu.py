@@ -41,7 +41,7 @@ class PlayerMenu(object):
 
         """
 
-        spritesheet = setup.GFX[key]
+        spritesheet = setup.gfx()[key]
         surface = pg.Surface((32, 32))
         surface.set_colorkey(c.BLACK)
         image = self.get_image(coordx, coordy, 32, 32, spritesheet)

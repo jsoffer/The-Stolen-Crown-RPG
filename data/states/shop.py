@@ -18,7 +18,7 @@ class Shop(tools.State):
         super(Shop, self).__init__()
         self.key = None
         self.sell_items = None
-        self.music = setup.MUSIC['shop_theme']
+        self.music = setup.music()['shop_theme']
         self.volume = 0.4
 
     def startup(self, game_data):
@@ -34,8 +34,6 @@ class Shop(tools.State):
         self.items = self.make_purchasable_items()
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)
-        self.transition_rect = setup.SCREEN.get_rect()
-        self.transition_alpha = 255
 
     def make_state_dict(self):
         """
@@ -92,7 +90,7 @@ class Shop(tools.State):
         duplicated at player_menu
 
         """
-        spritesheet = setup.GFX[key]
+        spritesheet = setup.gfx()[key]
         surface = pg.Surface((32, 32))
         surface.set_colorkey(c.BLACK)
         image = self.get_image(coordx, coordy, 32, 32, spritesheet)
@@ -111,7 +109,7 @@ class Shop(tools.State):
         """
         Make the counter to conduct business.
         """
-        sprite_sheet = copy.copy(setup.GFX['house'])
+        sprite_sheet = copy.copy(setup.gfx()['house'])
         sprite = pg.sprite.Sprite()
         sprite.image = self.get_image(102, 64, 26, 82, sprite_sheet)
         sprite.image = pg.transform.scale2x(sprite.image)
@@ -132,33 +130,6 @@ class Shop(tools.State):
         """
         self.gui.update(keys)
         self.draw_level(surface)
-
-    def transition_in(self, surface, *_):
-        """
-        Transition into level.
-        """
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        self.draw_level(surface)
-        surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha -= c.TRANSITION_SPEED
-        if self.transition_alpha <= 0:
-            self.state = 'normal'
-            self.transition_alpha = 0
-
-    def transition_out(self, surface, *_):
-        """
-        Transition level to new scene.
-        """
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        self.draw_level(surface)
-        surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha += c.TRANSITION_SPEED
-        if self.transition_alpha >= 255:
-            self.done = True
 
     def draw_level(self, surface):
         """

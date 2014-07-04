@@ -6,9 +6,9 @@ Control, state, loaders
 
 __author__ = 'justinarmstrong'
 
-import os
 import pygame as pg
 from . import constants as c
+from . import setup
 
 class Timer(object):
     """
@@ -146,6 +146,13 @@ class State(object):
         self.music_title = None
         self.previous_music = None
 
+        self.transition_surface = pg.Surface(setup.screen_rect().size)
+        self.transition_surface.fill(c.TRANSITION_COLOR)
+        self.transition_surface.set_alpha(255)
+
+        self.transition_rect = setup.screen().get_rect()
+        self.transition_alpha = 255
+
     def get_event(self, event):
         pass
 
@@ -159,46 +166,33 @@ class State(object):
     def update(self, surface, keys):
         pass
 
-def load_all_gfx(directory,
-                 colorkey=(255, 0, 255),
-                 accept=('.png', 'jpg', 'bmp')):
-    graphics = {}
-    for pic in os.listdir(directory):
-        name, ext = os.path.splitext(pic)
-        if ext.lower() in accept:
-            img = pg.image.load(os.path.join(directory, pic))
-            if img.get_alpha():
-                img = img.convert_alpha()
-            else:
-                img = img.convert()
-                img.set_colorkey(colorkey)
-            graphics[name] = img
-    return graphics
+    def transition_in(self, surface=None, unused_keys=None):
+        """
+        Transition into level.
+        """
+        self.transition_surface.set_alpha(self.transition_alpha)
+        if surface is not None:
+            self.draw_level(surface)
+            surface.blit(self.transition_surface, self.transition_rect)
+        self.transition_alpha -= c.TRANSITION_SPEED
+        if self.transition_alpha <= 0:
+            self.state = 'normal'
+            self.transition_alpha = 0
 
-def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
-    songs = {}
-    for song in os.listdir(directory):
-        name, ext = os.path.splitext(song)
-        if ext.lower() in accept:
-            songs[name] = os.path.join(directory, song)
-    return songs
+    def transition_out(self, surface=None, unused_keys=None):
+        """
+        Transition level to new scene.
+        """
+        transition_image = pg.Surface(self.transition_rect.size)
+        transition_image.fill(c.TRANSITION_COLOR)
+        transition_image.set_alpha(self.transition_alpha)
+        if surface is not None:
+            self.draw_level(surface)
+            surface.blit(self.transition_surface, self.transition_rect)
+        self.transition_alpha += c.TRANSITION_SPEED
+        if self.transition_alpha >= 255:
+            self.done = True
 
-
-def load_all_fonts(directory, accept=('.ttf')):
-    return load_all_music(directory, accept)
-
-
-def load_all_tmx(directory, accept=('.tmx')):
-    return load_all_music(directory, accept)
-
-
-def load_all_sfx(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
-    effects = {}
-    for sound_fx in os.listdir(directory):
-        name, ext = os.path.splitext(sound_fx)
-        if ext.lower() in accept:
-            effects[name] = pg.mixer.Sound(os.path.join(directory, sound_fx))
-    return effects
 
 
 def get_image(pos_x, pos_y, width, height, sprite_sheet):

@@ -10,11 +10,11 @@ from .levels import make_viewport
 class Menu(tools.State):
     def __init__(self):
         super(Menu, self).__init__()
-        self.music = setup.MUSIC['kings_theme']
+        self.music = setup.music()['kings_theme']
         self.music_title = 'kings_theme'
         self.volume = 0.4
         self.next = c.INSTRUCTIONS
-        self.tmx_map = setup.TMX['title']
+        self.tmx_map = setup.tmx()['title']
         self.name = c.MAIN_MENU
         self.startup()
 
@@ -24,14 +24,14 @@ class Menu(tools.State):
         self.map_rect = self.map_image.get_rect()
         self.viewport = make_viewport(self.map_image)
         self.level_surface = pg.Surface(self.map_rect.size)
-        self.title_box = setup.GFX['title_box']
+        self.title_box = setup.gfx()['title_box']
         self.title_rect = self.title_box.get_rect()
         self.title_rect.midbottom = self.viewport.midbottom
         self.title_rect.y -= 30
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.alpha = 255
-        self.transition_surface = pg.Surface(setup.SCREEN_RECT.size)
+        self.transition_surface = pg.Surface(setup.screen_rect().size)
         self.transition_surface.fill(c.BLACK_BLUE)
         self.transition_surface.set_alpha(self.alpha)
 
@@ -45,12 +45,12 @@ class Menu(tools.State):
 
         return state_dict
 
-    def update(self, surface, *_):
+    def update(self, surface, unused_keys):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level()
+        update_level(surface, unused_keys)
         self.draw_level(surface)
 
     def draw_level(self, surface):
@@ -66,27 +66,7 @@ class Menu(tools.State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def transition_in(self):
-        """
-        Transition into scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha -= c.TRANSITION_SPEED
-        if self.alpha <= 0:
-            self.alpha = 0
-            self.state = c.NORMAL
-
-
-    def transition_out(self):
-        """
-        Transition out of scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha += c.TRANSITION_SPEED
-        if self.alpha >= 255:
-            self.done = True
-
-    def normal_update(self):
+    def normal_update(self, surface, keys):
         pass
 
 
@@ -96,7 +76,7 @@ class Instructions(tools.State):
     """
     def __init__(self):
         super(Instructions, self).__init__()
-        self.tmx_map = setup.TMX['title']
+        self.tmx_map = setup.tmx()['title']
         self.music = None
         self.music_title = None
 
@@ -116,9 +96,6 @@ class Instructions(tools.State):
         self.name = c.MAIN_MENU
         self.state = c.TRANSITION_IN
         self.alpha = 255
-        self.transition_surface = pg.Surface(setup.SCREEN_RECT.size)
-        self.transition_surface.fill(c.BLACK_BLUE)
-        self.transition_surface.set_alpha(self.alpha)
         self.observers = [observer.SoundEffects()]
 
     def notify(self, event):
@@ -132,7 +109,7 @@ class Instructions(tools.State):
         """
         Set image for message box.
         """
-        return setup.GFX['instructions_box']
+        return setup.gfx()['instructions_box']
 
     def make_state_dict(self):
         """
@@ -149,7 +126,7 @@ class Instructions(tools.State):
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(keys)
+        update_level(surface, keys)
         self.draw_level(surface)
 
     def draw_level(self, surface):
@@ -169,26 +146,7 @@ class Instructions(tools.State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def transition_in(self, *_):
-        """
-        Transition into scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha -= c.TRANSITION_SPEED
-        if self.alpha <= 0:
-            self.alpha = 0
-            self.state = c.NORMAL
-
-    def transition_out(self, *_):
-        """
-        Transition out of scene with a fade.
-        """
-        self.transition_surface.set_alpha(self.alpha)
-        self.alpha += c.TRANSITION_SPEED
-        if self.alpha >= 255:
-            self.done = True
-
-    def normal_update(self, keys):
+    def normal_update(self, surface, keys):
         pass
 
 def set_next_scene():
@@ -218,7 +176,7 @@ class LoadGame(Instructions):
         """
         Set image for message box.
         """
-        return setup.GFX['loadgamebox']
+        return setup.gfx()['loadgamebox']
 
     def draw_arrow(self):
         self.level_surface.blit(self.arrow.image, self.arrow.rect)
@@ -226,7 +184,7 @@ class LoadGame(Instructions):
     def get_event(self, event):
         pass
 
-    def normal_update(self, keys):
+    def normal_update(self, surface, keys):
         if self.allow_input:
             if keys[pg.K_DOWN] and self.arrow.index == 0:
                 self.arrow.index = 1

@@ -7,25 +7,68 @@ creates dictionaries of resources.
 
 __author__ = 'justinarmstrong'
 
-import os
-import pygame as pg
-from data.constants import ORIGINAL_CAPTION
-from . import tools
+SCREEN = None
+SCREEN_RECT = None
 
-os.environ['SDL_VIDEO_CENTERED'] = '1'
-pg.init()
-pg.event.set_allowed([pg.KEYDOWN, pg.KEYUP, pg.QUIT])
-pg.display.set_caption(ORIGINAL_CAPTION)
-SCREEN = pg.display.set_mode((800, 608))
-SCREEN_RECT = SCREEN.get_rect()
+FONTS = None
+MUSIC = None
+GFX = None
+SFX = None
+TMX = None
+FONT = None
 
-FONTS = tools.load_all_fonts(os.path.join('resources', 'fonts'))
-MUSIC = tools.load_all_music(os.path.join('resources', 'music'))
-GFX = tools.load_all_gfx(os.path.join('resources', 'graphics'))
-SFX = tools.load_all_sfx(os.path.join('resources', 'sound'))
-TMX = tools.load_all_tmx(os.path.join('resources', 'tmx'))
+def register_screen(_screen):
+    global SCREEN
+    SCREEN = _screen
 
-FONT = pg.font.Font(FONTS['Fixedsys500c'], 20)
+def register_screen_rect(_screen_rect):
+    global SCREEN_RECT
+    SCREEN_RECT = _screen_rect
 
+def register_fonts(_fonts):
+    global FONTS
+    FONTS = _fonts
 
+def register_music(_music):
+    global MUSIC
+    MUSIC = _music
 
+def register_gfx(_gfx):
+    global GFX
+    GFX = _gfx
+
+def register_sfx(_sfx):
+    global SFX
+    SFX = _sfx
+
+def register_tmx(_tmx):
+    global TMX
+    TMX = _tmx
+
+def register_font(_font):
+    global FONT
+    FONT = _font
+
+def screen():
+    return SCREEN
+
+def screen_rect():
+    return SCREEN_RECT
+
+def fonts():
+    return FONTS
+
+def music():
+    return MUSIC
+
+def gfx():
+    return GFX
+
+def sfx():
+    return SFX
+
+def tmx():
+    return TMX
+
+def font():
+    return FONT

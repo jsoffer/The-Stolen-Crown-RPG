@@ -4,7 +4,7 @@ import math, random, copy
 import pygame as pg
 from .. import setup, observer
 from .. import constants as c
-from ..tools import Timer
+from ..tools import Timer, get_image
 
 class Person(pg.sprite.Sprite):
     """
@@ -18,7 +18,7 @@ class Person(pg.sprite.Sprite):
         super(Person, self).__init__()
         self.alpha = 255
         self.name = sheet_key
-        self.get_image = setup.tools.get_image
+        self.get_image = get_image
         self.spritesheet_dict = self.create_spritesheet_dict(sheet_key)
         self.animation_dict = self.create_animation_dict()
         self.index = index
@@ -59,7 +59,7 @@ class Person(pg.sprite.Sprite):
         """
         image_list = []
         image_dict = {}
-        sheet = setup.GFX[sheet_key]
+        sheet = setup.gfx()[sheet_key]
 
         image_keys = ['facing up 1', 'facing up 2',
                       'facing down 1', 'facing down 2',
@@ -622,7 +622,7 @@ class Chest(Person):
         """
         Make a dictionary for the sprite's images.
         """
-        sprite_sheet = setup.GFX['treasurechest']
+        sprite_sheet = setup.gfx()['treasurechest']
         image_dict = {'closed': self.get_image(0, 0, 32, 32, sprite_sheet),
                       'opened': self.get_image(32, 0, 32, 32, sprite_sheet)}
 
