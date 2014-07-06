@@ -103,18 +103,18 @@ class Shop(tools.State):
 
         return sprite
 
-    def update(self, surface, keys):
+    def update(self, surface):
         """
         Update scene.
         """
         state_function = self.state_dict[self.state]
-        state_function(surface, keys)
+        state_function(surface)
 
-    def normal_update(self, surface, keys):
+    def normal_update(self, surface):
         """
         Update level normally.
         """
-        self.gui.update(keys)
+        self.gui.update()
         self.draw_level(surface)
 
     def draw_level(self, surface):

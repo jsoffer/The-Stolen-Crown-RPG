@@ -56,7 +56,8 @@ class Person(pg.sprite.Sprite):
         self.small_image_list = None
         self.move_counter = None
         self.attacked_enemy = None
-        self.keys = None
+
+        setup.update_keys()
 
     def create_spritesheet_dict(self, sheet_key):
         """
@@ -132,11 +133,9 @@ class Person(pg.sprite.Sprite):
                             'left': (-1, 0),
                             'right': (1, 0)}
 
-    def update(self, unused_keys=None):
+    def update(self):
         """
         Update sprite.
-
-        "unused_keys" is a template for derived classes
 
         """
         self.blockers = self.set_blockers()
@@ -514,12 +513,14 @@ class Player(Person):
                             'left': (-2, 0),
                             'right': (2, 0)}
 
-    def update(self, keys=None):
+    def update(self):
         """Updates player behavior"""
         self.damage_animation()
         self.healing_animation()
         self.blockers = self.set_blockers()
-        self.keys = keys
+
+        setup.update_keys()
+
         self.check_for_input()
         state_function = self.state_dict[self.state]
         state_function()
@@ -577,14 +578,17 @@ class Player(Person):
 
     def check_for_input(self):
         """Checks for player input"""
+
+        keys = setup.keys()
+
         if self.state == 'resting':
-            if self.keys[pg.K_UP]:
+            if keys[pg.K_UP]:
                 self.begin_moving('up')
-            elif self.keys[pg.K_DOWN]:
+            elif keys[pg.K_DOWN]:
                 self.begin_moving('down')
-            elif self.keys[pg.K_LEFT]:
+            elif keys[pg.K_LEFT]:
                 self.begin_moving('left')
-            elif self.keys[pg.K_RIGHT]:
+            elif keys[pg.K_RIGHT]:
                 self.begin_moving('right')
 
     def calculate_hit(self, unused_armor_list=None, unused_inventory=None):
@@ -642,7 +646,7 @@ class Chest(Person):
 
         return image_list
 
-    def update(self, unused_keys=None):
+    def update(self):
         """Implemented by inheriting classes"""
         self.blockers = self.set_blockers()
         state_function = self.state_dict[self.state]

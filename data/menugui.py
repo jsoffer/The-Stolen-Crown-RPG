@@ -96,7 +96,6 @@ class QuickStats(pg.sprite.Sprite):
     def __init__(self, game_data):
         self.inventory = game_data['player inventory']
         self.game_data = game_data
-        self.health = game_data['player stats']['health']
         self.stats = self.game_data['player stats']
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.small_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 18)
@@ -415,8 +414,11 @@ class MenuGui(object):
         self.arrow_index = 0
         self.allow_input = False
 
-    def check_for_input(self, keys):
+    def check_for_input(self):
         """Check for input"""
+
+        keys = setup.keys()
+
         if self.allow_input:
             if keys[pg.K_DOWN]:
                 if self.arrow_index < len(self.arrow.pos_list) - 1:
@@ -566,11 +568,11 @@ class MenuGui(object):
             if not self.inventory[potion]['quantity']:
                 del self.inventory[potion]
 
-    def update(self, keys):
+    def update(self):
         self.info_box.update()
         self.gold_box.update()
         self.arrow.update(self.arrow_index)
-        self.check_for_input(keys)
+        self.check_for_input()
 
 
     def draw(self, surface):

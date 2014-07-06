@@ -148,7 +148,7 @@ class Credits(tools.State):
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)
 
-    def update(self, surface, keys):
+    def update(self, surface):
         """
         Update scene.
         """

@@ -32,16 +32,24 @@ class Arrow(pg.sprite.Sprite):
         for listener in self.observers:
             listener.on_notify(event)
 
-    def update(self, keys):
+    def update(self):
         """
         Update arrow position.
         """
+
+        keys = setup.keys()
+
         if self.allow_input:
-            if keys[pg.K_DOWN] and not keys[pg.K_UP] and self.index == 0:
+            if (
+                    keys[pg.K_DOWN] and
+                    not keys[pg.K_UP] and
+                    self.index == 0):
                 self.index = 1
                 self.allow_input = False
                 self.notify(c.CLICK)
-            elif keys[pg.K_UP] and not keys[pg.K_DOWN] and self.index == 1:
+            elif (keys[pg.K_UP] and
+                  not keys[pg.K_DOWN] and
+                  self.index == 1):
                 self.index = 0
                 self.allow_input = False
                 self.notify(c.CLICK)
@@ -133,23 +141,26 @@ class DeathScene(tools.State):
 
         return box_sprite
 
-    def update(self, surface, keys, *_):
+    def update(self, surface):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(keys)
+        update_level()
         self.draw_level(surface)
 
-    def normal_update(self, keys):
-        self.arrow.update(keys)
-        self.check_for_input(keys)
+    def normal_update(self):
+        self.arrow.update()
+        self.check_for_input()
 
-    def check_for_input(self, keys):
+    def check_for_input(self):
         """
         Check if player wants to restart from last save point
         or just start from the beginning of the game.
         """
+
+        keys = setup.keys()
+
         if keys[pg.K_SPACE]:
             if self.arrow.index == 0:
                 self.next = c.TOWN

@@ -44,9 +44,11 @@ class Control(object):
         self.done = False
         # clock
         self.clock = pg.time.Clock()
-        self.show_fps = False
-        # all keys' pressed-or-not-pressed state
-        self.keys = pg.key.get_pressed()
+
+        # 'setup.keys()' keeps a global key state; it's updated 
+        # with update_keys
+        setup.update_keys()
+
         # (derived from) State
         # .state is the .state_name'ish member of .state_dict
         self.state_dict = {}
@@ -68,11 +70,9 @@ class Control(object):
 
         """
 
-        if self.state.quit:
-            self.done = True
-        elif self.state.done:
+        if self.state.done:
             self.flip_state()
-        self.state.update(self.screen, self.keys)
+        self.state.update(self.screen)
 
     def flip_state(self):
         """ Choose a new state from the pool; if the state changed,
@@ -106,19 +106,9 @@ class Control(object):
         for event in events:
             if event.type == pg.QUIT:
                 self.done = True
-            elif event.type == pg.KEYDOWN:
-                self.keys = pg.key.get_pressed()
-                self.toggle_show_fps(event.key)
+            elif event.type == pg.KEYDOWN or event.type == pg.KEYUP:
+                setup.update_keys()
                 self.state.get_event(event)
-            elif event.type == pg.KEYUP:
-                self.keys = pg.key.get_pressed()
-                self.state.get_event(event)
-
-    def toggle_show_fps(self, key):
-        if key == pg.K_F5:
-            self.show_fps = not self.show_fps
-            if not self.show_fps:
-                pg.display.set_caption(self.caption)
 
     def main(self):
         """Main loop for entire program"""
@@ -127,18 +117,11 @@ class Control(object):
             self.update()
             pg.display.update()
             self.clock.tick(c.FPS)
-            if self.show_fps:
-                fps = self.clock.get_fps()
-                with_fps = "{} - {:.2f} FPS".format(self.caption, fps)
-                pg.display.set_caption(with_fps)
-
 
 class State(object):
     """Base class for all game states"""
     def __init__(self):
-        self.start_time = 0.0
         self.done = False
-        self.quit = False
         self.next = None
         self.previous = None
         self.game_data = {}
@@ -165,7 +148,7 @@ class State(object):
         self.done = False
         return self.game_data
 
-    def update(self, surface, keys):
+    def update(self, surface):
         pass
 
     def make_state_dict(self):
@@ -204,7 +187,7 @@ class State(object):
 
         return sprite
 
-    def transition_in(self, surface=None, unused_keys=None):
+    def transition_in(self, surface=None):
         """
         Transition into level.
         """
@@ -217,7 +200,7 @@ class State(object):
             self.state = 'normal'
             self.transition_alpha = 0
 
-    def transition_out(self, surface=None, unused_keys=None):
+    def transition_out(self, surface=None):
         """
         Transition level to new scene.
         """
@@ -265,7 +248,7 @@ def create_game_data_dict():
     """Create a dictionary of persistant values the player
     carries between states"""
 
-    player_items = {'GOLD': dict([('quantity', 100),
+    player_items = {'GOLD': dict([('quantity', 10000),
                                   ('value', 0)]),
                     'Healing Potion': dict([('quantity', 2),
                                             ('value', 15)]),
@@ -280,8 +263,8 @@ def create_game_data_dict():
     player_health = {'current': 70,
                      'maximum': 70}
 
-    player_magic = {'current': 70,
-                    'maximum': 70}
+    player_magic = {'current': 7000,
+                    'maximum': 7000}
 
     player_stats = {'health': player_health,
                     'Level': 1,

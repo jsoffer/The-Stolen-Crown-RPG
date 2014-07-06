@@ -269,7 +269,7 @@ class SelectArrow(object):
 
         return state_dict
 
-    def select_action(self, keys):
+    def select_action(self):
         """
         Select what action the player should take.
         """
@@ -278,9 +278,9 @@ class SelectArrow(object):
             print(self.pos_list, self.index)
         self.rect.topleft = self.pos_list[self.index]
 
-        self.check_input(keys)
+        self.check_input()
 
-    def select_enemy(self, keys):
+    def select_enemy(self):
         """
         Select what enemy you want to take action on.
         """
@@ -291,9 +291,12 @@ class SelectArrow(object):
             self.rect.x = pos[0] - 60
             self.rect.y = pos[1] + 20
 
-        self.check_input(keys)
+        self.check_input()
 
-    def check_input(self, keys):
+    def check_input(self):
+
+        keys = setup.keys()
+
         if self.allow_input:
             if keys[pg.K_DOWN] and self.index < (len(self.pos_list) - 1):
                 self.notify(c.CLICK)
@@ -309,7 +312,7 @@ class SelectArrow(object):
                 and keys[pg.K_RIGHT] == False and keys[pg.K_LEFT] == False:
             self.allow_input = True
 
-    def select_item(self, keys):
+    def select_item(self):
         """
         Select item to use.
         """
@@ -319,7 +322,7 @@ class SelectArrow(object):
         self.rect.x = pos[0] - 60
         self.rect.y = pos[1] + 20
 
-        self.check_input(keys)
+        self.check_input()
 
     def make_select_item_pos_list(self):
         """
@@ -336,7 +339,7 @@ class SelectArrow(object):
 
         return pos_list
 
-    def select_magic(self, keys):
+    def select_magic(self):
         """
         Select magic to use.
         """
@@ -346,7 +349,7 @@ class SelectArrow(object):
         self.rect.x = pos[0] - 60
         self.rect.y = pos[1] + 20
 
-        self.check_input(keys)
+        self.check_input()
 
     def make_select_magic_pos_list(self):
         """
@@ -379,13 +382,13 @@ class SelectArrow(object):
         self.index = 0
         self.state = c.SELECT_MAGIC
 
-    def update(self, keys):
+    def update(self):
         """
         Update arrow position.
         """
         self.image = setup.gfx()['smallarrow']
         state_function = self.state_dict[self.state]
-        state_function(keys)
+        state_function()
 
     def draw(self, surface):
         """

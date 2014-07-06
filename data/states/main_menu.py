@@ -46,12 +46,12 @@ class Menu(tools.State):
         self.transition_surface.fill(c.BLACK_BLUE)
         self.transition_surface.set_alpha(self.alpha)
 
-    def update(self, surface, unused_keys):
+    def update(self, surface):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(surface, unused_keys)
+        update_level(surface)
         self.draw_level(surface)
 
     def draw_level(self, surface):
@@ -67,7 +67,7 @@ class Menu(tools.State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def normal_update(self, surface, keys):
+    def normal_update(self, surface):
         pass
 
 
@@ -127,12 +127,12 @@ class Instructions(tools.State):
         """
         return setup.gfx()['instructions_box']
 
-    def update(self, surface, keys):
+    def update(self, surface):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(surface, keys)
+        update_level(surface)
         self.draw_level(surface)
 
     def draw_level(self, surface):
@@ -152,7 +152,7 @@ class Instructions(tools.State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def normal_update(self, surface, keys):
+    def normal_update(self, surface):
         pass
 
 def set_next_scene():
@@ -190,7 +190,10 @@ class LoadGame(Instructions):
     def get_event(self, event):
         pass
 
-    def normal_update(self, surface, keys):
+    def normal_update(self, surface):
+
+        keys = setup.keys()
+
         if self.allow_input:
             if keys[pg.K_DOWN] and self.arrow.index == 0:
                 self.arrow.index = 1

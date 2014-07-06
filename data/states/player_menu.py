@@ -29,8 +29,8 @@ class PlayerMenu(tools.State):
 
         return background
 
-    def update(self, surface, keys):
-        self.gui.update(keys)
+    def update(self, surface):
+        self.gui.update()
         self.draw(surface)
 
     def draw(self, surface):

@@ -7,6 +7,8 @@ creates dictionaries of resources.
 
 __author__ = 'justinarmstrong'
 
+import pygame as pg
+
 SCREEN = None
 SCREEN_RECT = None
 
@@ -16,6 +18,15 @@ GFX = None
 SFX = None
 TMX = None
 FONT = None
+
+KEYS = None
+
+def update_keys():
+    global KEYS
+    KEYS = pg.key.get_pressed()
+
+def keys():
+    return KEYS
 
 def register_screen(_screen):
     global SCREEN

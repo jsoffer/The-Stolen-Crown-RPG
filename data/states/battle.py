@@ -193,28 +193,30 @@ class Battle(tools.State):
             self.enter_select_magic_state, self.try_to_run_away]
         return dict(zip(pos_list, state_list))
 
-    def update(self, surface, keys):
+    def update(self, surface):
         """
         Update the battle state.
         """
-        self.check_input(keys)
+        self.check_input()
         self.check_timed_events()
         self.check_if_battle_won()
         self.enemy_group.update()
-        self.player.update(keys)
+        self.player.update()
         self.attack_animations.update()
         self.info_box.update()
-        self.arrow.update(keys)
+        self.arrow.update()
         self.sword.update()
         self.damage_points.update()
         self.execute_player_actions()
 
         self.draw_battle(surface)
 
-    def check_input(self, keys):
+    def check_input(self):
         """
         Check user input to navigate GUI.
         """
+
+        keys = setup.keys()
 
         if not self.allow_input:
             print("NOT ALLOWING INPUT...")

@@ -360,19 +360,19 @@ class LevelState(tools.State):
 
         return portal_group
 
-    def running_normally(self, surface, keys):
+    def running_normally(self, surface):
         """
         Update level normally.
         """
         self.check_for_dialogue()
-        self.player.update(keys)
+        self.player.update()
         self.sprites.update()
-        self.collision_handler.update(keys)
+        self.collision_handler.update()
         self.check_for_battle()
         self.check_for_portals()
         self.check_for_end_of_game()
-        self.dialogue_handler.update(keys)
-        self.check_for_menu(keys)
+        self.dialogue_handler.update()
+        self.check_for_menu()
         self.viewport_update()
         self.draw_level(surface)
 
@@ -397,10 +397,13 @@ class LevelState(tools.State):
             self.next = 'battle'
             self.state = 'transition_out'
 
-    def check_for_menu(self, keys):
+    def check_for_menu(self):
         """
         Check if player hits enter to go to menu.
         """
+
+        keys = setup.keys()
+
         if keys[pg.K_RETURN] and self.allow_input:
             if self.player.state == 'resting':
                 self.state = 'menu'
@@ -445,18 +448,18 @@ class LevelState(tools.State):
         elif direction == 'right':
             location[0] -= 1
 
-    def handling_dialogue(self, surface, keys):
+    def handling_dialogue(self, surface):
         """
         Update only dialogue boxes.
         """
-        self.dialogue_handler.update(keys)
+        self.dialogue_handler.update()
         self.draw_level(surface)
 
-    def goto_menu(self, surface, keys, *_):
+    def goto_menu(self, surface):
         """
         Go to menu screen.
         """
-        self.menu_screen.update(surface, keys)
+        self.menu_screen.update(surface)
         self.menu_screen.draw(surface)
 
     def check_for_dialogue(self):
@@ -480,12 +483,12 @@ class LevelState(tools.State):
             self.transition_alpha = 255
             self.done = True
 
-    def update(self, surface, keys):
+    def update(self, surface):
         """
         Update state.
         """
         state_function = self.state_dict[self.state]
-        state_function(surface, keys)
+        state_function(surface)
 
     def viewport_update(self):
         """

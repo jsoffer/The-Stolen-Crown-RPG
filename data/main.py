@@ -4,8 +4,8 @@ Entry point
 
 """
 
-from data.states import shop, levels, battle, main_menu, death
-from data.states import sc_credits
+from data.states import (shop, levels, battle,
+                         main_menu, death, sc_credits)
 from . import tools
 from . import constants as c
 

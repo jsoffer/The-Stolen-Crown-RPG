@@ -11,7 +11,7 @@ class CollisionHandler(object):
         self.portals = portals
         self.level = level
 
-    def update(self, unused_keys):
+    def update(self):
         """
         Check for collisions between game objects.
         """

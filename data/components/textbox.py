@@ -49,18 +49,21 @@ class DialogueBox(object):
 
         return image
 
-    def update(self, keys):
+    def update(self):
         """Updates scrolling text"""
         self.draw_box()
-        self.terminate_check(keys)
+        self.terminate_check()
 
     def draw_box(self):
         """Reveal dialogue on textbox"""
         self.image = self.make_dialogue_box_image()
         self.check_to_draw_arrow()
 
-    def terminate_check(self, keys):
+    def terminate_check(self):
         """Remove textbox from sprite group after 2 seconds"""
+
+        keys = setup.keys()
+
         if keys[pg.K_SPACE] and self.allow_input:
             self.done = True
 
@@ -91,8 +94,11 @@ class TextHandler(object):
 
         self.wait_timer = tools.Timer(300)
 
-    def update(self, keys):
+    def update(self):
         """Checks for the creation of Dialogue boxes"""
+
+        keys = setup.keys()
+
         if keys[pg.K_SPACE] and not self.textbox and self.allow_input:
             for sprite in self.sprites:
                 if self.wait_timer.done():
@@ -105,7 +111,7 @@ class TextHandler(object):
                 # open chest (that's exactly what self.open_chest() did)
                 self.talking_sprite.index = 1
 
-            self.textbox.update(keys)
+            self.textbox.update()
 
             if self.textbox.done:
 
@@ -232,7 +238,7 @@ class TextHandler(object):
             if item == 'ELIXIR':
                 self.game_data['has brother elixir'] = True
                 self.game_data['old man gift'] = 'Fire Blast'
-                dialogue = ['Hurry! There is precious little time.']
+                #dialogue = ['Hurry! There is precious little time.']
                 #self.level.reset_dialogue = self.talking_sprite, dialogue
 
     def add_new_item_to_inventory(self, item):
