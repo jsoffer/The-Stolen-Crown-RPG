@@ -259,10 +259,12 @@ class TextHandler(object):
 
     def update_game_items_info(self, sprite):
 
+        game_data = setup.game_data()
+
         if sprite.name == 'treasurechest':
-            self.game_data['treasure{}'.format(sprite.identifier)] = False
+            game_data['treasure{}'.format(sprite.identifier)] = False
         elif sprite.name == 'oldmanbrother':
-            self.game_data['brother elixir'] = False
+            game_data['brother elixir'] = False
 
     def reset_sprite_direction(self):
         """Reset sprite to default direction"""

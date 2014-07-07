@@ -127,10 +127,10 @@ class InfoBox(object):
 
         if self.state == c.SELECT_ITEM:
             text_sprites = self.make_text_sprites(self.make_item_text())
-            text_sprites.draw()
+            text_sprites.draw(surface)
         elif self.state == c.SELECT_MAGIC:
             text_sprites = self.make_text_sprites(self.make_magic_text())
-            text_sprites.draw()
+            text_sprites.draw(surface)
         else:
             text_surface = self.font.render(
                 self.state_dict[self.state], True, c.NEAR_BLACK)
