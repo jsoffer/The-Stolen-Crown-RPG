@@ -485,7 +485,7 @@ class Player(Person):
     User controlled character.
     """
 
-    def __init__(self, direction, game_data,
+    def __init__(self, direction,
                  x=0, y=0, state='resting', index=0):
         super(Player, self).__init__('player', x, y, direction, state, index)
         self.damaged = False
@@ -493,7 +493,6 @@ class Player(Person):
         self.damage_alpha = 0
         self.healing_alpha = 0
         self.fade_in = True
-        self.game_data = game_data
         self.index = 1
         self.image = self.image_list[self.index]
 
@@ -502,7 +501,7 @@ class Player(Person):
         """
         Make level property equal to player level in game_data.
         """
-        return self.game_data['player stats']['Level']
+        return setup.game_data()['player stats']['Level']
 
 
     def create_vector_dict(self):
@@ -597,8 +596,10 @@ class Player(Person):
 
 
         """
-        weapon = self.game_data['player inventory']['equipped weapon']
-        weapon_power = self.game_data['player inventory'][weapon]['power']
+        game_data = setup.game_data()
+
+        weapon = game_data['player inventory']['equipped weapon']
+        weapon_power = game_data['player inventory'][weapon]['power']
         max_strength = weapon_power
         min_strength = max_strength - 7
         return random.randint(min_strength, max_strength)

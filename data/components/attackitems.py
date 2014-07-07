@@ -46,11 +46,12 @@ class Sword(object):
                 self.index -= 1
             self.timer.reset()
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw sprite to surface.
         """
         if self.player.state == 'attack':
+            surface = setup.screen()
             surface.blit(self.image, self.rect)
 
 

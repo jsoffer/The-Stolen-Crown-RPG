@@ -12,13 +12,19 @@ from . import constants as c
 class Gui(object):
     """Class that controls the GUI of the shop state"""
     def __init__(self, level):
+
+        game_data = setup.game_data()
+
         self.level = level
-        self.game_data = self.level.game_data
-        self.level.game_data['last direction'] = 'down'
+
+        game_data['last direction'] = 'down'
+
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
         self.sellable_items = level.sell_items
-        self.player_inventory = level.game_data['player inventory']
+
+        self.player_inventory = game_data['player inventory']
+
         self.name = level.name
         self.state = 'dialogue'
         self.no_selling = ['Inn', 'magic shop']
@@ -245,7 +251,7 @@ class Gui(object):
             else:
                 if self.level.name in self.no_selling:
                     self.level.state = 'transition out'
-                    self.game_data['last state'] = self.level.name
+                    setup.game_data()['last state'] = self.level.name
                 else:
                     self.state = 'buysell'
 
@@ -319,6 +325,9 @@ class Gui(object):
         """
         Add item to player's inventory.
         """
+
+        game_data = setup.game_data()
+
         item_type = item['type']
         quantity = item['quantity']
         value = item['price']
@@ -326,12 +335,10 @@ class Gui(object):
         magic_list = ['Cure', 'Fire Blast']
         player_armor = ['Chain Mail', 'Wooden Shield']
         player_weapons = ['Rapier', 'Long Sword']
-        player_items = self.level.game_data['player inventory']
-        player_health = self.level.game_data['player stats']['health']
-        player_magic = self.level.game_data['player stats']['magic']
-        equipped_armor = self.level.game_data[
-            'player inventory'][
-                'equipped armor']
+        player_items = game_data['player inventory']
+        player_health = game_data['player stats']['health']
+        player_magic = game_data['player stats']['magic']
+        equipped_armor = game_data['player inventory']['equipped armor']
 
         item_to_add = {'quantity': quantity,
                        'value': value,
@@ -352,7 +359,7 @@ class Gui(object):
         elif item_type == 'room':
             player_health['current'] = player_health['maximum']
             player_magic['current'] = player_magic['maximum']
-            pickle.dump(self.game_data, open("save.p", "wb"))
+            pickle.dump(game_data, open("save.p", "wb"))
 
     def confirm_sell(self):
         """
@@ -398,19 +405,17 @@ class Gui(object):
         item_price = self.item_to_be_sold['price']
         item_name = self.item_to_be_sold['type']
 
+        game_data = setup.game_data()
+
         if item_name in self.weapon_list:
-            if item_name == self.game_data[
-                    'player inventory'][
-                        'equipped weapon']:
+            if item_name == game_data['player inventory']['equipped weapon']:
                 self.state = 'cantsellequippedweapon'
             else:
                 self.notify(c.CLOTH_BELT)
                 self.sell_inventory_data_adjust(item_price, item_name)
 
         elif item_name in self.armor_list:
-            if item_name in self.game_data[
-                    'player inventory'][
-                        'equipped armor']:
+            if item_name in game_data['player inventory']['equipped armor']:
                 self.state = 'cantsellequippedarmor'
             else:
                 self.notify(c.CLOTH_BELT)
@@ -539,7 +544,7 @@ class Gui(object):
                     self.arrow_index = 0
             else:
                 self.level.state = 'transition out'
-                self.game_data['last state'] = self.level.name
+                setup.game_data()['last state'] = self.level.name
 
             self.arrow_index = 0
             self.notify(c.CLICK2)
@@ -673,11 +678,13 @@ class Gui(object):
         state_function()
 
 
-    def draw(self, surface):
+    def draw(self):
         """Draw GUI to level surface"""
         #state_list1 = ['dialogue', 'reject', 'accept', 'hasitem']
         state_list2 = [
             'select', 'confirmpurchase', 'buysell', 'sell', 'confirmsell']
+
+        surface = setup.screen()
 
         surface.blit(self.dialogue_box.image, self.dialogue_box.rect)
         surface.blit(self.gold_box.image, self.gold_box.rect)

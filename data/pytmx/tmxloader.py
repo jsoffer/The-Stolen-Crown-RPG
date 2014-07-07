@@ -186,8 +186,9 @@ def _load_images_pygame(tmxdata, *_, **kwargs):
                             tile, colorkey, force_colorkey, pixelalpha)
                         tmxdata.images[gid] = tile
                 except ValueError as ve_exception:
-                    print(ve_exception, path,
-                          (tiles_x, tiles_y), tile_size, image.get_rect())
+                    pass
+                    #print(ve_exception, path,
+                    #      (tiles_x, tiles_y), tile_size, image.get_rect())
 
 
     # load image layer images

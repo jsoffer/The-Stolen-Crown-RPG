@@ -20,6 +20,7 @@ TMX = None
 FONT = None
 
 KEYS = None
+GAME_DATA = None
 
 def update_keys():
     global KEYS
@@ -27,6 +28,13 @@ def update_keys():
 
 def keys():
     return KEYS
+
+def register_game_data(_game_data):
+    global GAME_DATA
+    GAME_DATA = _game_data
+
+def game_data():
+    return GAME_DATA
 
 def register_screen(_screen):
     global SCREEN

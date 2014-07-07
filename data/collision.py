@@ -1,4 +1,5 @@
 import pygame as pg
+from . import setup
 
 class CollisionHandler(object):
     """Handles collisions between the user, blockers and computer
@@ -82,9 +83,10 @@ class CollisionHandler(object):
         """
         Switch scene to battle 1/5 times if battles are allowed.
         """
+        game_data = setup.game_data()
         if self.level.allow_battles:
-            self.level.game_data['battle counter'] -= 5
-            if self.level.game_data['battle counter'] <= 0:
+            game_data['battle counter'] -= 5
+            if game_data['battle counter'] <= 0:
                 self.level.switch_to_battle = True
 
 def make_blocker_list(blockers, sprites):

@@ -31,9 +31,8 @@ class Shop(tools.State):
         self.music = setup.music()['shop_theme']
         self.volume = 0.4
 
-    def startup(self, game_data):
+    def startup(self):
         """Startup state"""
-        self.game_data = game_data
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
         self.next = c.TOWN
@@ -103,26 +102,30 @@ class Shop(tools.State):
 
         return sprite
 
-    def update(self, surface):
+    def update(self):
         """
         Update scene.
         """
-        state_function = self.state_dict[self.state]
-        state_function(surface)
 
-    def normal_update(self, surface):
+        state_function = self.state_dict[self.state]
+        state_function()
+
+    def normal_update(self):
         """
         Update level normally.
         """
         self.gui.update()
-        self.draw_level(surface)
+        self.draw_level()
 
-    def draw_level(self, surface):
+    def draw_level(self):
         """
         Blit graphics to game surface.
         """
+
+        surface = setup.screen()
+
         surface.blit(self.background.image, self.background.rect)
-        self.gui.draw(surface)
+        self.gui.draw()
 
 
 class Inn(Shop):

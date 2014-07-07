@@ -36,16 +36,15 @@ class Control(object):
     the event_loop which passes events to States as needed.  Logic for flipping
     states is also found here.
     """
-    def __init__(self, caption):
-        # drawable
-        self.screen = pg.display.get_surface()
-        self.caption = caption
+    def __init__(self):
+
         # stop condition
-        self.done = False
+        self.quit = False
+
         # clock
         self.clock = pg.time.Clock()
 
-        # 'setup.keys()' keeps a global key state; it's updated 
+        # 'setup.keys()' keeps a global key state; it's updated
         # with update_keys
         setup.update_keys()
 
@@ -60,19 +59,25 @@ class Control(object):
         make sure its music is set
 
         """
+
         self.state_dict = state_dict
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
+
         self.set_music()
 
     def update(self):
-        """ Update self.state... maybe better in State itself?
+        """
+        Propagate the update tick to the current state; if the current state
+        is done, advance to the next
 
         """
 
         if self.state.done:
+            self.state.done = False
             self.flip_state()
-        self.state.update(self.screen)
+
+        self.state.update()
 
     def flip_state(self):
         """ Choose a new state from the pool; if the state changed,
@@ -80,21 +85,30 @@ class Control(object):
 
         """
 
-        previous, self.state_name = self.state_name, self.state.next
-        previous_music = self.state.music_title
-        persist = self.state.cleanup()
+        # keep some info of the current state
+        current_music = self.state.music_title
+        current_name = self.state_name
+
+        # update
+        self.state_name = self.state.next
         self.state = self.state_dict[self.state_name]
-        self.state.previous = previous
-        self.state.previous_music = previous_music
-        self.state.startup(persist)
+
+        self.state.previous = current_name
+        self.state.previous_music = current_music
+
+        # initialize the new state
+        self.state.startup()
         self.set_music()
 
     def set_music(self):
         """
         Set music for the new state.
         """
+
         if self.state.music_title == self.state.previous_music:
+            # do not restart when the song didn't change
             pass
+
         elif self.state.music:
             pg.mixer.music.load(self.state.music)
             pg.mixer.music.set_volume(self.state.volume)
@@ -105,14 +119,18 @@ class Control(object):
 
         for event in events:
             if event.type == pg.QUIT:
-                self.done = True
+                self.quit = True
+
             elif event.type == pg.KEYDOWN or event.type == pg.KEYUP:
                 setup.update_keys()
-                self.state.get_event(event)
+                if setup.keys()[pg.K_q]:
+                    self.quit = True
+
+            self.state.get_event(event)
 
     def main(self):
         """Main loop for entire program"""
-        while not self.done:
+        while not self.quit:
             self.event_loop()
             self.update()
             pg.display.update()
@@ -122,33 +140,31 @@ class State(object):
     """Base class for all game states"""
     def __init__(self):
         self.done = False
-        self.next = None
-        self.previous = None
-        self.game_data = {}
+
         self.music = None
         self.music_title = None
+
+        self.next = None
+
+        self.previous = None
         self.previous_music = None
 
-        self.transition_surface = pg.Surface(setup.screen_rect().size)
-        self.transition_surface.fill(c.TRANSITION_COLOR)
-        self.transition_surface.set_alpha(255)
+        #self.transition_surface = pg.Surface(setup.screen_rect().size)
+        #self.transition_surface.fill(c.TRANSITION_COLOR)
+        #self.transition_surface.set_alpha(255)
 
-        self.transition_rect = setup.screen().get_rect()
-        self.transition_alpha = 255
+        #self.transition_rect = setup.screen().get_rect()
+        #self.transition_alpha = 255
 
         self.state = None
 
     def get_event(self, event):
         pass
 
-    def startup(self, game_data):
-        self.game_data = game_data
+    def startup(self):
+        pass
 
-    def cleanup(self):
-        self.done = False
-        return self.game_data
-
-    def update(self, surface):
+    def update(self):
         pass
 
     def make_state_dict(self):
@@ -191,28 +207,36 @@ class State(object):
         """
         Transition into level.
         """
-        self.transition_surface.set_alpha(self.transition_alpha)
+
+        self.state = 'normal'
+
         if surface is not None:
             self.draw_level(surface)
-            surface.blit(self.transition_surface, self.transition_rect)
-        self.transition_alpha -= c.TRANSITION_SPEED
-        if self.transition_alpha <= 0:
-            self.state = 'normal'
-            self.transition_alpha = 0
 
-    def transition_out(self, surface=None):
+        #self.transition_surface.set_alpha(self.transition_alpha)
+        #if surface is not None:
+        #    self.draw_level(surface)
+        #    surface.blit(self.transition_surface, self.transition_rect)
+        #self.transition_alpha -= c.TRANSITION_SPEED
+        #if self.transition_alpha <= 0:
+        #    self.state = 'normal'
+        #    self.transition_alpha = 0
+
+    def transition_out(self):
         """
         Transition level to new scene.
         """
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        if surface is not None:
-            self.draw_level(surface)
-            surface.blit(self.transition_surface, self.transition_rect)
-        self.transition_alpha += c.TRANSITION_SPEED
-        if self.transition_alpha >= 255:
-            self.done = True
+        self.done = True
+
+        #transition_image = pg.Surface(self.transition_rect.size)
+        #transition_image.fill(c.TRANSITION_COLOR)
+        #transition_image.set_alpha(self.transition_alpha)
+        #if surface is not None:
+        #    self.draw_level(surface)
+        #    surface.blit(self.transition_surface, self.transition_rect)
+        #self.transition_alpha += c.TRANSITION_SPEED
+        #if self.transition_alpha >= 255:
+        #    self.done = True
 
 def get_image(pos_x, pos_y, width, height, sprite_sheet):
     """ Extracts image from sprite sheet """
@@ -300,7 +324,7 @@ def create_game_data_dict():
                  'delivered crown': False,
                  'brother item': 'ELIXIR'}
 
-    return data_dict
+    setup.register_game_data(data_dict)
 
 def empty_background():
     """

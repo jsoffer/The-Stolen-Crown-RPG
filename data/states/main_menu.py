@@ -29,7 +29,7 @@ class Menu(tools.State):
         self.name = c.MAIN_MENU
         self.startup()
 
-    def startup(self, unused_game_data=None):
+    def startup(self):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
@@ -42,32 +42,37 @@ class Menu(tools.State):
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.alpha = 255
-        self.transition_surface = pg.Surface(setup.screen_rect().size)
-        self.transition_surface.fill(c.BLACK_BLUE)
-        self.transition_surface.set_alpha(self.alpha)
 
-    def update(self, surface):
+        #self.transition_surface = pg.Surface(setup.screen_rect().size)
+        #self.transition_surface.fill(c.BLACK_BLUE)
+        #self.transition_surface.set_alpha(self.alpha)
+
+    def update(self):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(surface)
-        self.draw_level(surface)
+        update_level()
+        self.draw_level()
 
-    def draw_level(self, surface):
+    def draw_level(self):
         """
         Blit tmx map and title box onto screen.
         """
+
+        surface = setup.screen()
+
         self.level_surface.blit(self.map_image, self.viewport, self.viewport)
         self.level_surface.blit(self.title_box, self.title_rect)
         surface.blit(self.level_surface, (0, 0), self.viewport)
-        surface.blit(self.transition_surface, (0, 0))
+
+        #surface.blit(self.transition_surface, (0, 0))
 
     def get_event(self, event):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def normal_update(self, surface):
+    def normal_update(self):
         pass
 
 
@@ -96,7 +101,7 @@ class Instructions(tools.State):
         self.music_title = None
 
 
-    def startup(self, unused_game_data=None):
+    def startup(self):
         self.renderer = tilerender.Renderer(self.tmx_map)
         self.map_image = self.renderer.make_2x_map()
         self.map_rect = self.map_image.get_rect()
@@ -106,7 +111,10 @@ class Instructions(tools.State):
         self.title_rect = self.title_box.get_rect()
         self.title_rect.midbottom = self.viewport.midbottom
         self.title_rect.y -= 30
-        self.game_data = tools.create_game_data_dict()
+
+        # it's registered on 'setup' by create_game_data_dict
+        tools.create_game_data_dict()
+
         self.next = set_next_scene()
         self.state_dict = self.make_state_dict()
         self.name = c.MAIN_MENU
@@ -127,23 +135,26 @@ class Instructions(tools.State):
         """
         return setup.gfx()['instructions_box']
 
-    def update(self, surface):
+    def update(self):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
-        update_level(surface)
-        self.draw_level(surface)
+        update_level()
+        self.draw_level()
 
-    def draw_level(self, surface):
+    def draw_level(self):
         """
         Blit tmx map and title box onto screen.
         """
+
+        surface = setup.screen()
+
         self.level_surface.blit(self.map_image, self.viewport, self.viewport)
         self.level_surface.blit(self.title_box, self.title_rect)
         self.draw_arrow()
         surface.blit(self.level_surface, (0, 0), self.viewport)
-        surface.blit(self.transition_surface, (0, 0))
+        #surface.blit(self.transition_surface, (0, 0))
 
     def draw_arrow(self):
         pass
@@ -152,7 +163,7 @@ class Instructions(tools.State):
         if event.type == pg.KEYDOWN:
             self.state = c.TRANSITION_OUT
 
-    def normal_update(self, surface):
+    def normal_update(self):
         pass
 
 def set_next_scene():
@@ -190,7 +201,7 @@ class LoadGame(Instructions):
     def get_event(self, event):
         pass
 
-    def normal_update(self, surface):
+    def normal_update(self):
 
         keys = setup.keys()
 
@@ -205,7 +216,10 @@ class LoadGame(Instructions):
                 self.allow_input = False
             elif keys[pg.K_SPACE]:
                 if self.arrow.index == 0:
-                    self.game_data = pickle.load(open("save.p", "rb"))
+
+                    #self.game_data = pickle.load(open("save.p", "rb"))
+                    setup.register_game_data(pickle.load(open("save.p", "rb")))
+
                     self.next = c.TOWN
                     self.state = c.TRANSITION_OUT
                 else:

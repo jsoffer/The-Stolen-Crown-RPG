@@ -44,15 +44,19 @@ class Battle(tools.State):
 
         self.action_timer = Timer(1500)
 
-    def startup(self, game_data):
+    def startup(self):
         """
         Initialize state attributes.
         """
+
+        game_data = setup.game_data()
+
         self.allow_input = False
-        self.game_data = game_data
         self.inventory = game_data['player inventory']
         self.state = 'transition in'
+        print("NEXT PRE", self.next)
         self.next = game_data['last state']
+        print("NEXT POST", self.next)
         self.run_away = False
 
         self.player = self.make_player()
@@ -63,14 +67,12 @@ class Battle(tools.State):
         self.experience_points = self.get_experience_points()
         self.new_gold = self.get_new_gold()
         self.background = make_background()
-        self.info_box = battlegui.InfoBox(game_data,
-                                          self.experience_points,
+        self.info_box = battlegui.InfoBox(self.experience_points,
                                           self.new_gold)
         self.arrow = battlegui.SelectArrow(self.enemy_pos_list,
                                            self.info_box)
         self.select_box = battlegui.SelectBox()
-        self.player_health_box = battlegui.PlayerHealth(self.select_box.rect,
-                                                        self.game_data)
+        self.player_health_box = battlegui.PlayerHealth(self.select_box.rect)
 
         self.select_action_state_dict = self.make_selection_state_dict()
         self.observers = [observer.Battle(self),
@@ -80,12 +82,12 @@ class Battle(tools.State):
         self.damage_points = pg.sprite.Group()
         self.player_actions = []
         self.player_action_dict = self.make_player_action_dict()
-        self.player_level = self.game_data['player stats']['Level']
+        self.player_level = game_data['player stats']['Level']
         self.enemies_to_attack = []
         self.action_selected = False
-        self.transition_rect = setup.screen().get_rect()
-        self.transition_alpha = 255
-        self.temp_magic = self.game_data['player stats']['magic']['current']
+        #self.transition_rect = setup.screen().get_rect()
+        #self.transition_alpha = 255
+        self.temp_magic = game_data['player stats']['magic']['current']
 
     def make_player_action_dict(self):
         """
@@ -130,6 +132,7 @@ class Battle(tools.State):
         Make the enemies for the battle. Return sprite group.
         """
         pos_list = []
+        game_data = setup.game_data()
 
         for column in range(3):
             for row in range(3):
@@ -139,16 +142,16 @@ class Battle(tools.State):
 
         enemy_group = pg.sprite.Group()
 
-        if self.game_data['battle type']:
+        if game_data['battle type']:
             enemy = person.Enemy('evilwizard', 0, 0,
                                  'down', 'battle resting')
             enemy_group.add(enemy)
         else:
-            if self.game_data['start of game']:
+            if game_data['start of game']:
                 for enemy in range(3):
                     enemy_group.add(person.Enemy('devil', 0, 0,
                                                  'down', 'battle resting'))
-                self.game_data['start of game'] = False
+                game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 2)):
                     enemy_group.add(person.Enemy('devil', 0, 0,
@@ -172,8 +175,7 @@ class Battle(tools.State):
         """
         Make the sprite for the player's character.
         """
-        player = person.Player(
-            'left', self.game_data, 630, 220, 'battle resting', 1)
+        player = person.Player('left', 630, 220, 'battle resting', 1)
         player.image = pg.transform.scale2x(player.image)
         return player
 
@@ -193,7 +195,7 @@ class Battle(tools.State):
             self.enter_select_magic_state, self.try_to_run_away]
         return dict(zip(pos_list, state_list))
 
-    def update(self, surface):
+    def update(self):
         """
         Update the battle state.
         """
@@ -209,7 +211,7 @@ class Battle(tools.State):
         self.damage_points.update()
         self.execute_player_actions()
 
-        self.draw_battle(surface)
+        self.draw_battle()
 
     def check_input(self):
         """
@@ -217,18 +219,17 @@ class Battle(tools.State):
         """
 
         keys = setup.keys()
+        game_data = setup.game_data()
 
         if not self.allow_input:
-            print("NOT ALLOWING INPUT...")
             if keys[pg.K_RETURN] == False and keys[pg.K_SPACE] == False:
                 self.allow_input = True
-                print("ENABLING INPUT...")
             return
 
         if not keys[pg.K_SPACE]:
             return
 
-        inventory = self.game_data['player inventory']
+        inventory = game_data['player inventory']
 
         print(self.state)
 
@@ -248,11 +249,11 @@ class Battle(tools.State):
             if self.arrow.index == (len(self.arrow.pos_list) - 1):
                 self.enter_select_action_state()
             elif selected.startswith('Healing Potion'):
-                if 'Healing Potion' in self.game_data['player inventory']:
+                if 'Healing Potion' in game_data['player inventory']:
                     self.player_actions.append(c.DRINK_HEALING_POTION)
                     self.action_selected = True
             elif selected.startswith('Ether'):
-                if 'Ether Potion' in self.game_data['player inventory']:
+                if 'Ether Potion' in game_data['player inventory']:
                     self.player_actions.append(c.DRINK_ETHER_POTION)
                     self.action_selected = True
 
@@ -280,6 +281,9 @@ class Battle(tools.State):
         """
         Check if amount of time has passed for timed events.
         """
+
+        game_data = setup.game_data()
+
         timed_states = [c.PLAYER_DAMAGED,
                         c.ENEMY_DAMAGED,
                         c.ENEMY_DEAD,
@@ -335,23 +339,23 @@ class Battle(tools.State):
                 self.enter_show_gold_state()
 
         elif self.state == c.SHOW_GOLD:
-            if self.action_timer.done(1800):
+            if self.action_timer.done(1900):
                 self.enter_show_experience_state()
 
         elif self.state == c.LEVEL_UP:
-            if self.action_timer.done(2200):
-                if self.game_data['player stats']['Level'] == 3:
+            if self.action_timer.done(2000):
+                if game_data['player stats']['Level'] == 3:
                     self.msg_two_actions()
                 else:
                     self.end_battle()
 
         elif self.state == c.TWO_ACTIONS:
-            if self.action_timer.done(3000):
+            if self.action_timer.done(2100):
                 self.end_battle()
 
         elif self.state == c.SHOW_EXPERIENCE:
             if self.action_timer.done(2200):
-                player_stats = self.game_data['player stats']
+                player_stats = game_data['player stats']
                 player_stats['experience to next level'] -= (
                     self.experience_points)
                 if player_stats['experience to next level'] <= 0:
@@ -399,12 +403,17 @@ class Battle(tools.State):
         """
         End battle and flip back to previous state.
         """
-        if self.game_data['battle type'] == 'evilwizard':
-            self.game_data['crown quest'] = True
-            self.game_data['talked to king'] = True
-        self.game_data['last state'] = self.name
-        self.game_data['battle counter'] = random.randint(50, 255)
-        self.game_data['battle type'] = None
+
+        game_data = setup.game_data()
+
+        if game_data['battle type'] == 'evilwizard':
+            game_data['crown quest'] = True
+            game_data['talked to king'] = True
+        print("END PRE", game_data['last state'])
+        game_data['last state'] = self.name
+        print("END POST", game_data['last state'])
+        game_data['battle counter'] = random.randint(50, 255)
+        game_data['battle type'] = None
         self.state = 'transition out'
 
     def attack_enemy(self, enemy_damage):
@@ -424,106 +433,127 @@ class Battle(tools.State):
         for i, enemy in enumerate(self.enemy_list):
             enemy.index = i
 
-    def draw_battle(self, surface):
+    def draw_battle(self):
         """Draw all elements of battle state"""
+
+        surface = setup.screen()
+
         self.background.draw(surface)
         self.enemy_group.draw(surface)
         self.attack_animations.draw(surface)
-        self.sword.draw(surface)
+        self.sword.draw()
         surface.blit(self.player.image, self.player.rect)
         surface.blit(self.info_box.image, self.info_box.rect)
         surface.blit(self.select_box.image, self.select_box.rect)
         surface.blit(self.arrow.image, self.arrow.rect)
-        self.player_health_box.draw(surface)
+        self.player_health_box.draw()
         self.damage_points.draw(surface)
-        self.draw_transition(surface)
+        self.draw_transition()
 
-    def draw_transition(self, surface):
+    def draw_transition(self):
         """
         Fade in and out of state.
         """
         if self.state == 'transition in':
 
-            transition_image = pg.Surface(self.transition_rect.size)
-            transition_image.fill(c.TRANSITION_COLOR)
-            transition_image.set_alpha(self.transition_alpha)
-            surface.blit(transition_image, self.transition_rect)
-            self.transition_alpha -= c.TRANSITION_SPEED
-            if self.transition_alpha <= 0:
-                self.state = c.SELECT_ACTION
-                self.transition_alpha = 0
+            self.state = c.SELECT_ACTION
+
+            #transition_image = pg.Surface(self.transition_rect.size)
+            #transition_image.fill(c.TRANSITION_COLOR)
+            #transition_image.set_alpha(self.transition_alpha)
+            #surface.blit(transition_image, self.transition_rect)
+            #self.transition_alpha -= c.TRANSITION_SPEED
+            #if self.transition_alpha <= 0:
+            #    self.state = c.SELECT_ACTION
+            #    self.transition_alpha = 0
 
         elif self.state == 'transition out':
-            transition_image = pg.Surface(self.transition_rect.size)
-            transition_image.fill(c.TRANSITION_COLOR)
-            transition_image.set_alpha(self.transition_alpha)
-            surface.blit(transition_image, self.transition_rect)
-            self.transition_alpha += c.TRANSITION_SPEED
-            if self.transition_alpha >= 255:
-                self.done = True
+            self.done = True
+            #transition_image = pg.Surface(self.transition_rect.size)
+            #transition_image.fill(c.TRANSITION_COLOR)
+            #transition_image.set_alpha(self.transition_alpha)
+            #surface.blit(transition_image, self.transition_rect)
+            #self.transition_alpha += c.TRANSITION_SPEED
+            #if self.transition_alpha >= 255:
+            #    self.done = True
 
         elif self.state == c.DEATH_FADE:
-            transition_image = pg.Surface(self.transition_rect.size)
-            transition_image.fill(c.TRANSITION_COLOR)
-            transition_image.set_alpha(self.transition_alpha)
-            surface.blit(transition_image, self.transition_rect)
-            self.transition_alpha += c.DEATH_TRANSITION_SPEED
-            if self.transition_alpha >= 255:
-                self.done = True
-                self.next = c.DEATH_SCENE
+            self.done = True
+            #transition_image = pg.Surface(self.transition_rect.size)
+            #transition_image.fill(c.TRANSITION_COLOR)
+            #transition_image.set_alpha(self.transition_alpha)
+            #surface.blit(transition_image, self.transition_rect)
+            #self.transition_alpha += c.DEATH_TRANSITION_SPEED
+            #if self.transition_alpha >= 255:
+            #    self.done = True
+            #    self.next = c.DEATH_SCENE
 
     def player_damaged(self, damage):
-        self.game_data['player stats']['health']['current'] -= damage
-        if self.game_data['player stats']['health']['current'] <= 0:
-            self.game_data['player stats']['health']['current'] = 0
+
+        game_data = setup.game_data()
+
+        game_data['player stats']['health']['current'] -= damage
+        if game_data['player stats']['health']['current'] <= 0:
+            game_data['player stats']['health']['current'] = 0
             self.state = c.DEATH_FADE
 
     def player_healed(self, heal, magic_points=0):
         """
         Add health from potion to game data.
         """
-        health = self.game_data['player stats']['health']
+
+        game_data = setup.game_data()
+
+        health = game_data['player stats']['health']
 
         health['current'] += heal
+
         if health['current'] > health['maximum']:
             health['current'] = health['maximum']
 
         if self.state == c.DRINK_HEALING_POTION:
-            self.game_data[
+            game_data[
                 'player inventory'][
                     'Healing Potion'][
                         'quantity'] -= 1
-            if self.game_data[
+            if game_data[
                     'player inventory'][
                         'Healing Potion'][
                             'quantity'] == 0:
-                del self.game_data['player inventory']['Healing Potion']
+                del game_data['player inventory']['Healing Potion']
+
         elif self.state == c.CURE_SPELL:
-            self.game_data['player stats']['magic']['current'] -= magic_points
+            game_data['player stats']['magic']['current'] -= magic_points
 
     def magic_boost(self, magic_points):
         """
         Add magic from ether to game data.
         """
-        magic = self.game_data['player stats']['magic']
+
+        game_data = setup.game_data()
+
+        magic = game_data['player stats']['magic']
         magic['current'] += magic_points
         self.temp_magic += magic_points
         if magic['current'] > magic['maximum']:
             magic['current'] = magic['maximum']
 
-        self.game_data['player inventory']['Ether Potion']['quantity'] -= 1
-        if not self.game_data['player inventory']['Ether Potion']['quantity']:
-            del self.game_data['player inventory']['Ether Potion']
+        game_data['player inventory']['Ether Potion']['quantity'] -= 1
+        if not game_data['player inventory']['Ether Potion']['quantity']:
+            del game_data['player inventory']['Ether Potion']
 
     def cast_fire_blast(self):
         """
         Cast fire blast on all enemies.
         """
+
+        game_data = setup.game_data()
+
         self.notify(c.FIRE)
         self.state = self.info_box.state = c.FIRE_SPELL
         power = self.inventory['Fire Blast']['power']
         magic_points = self.inventory['Fire Blast']['magic points']
-        self.game_data['player stats']['magic']['current'] -= magic_points
+        game_data['player stats']['magic']['current'] -= magic_points
         for enemy in self.enemy_list:
             damage = random.randint(power//2, power)
             self.damage_points.add(

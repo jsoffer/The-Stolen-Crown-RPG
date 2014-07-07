@@ -46,11 +46,10 @@ class LevelState(tools.State):
         self.volume = None
         self.portal = None
 
-    def startup(self, game_data):
+    def startup(self):
         """
         Call when the State object is flipped to.
         """
-        self.game_data = game_data
         self.music, self.volume = self.set_music()
         self.state = 'transition_in'
         #self.reset_dialogue = ()
@@ -76,7 +75,7 @@ class LevelState(tools.State):
                                                             self)
         self.dialogue_handler = textbox.TextHandler(self)
         self.state_dict = self.make_state_dict()
-        self.menu_screen = player_menu.PlayerMenu(game_data, self)
+        self.menu_screen = player_menu.PlayerMenu(self)
 
     def set_music(self):
         """
@@ -93,7 +92,7 @@ class LevelState(tools.State):
                       c.HOUSE: ('pleasant_creek', .1),
                       c.BROTHER_HOUSE: ('pleasant_creek', .1)}
 
-        if self.game_data['crown quest'] and (
+        if setup.game_data()['crown quest'] and (
                 self.name == c.TOWN or self.name == c.CASTLE):
             self.music_title = 'kings_theme'
             return setup.music()['kings_theme'], .4
@@ -125,11 +124,12 @@ class LevelState(tools.State):
         """
         last_state = self.previous
 
+        game_data = setup.game_data()
+
         if last_state == 'battle':
-            player = person.Player(
-                self.game_data['last direction'], self.game_data)
-            player.rect.x = self.game_data['last location'][0] * 32
-            player.rect.y = self.game_data['last location'][1] * 32
+            player = person.Player(game_data['last direction'])
+            player.rect.x = game_data['last location'][0] * 32
+            player.rect.y = game_data['last location'][1] * 32
 
         else:
             for obj in self.renderer.tmx_data.get_objects():
@@ -138,8 +138,7 @@ class LevelState(tools.State):
                     if last_state == properties['state']:
                         posx = properties['x'] * 2
                         posy = (properties['y'] * 2) - 32
-                        player = person.Player(properties['direction'],
-                                               self.game_data)
+                        player = person.Player(properties['direction'])
                         player.rect.x = posx
                         player.rect.y = posy
 
@@ -236,16 +235,18 @@ class LevelState(tools.State):
                 if sprite_state:
                     sprite.state = sprite_state
 
+                game_data = setup.game_data()
+
                 if sprite.name == 'oldman':
                     if (
-                            self.game_data['old man gift'] and not
-                            self.game_data['elixir received']):
-                        sprite.item = self.game_data['old man gift']
+                            game_data['old man gift'] and not
+                            game_data['elixir received']):
+                        sprite.item = game_data['old man gift']
                     else:
                         sprite.item = item
                 elif sprite.name == 'king':
-                    if not self.game_data['talked to king']:
-                        sprite.item = self.game_data['king item']
+                    if not game_data['talked to king']:
+                        sprite.item = game_data['king item']
                 else:
                     sprite.item = item
                 sprite.battle = battle
@@ -253,7 +254,7 @@ class LevelState(tools.State):
                 self.check_for_opened_chest(sprite)
                 if (
                         sprite.name == 'evilwizard' and
-                        self.game_data['crown quest']):
+                        game_data['crown quest']):
                     pass
                 else:
                     sprites.add(sprite)
@@ -265,6 +266,9 @@ class LevelState(tools.State):
         Assign dialogue from object property dictionaries in tmx maps to sprites
         """
         dialogue_list = []
+
+        game_data = setup.game_data()
+
         for i in range(int(property_dict['dialogue length'])):
             dialogue_list.append(property_dict['dialogue'+str(i)])
             sprite.dialogue = dialogue_list
@@ -273,8 +277,8 @@ class LevelState(tools.State):
             quest_in_process_dialogue = ['Hurry to the NorthEast Shores!',
                                          'I do not have much time left.']
 
-            if self.game_data['has brother elixir']:
-                if self.game_data['elixir received']:
+            if game_data['has brother elixir']:
+                if game_data['elixir received']:
                     sprite.dialogue = ['My good health is thanks to you.',
                                        'I will be forever in your debt.']
                 else:
@@ -285,20 +289,20 @@ class LevelState(tools.State):
                         'Use it wisely.',
                         'You learned FIRE BLAST.']
 
-            elif self.game_data['talked to sick brother']:
+            elif game_data['talked to sick brother']:
                 sprite.dialogue = quest_in_process_dialogue
 
-            #elif not self.game_data['talked to sick brother']:
+            #elif not game_data['talked to sick brother']:
                 #self.reset_dialogue = (sprite, quest_in_process_dialogue)
 
         elif sprite.name == 'oldmanbrother':
-            if self.game_data['has brother elixir']:
-                if self.game_data['elixir received']:
+            if game_data['has brother elixir']:
+                if game_data['elixir received']:
                     sprite.dialogue = ['I am glad my brother is doing well.',
                                        'You have a wise and generous spirit.']
                 else:
                     sprite.dialogue = ['Hurry! There is precious little time.']
-            elif self.game_data['talked to sick brother']:
+            elif game_data['talked to sick brother']:
                 sprite.dialogue = [
                     'My brother is sick?!?',
                     'I have not seen him in years. '
@@ -315,17 +319,17 @@ class LevelState(tools.State):
                                   'My kingdom is forever in your debt.']
 
             if (
-                    self.game_data['crown quest'] and not
-                    self.game_data['delivered crown']):
+                    game_data['crown quest'] and not
+                    game_data['delivered crown']):
                 sprite.dialogue = retrieved_crown_dialogue
                 #self.reset_dialogue = (sprite, thank_you_dialogue)
-            elif self.game_data['delivered crown']:
+            elif game_data['delivered crown']:
                 sprite.dialogue = thank_you_dialogue
 
 
     def check_for_opened_chest(self, sprite):
         if sprite.name == 'treasurechest':
-            if not self.game_data['treasure{}'.format(sprite.identifier)]:
+            if not setup.game_data()['treasure{}'.format(sprite.identifier)]:
                 sprite.dialogue = ['Empty.']
                 sprite.item = None
                 sprite.index = 1
@@ -360,7 +364,7 @@ class LevelState(tools.State):
 
         return portal_group
 
-    def running_normally(self, surface):
+    def running_normally(self):
         """
         Update level normally.
         """
@@ -374,7 +378,7 @@ class LevelState(tools.State):
         self.dialogue_handler.update()
         self.check_for_menu()
         self.viewport_update()
-        self.draw_level(surface)
+        self.draw_level()
 
     def check_for_portals(self):
         """
@@ -417,16 +421,19 @@ class LevelState(tools.State):
         """
         Update the persistant game data dictionary.
         """
-        self.game_data['last location'] = self.player.location
-        self.game_data['last direction'] = self.player.direction
-        self.game_data['last state'] = self.name
+
+        game_data = setup.game_data()
+
+        game_data['last location'] = self.player.location
+        game_data['last direction'] = self.player.direction
+        game_data['last state'] = self.name
         self.set_new_start_pos()
 
     def check_for_end_of_game(self):
         """
         Switch scene to credits if main quest is complete.
         """
-        if self.game_data['delivered crown']:
+        if setup.game_data()['delivered crown']:
             self.next = c.CREDITS
             self.state = 'slow transition out'
 
@@ -434,8 +441,11 @@ class LevelState(tools.State):
         """
         Set new start position based on previous state.
         """
-        location = copy.deepcopy(self.game_data['last location'])
-        direction = self.game_data['last direction']
+
+        game_data = setup.game_data()
+
+        location = copy.deepcopy(game_data['last location'])
+        direction = game_data['last direction']
 
         if self.next == 'player menu':
             pass
@@ -448,19 +458,19 @@ class LevelState(tools.State):
         elif direction == 'right':
             location[0] -= 1
 
-    def handling_dialogue(self, surface):
+    def handling_dialogue(self):
         """
         Update only dialogue boxes.
         """
         self.dialogue_handler.update()
-        self.draw_level(surface)
+        self.draw_level()
 
-    def goto_menu(self, surface):
+    def goto_menu(self):
         """
         Go to menu screen.
         """
-        self.menu_screen.update(surface)
-        self.menu_screen.draw(surface)
+        self.menu_screen.update()
+        self.menu_screen.draw()
 
     def check_for_dialogue(self):
         """
@@ -469,26 +479,27 @@ class LevelState(tools.State):
         if self.dialogue_handler.textbox:
             self.state = 'dialogue'
 
-    def slow_fade_out(self, surface, *_):
+    def slow_fade_out(self):
         """
         Transition level to new scene.
         """
-        transition_image = pg.Surface(self.transition_rect.size)
-        transition_image.fill(c.TRANSITION_COLOR)
-        transition_image.set_alpha(self.transition_alpha)
-        self.draw_level(surface)
-        surface.blit(transition_image, self.transition_rect)
-        self.transition_alpha += 2
-        if self.transition_alpha >= 255:
-            self.transition_alpha = 255
-            self.done = True
+        self.done = True
+        #transition_image = pg.Surface(self.transition_rect.size)
+        #transition_image.fill(c.TRANSITION_COLOR)
+        #transition_image.set_alpha(self.transition_alpha)
+        #self.draw_level(surface)
+        #surface.blit(transition_image, self.transition_rect)
+        #self.transition_alpha += 2
+        #if self.transition_alpha >= 255:
+        #    self.transition_alpha = 255
+        #    self.done = True
 
-    def update(self, surface):
+    def update(self):
         """
         Update state.
         """
         state_function = self.state_dict[self.state]
-        state_function(surface)
+        state_function()
 
     def viewport_update(self):
         """
@@ -498,16 +509,19 @@ class LevelState(tools.State):
         self.viewport.center = self.player.rect.center
         self.viewport.clamp_ip(self.level_rect)
 
-    def draw_level(self, surface):
+    def draw_level(self):
         """
         Blit all images to screen.
         """
+
+        surface = setup.screen()
+
         self.level_surface.blit(self.map_image, self.viewport, self.viewport)
         self.level_surface.blit(self.player.image, self.player.rect)
         self.sprites.draw(self.level_surface)
 
         surface.blit(self.level_surface, (0, 0), self.viewport)
-        self.dialogue_handler.draw(surface)
+        self.dialogue_handler.draw()
 
 def make_viewport(map_image):
     """

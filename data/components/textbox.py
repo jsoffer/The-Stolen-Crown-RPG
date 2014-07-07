@@ -88,7 +88,6 @@ class TextHandler(object):
         self.textbox = None
         self.allow_input = False
         self.level = level
-        self.game_data = level.game_data
         self.observers = [observer.SoundEffects()]
         self.notify = tools.notify_observers
 
@@ -98,6 +97,7 @@ class TextHandler(object):
         """Checks for the creation of Dialogue boxes"""
 
         keys = setup.keys()
+        game_data = setup.game_data()
 
         if keys[pg.K_SPACE] and not self.textbox and self.allow_input:
             for sprite in self.sprites:
@@ -123,27 +123,27 @@ class TextHandler(object):
                 elif self.talking_sprite.item:
                     self.check_for_item()
                 elif self.talking_sprite.battle:
-                    self.game_data['battle type'] = self.talking_sprite.battle
+                    game_data['battle type'] = self.talking_sprite.battle
                     self.end_dialogue()
                     self.level.switch_to_battle = True
                 elif self.talking_sprite.name == 'oldmanbrother' and \
-                        self.game_data['talked to sick brother'] and \
-                        not self.game_data['has brother elixir']:
+                        game_data['talked to sick brother'] and \
+                        not game_data['has brother elixir']:
                     self.talking_sprite.item = 'ELIXIR'
-                    self.game_data['has brother elixir'] = True
+                    game_data['has brother elixir'] = True
                     self.check_for_item()
                     dialogue = ['Hurry! There is precious little time.']
                     self.talking_sprite.dialogue = dialogue
                 elif self.talking_sprite.name == 'oldman':
-                    if self.game_data['has brother elixir'] and \
-                            not self.game_data['elixir received']:
-                        del self.game_data['player inventory']['ELIXIR']
-                        self.game_data['elixir received'] = True
+                    if game_data['has brother elixir'] and \
+                            not game_data['elixir received']:
+                        del game_data['player inventory']['ELIXIR']
+                        game_data['elixir received'] = True
                         dialogue = ['My good health is thanks to you.',
                                     'I will be forever in your debt.']
                         self.talking_sprite.dialogue = dialogue
-                    elif not self.game_data['talked to sick brother']:
-                        self.game_data['talked to sick brother'] = True
+                    elif not game_data['talked to sick brother']:
+                        game_data['talked to sick brother'] = True
 
                         dialogue = ['Hurry to the NorthEast Shores!',
                                     'I do not have much time left.']
@@ -152,16 +152,16 @@ class TextHandler(object):
                         self.end_dialogue()
                 elif self.talking_sprite.name == 'king':
 
-                    if not self.game_data['talked to king']:
-                        self.game_data['talked to king'] = True
+                    if not game_data['talked to king']:
+                        game_data['talked to king'] = True
                         new_dialogue = [
                             'Hurry to the castle in the NorthWest!',
                             'The sorceror who lives there has my crown.',
                             'Please retrieve it for me.']
                         self.talking_sprite.dialogue = new_dialogue
                         self.end_dialogue()
-                    elif self.game_data['crown quest']:
-                        self.game_data['delivered crown'] = True
+                    elif game_data['crown quest']:
+                        game_data['delivered crown'] = True
                         self.end_dialogue()
                     else:
                         self.end_dialogue()
@@ -213,16 +213,18 @@ class TextHandler(object):
         """Checks if sprite has an item to give to the player"""
         item = self.talking_sprite.item
 
+        game_data = setup.game_data()
+
         if item:
-            if item in self.game_data['player inventory']:
-                if 'quantity' in self.game_data['player inventory'][item]:
+            if item in game_data['player inventory']:
+                if 'quantity' in game_data['player inventory'][item]:
                     if item == 'GOLD':
-                        self.game_data[
+                        game_data[
                             'player inventory'][
                                 item][
                                     'quantity'] += 100
                     else:
-                        self.game_data[
+                        game_data[
                             'player inventory'][
                                 item][
                                     'quantity'] += 1
@@ -236,13 +238,13 @@ class TextHandler(object):
                 self.talking_sprite.dialogue = ['Empty.']
 
             if item == 'ELIXIR':
-                self.game_data['has brother elixir'] = True
-                self.game_data['old man gift'] = 'Fire Blast'
+                game_data['has brother elixir'] = True
+                game_data['old man gift'] = 'Fire Blast'
                 #dialogue = ['Hurry! There is precious little time.']
                 #self.level.reset_dialogue = self.talking_sprite, dialogue
 
     def add_new_item_to_inventory(self, item):
-        inventory = self.game_data['player inventory']
+        inventory = setup.game_data()['player inventory']
         potions = ['Healing Potion', 'Ether Potion']
         if item in potions:
             inventory[item] = dict([('quantity', 1),
@@ -256,6 +258,7 @@ class TextHandler(object):
             pass
 
     def update_game_items_info(self, sprite):
+
         if sprite.name == 'treasurechest':
             self.game_data['treasure{}'.format(sprite.identifier)] = False
         elif sprite.name == 'oldmanbrother':
@@ -268,7 +271,8 @@ class TextHandler(object):
                 sprite.direction = sprite.default_direction
 
 
-    def draw(self, surface):
+    def draw(self):
         """Draws textbox to surface"""
         if self.textbox:
+            surface = setup.screen()
             surface.blit(self.textbox.image, self.textbox.rect)

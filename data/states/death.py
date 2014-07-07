@@ -81,12 +81,11 @@ class DeathScene(tools.State):
         self.volume = 0.5
         self.music_title = 'shop_theme'
 
-    def startup(self, game_data):
-        self.game_data = game_data
+    def startup(self):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
         self.background = pg.Surface(setup.SCREEN_RECT.size)
         self.background.fill(c.BLACK_BLUE)
-        self.player = person.Player('down', self.game_data, 1, 1, 'resting', 1)
+        self.player = person.Player('down', 1, 1, 'resting', 1)
         self.player.image = pg.transform.scale2x(self.player.image)
         self.player.rect = self.player.image.get_rect()
         self.player.rect.center = setup.SCREEN_RECT.center
@@ -97,8 +96,9 @@ class DeathScene(tools.State):
         self.alpha = 255
         self.name = c.DEATH_SCENE
         if not os.path.isfile("save.p"):
-            game_data = tools.create_game_data_dict()
-            pickle.dump(game_data, open("save.p", "wb"))
+            # initializes setup.game_data internally
+            tools.create_game_data_dict()
+            pickle.dump(setup.game_data(), open("save.p", "wb"))
         self.observers = [observer.SoundEffects()]
 
     def notify(self, event):
@@ -141,13 +141,13 @@ class DeathScene(tools.State):
 
         return box_sprite
 
-    def update(self, surface):
+    def update(self):
         """
         Update scene.
         """
         update_level = self.state_dict[self.state]
         update_level()
-        self.draw_level(surface)
+        self.draw_level()
 
     def normal_update(self):
         self.arrow.update()
@@ -164,16 +164,20 @@ class DeathScene(tools.State):
         if keys[pg.K_SPACE]:
             if self.arrow.index == 0:
                 self.next = c.TOWN
-                self.game_data = pickle.load(open("save.p", "rb"))
+                #self.game_data = pickle.load(open("save.p", "rb"))
+                setup.register_game_data(pickle.load(open("save.p", "rb")))
             elif self.arrow.index == 1:
                 self.next = c.MAIN_MENU
             self.state = c.TRANSITION_OUT
             self.notify(c.CLICK2)
 
-    def draw_level(self, surface):
+    def draw_level(self):
         """
         Draw background, player, and message box.
         """
+
+        surface = setup.screen()
+
         surface.blit(self.background, (0, 0))
         surface.blit(self.player.image, self.player.rect)
         surface.blit(self.message_box.image, self.message_box.rect)

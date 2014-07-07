@@ -11,8 +11,7 @@ class InfoBox(object):
     Info box that describes attack damage and other battle
     related information.
     """
-    def __init__(self, game_data, experience, gold):
-        self.game_data = game_data
+    def __init__(self, experience, gold):
         self.enemy_damage = 0
         self.player_damage = 0
         self.state = c.SELECT_ACTION
@@ -63,7 +62,7 @@ class InfoBox(object):
         """
         Make the text for when the player selects items.
         """
-        inventory = self.game_data['player inventory']
+        inventory = setup.game_data()['player inventory']
         allowed_item_list = ['Healing Potion', 'Ether Potion']
         title = 'SELECT ITEM'
         item_text_list = [title]
@@ -81,7 +80,7 @@ class InfoBox(object):
         """
         Make the text for when the player selects magic.
         """
-        inventory = self.game_data['player inventory']
+        inventory = setup.game_data()['player inventory']
         allowed_item_list = ['Fire Blast', 'Cure']
         title = 'SELECT MAGIC SPELL'
         magic_text_list = [title]
@@ -128,10 +127,10 @@ class InfoBox(object):
 
         if self.state == c.SELECT_ITEM:
             text_sprites = self.make_text_sprites(self.make_item_text())
-            text_sprites.draw(surface)
+            text_sprites.draw()
         elif self.state == c.SELECT_MAGIC:
             text_sprites = self.make_text_sprites(self.make_magic_text())
-            text_sprites.draw(surface)
+            text_sprites.draw()
         else:
             text_surface = self.font.render(
                 self.state_dict[self.state], True, c.NEAR_BLACK)
@@ -182,7 +181,7 @@ class InfoBox(object):
         Return message indicating a level up for player.
         """
         return "You leveled up to Level {}!".format(
-            self.game_data['player stats']['Level'])
+            setup.game_data()['player stats']['Level'])
 
     def reset_level_up_message(self):
         self.state_dict[c.LEVEL_UP] = self.level_up()
@@ -390,10 +389,11 @@ class SelectArrow(object):
         state_function = self.state_dict[self.state]
         state_function()
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw to surface.
         """
+        surface = setup.screen()
         surface.blit(self.image, self.rect)
 
     def remove_pos(self, enemy):
@@ -423,7 +423,8 @@ class PlayerHealth(object):
     """
     Basic health meter for player.
     """
-    def __init__(self, select_box_rect, game_data):
+    def __init__(self, select_box_rect):
+        game_data = setup.game_data()
         self.health_stats = game_data['player stats']['health']
         self.magic_stats = game_data['player stats']['magic']
         self.title_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
@@ -480,8 +481,9 @@ class PlayerHealth(object):
         """
         return self.image.get_rect(centerx=self.posx, bottom=self.posy)
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw health to surface.
         """
+        surface = setup.screen()
         surface.blit(self.image, self.rect)

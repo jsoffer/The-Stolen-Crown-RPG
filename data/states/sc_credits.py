@@ -115,10 +115,12 @@ class CreditEntry(object):
         update_method = self.state_dict[self.state]
         update_method()
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw the current credit to main surface.
         """
+        surface = setup.screen()
+
         for credit_sprite in self.current_credit:
             surface.blit(credit_sprite.image, credit_sprite.rect)
 
@@ -137,30 +139,33 @@ class Credits(tools.State):
         self.credit = None
         self.background = None
 
-    def startup(self, game_data):
+    def startup(self):
         """
         Initialize data at scene start.
         """
-        self.game_data = game_data
+
         self.music = setup.music()['overworld']
         self.volume = 0.4
         self.background = pg.Surface(setup.screen_rect().size)
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)
 
-    def update(self, surface):
+    def update(self):
         """
         Update scene.
         """
         self.credit.update()
-        self.draw_scene(surface)
+        self.draw_scene()
 
-    def draw_scene(self, surface):
+    def draw_scene(self):
         """
         Draw all graphics to the window surface.
         """
+
+        surface = setup.screen()
+
         surface.blit(self.background, (0, 0))
-        self.credit.draw(surface)
+        self.credit.draw()
 
 
 

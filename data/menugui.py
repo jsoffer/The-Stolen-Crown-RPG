@@ -86,17 +86,22 @@ class SmallArrow(pg.sprite.Sprite):
         state_function = self.state_dict[self.state]
         state_function(pos_index)
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw to surface"""
+
+        surface = setup.screen()
+
         surface.blit(self.image, self.rect)
 
 
 class QuickStats(pg.sprite.Sprite):
-    def __init__(self, game_data):
+    def __init__(self):
+
+        game_data = setup.game_data()
+
         self.inventory = game_data['player inventory']
-        self.game_data = game_data
-        self.stats = self.game_data['player stats']
+        self.stats = game_data['player stats']
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.small_font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 18)
         self.image, self.rect = self.make_image()
@@ -130,7 +135,7 @@ class QuickStats(pg.sprite.Sprite):
             text_rect = render.get_rect(x=pos_x, centery=center_y)
             surface.blit(render, text_rect)
 
-        if self.game_data['crown quest']:
+        if setup.game_data()['crown quest']:
             crown = setup.gfx()['crown']
             crown_rect = crown.get_rect(x=178, y=40)
             surface.blit(crown, crown_rect)
@@ -143,10 +148,11 @@ class QuickStats(pg.sprite.Sprite):
         """
         self.image, self.rect = self.make_image()
 
-    def draw(self, surface):
+    def draw(self):
         """
         Draw to surface.
         """
+        surface = setup.screen()
         surface.blit(self.image, self.rect)
 
 
@@ -368,8 +374,9 @@ class InfoBox(pg.sprite.Sprite):
         state_function()
 
 
-    def draw(self, surface):
+    def draw(self):
         """Draw to surface"""
+        surface = setup.screen()
         surface.blit(self.image, self.rect)
 
 
@@ -394,21 +401,21 @@ class SelectionBox(pg.sprite.Sprite):
 
         return surface, rect
 
-    def draw(self, surface):
+    def draw(self):
         """Draw to surface"""
+        surface = setup.screen()
         surface.blit(self.image, self.rect)
 
 
 class MenuGui(object):
     def __init__(self, level, inventory, stats):
         self.level = level
-        self.game_data = self.level.game_data
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
         self.inventory = inventory
         self.stats = stats
         self.info_box = InfoBox(inventory, stats)
-        self.gold_box = QuickStats(self.game_data)
+        self.gold_box = QuickStats()
         self.selection_box = SelectionBox()
         self.arrow = SmallArrow(self.info_box)
         self.arrow_index = 0
@@ -493,7 +500,10 @@ class MenuGui(object):
         """
         Select item from item menu.
         """
-        health = self.game_data['player stats']['health']
+
+        game_data = setup.game_data()
+
+        health = game_data['player stats']['health']
         posx = self.arrow.rect.x - 220
         posy = self.arrow.rect.y - 38
 
@@ -504,7 +514,7 @@ class MenuGui(object):
                 self.drink_potion(potion, health, value)
             elif self.info_box.slots[(posx, posy)][:5] == 'Ether':
                 potion = 'Ether Potion'
-                stat = self.game_data['player stats']['magic']
+                stat = game_data['player stats']['magic']
                 value = 30
                 self.drink_potion(potion, stat, value)
             elif self.info_box.slots[(posx, posy)][:10] == 'Long Sword':
@@ -526,11 +536,6 @@ class MenuGui(object):
         """
         Select spell from magic menu.
         """
-        # 'do not heal healty' is handled somewhere else
-        # health = self.game_data['player stats']['health']
-
-        # ?
-        # magic = self.game_data['player stats']['magic']
 
         posx = self.arrow.rect.x - 190
         posy = self.arrow.rect.y - 39
@@ -543,9 +548,12 @@ class MenuGui(object):
         """
         Use cure spell to heal player.
         """
-        health = self.game_data['player stats']['health']
-        magic = self.game_data['player stats']['magic']
-        inventory = self.game_data['player inventory']
+
+        game_data = setup.game_data()
+
+        health = game_data['player stats']['health']
+        magic = game_data['player stats']['magic']
+        inventory = game_data['player inventory']
 
         if health['current'] != health['maximum']:
             if magic['current'] >= inventory['Cure']['magic points']:
@@ -575,9 +583,9 @@ class MenuGui(object):
         self.check_for_input()
 
 
-    def draw(self, surface):
-        self.gold_box.draw(surface)
-        self.info_box.draw(surface)
-        self.selection_box.draw(surface)
-        self.arrow.draw(surface)
+    def draw(self):
+        self.gold_box.draw()
+        self.info_box.draw()
+        self.selection_box.draw()
+        self.arrow.draw()
 

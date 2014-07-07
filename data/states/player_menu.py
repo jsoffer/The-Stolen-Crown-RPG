@@ -5,13 +5,18 @@ Most of the logic is in menugui.MenuGUI()
 
 """
 from .. import tools, menugui
+from .. import setup
 
 
 class PlayerMenu(tools.State):
-    def __init__(self, game_data, level):
+    def __init__(self, level):
         super(PlayerMenu, self).__init__()
+
+        game_data = setup.game_data()
+
         inventory = game_data['player inventory']
         stats = game_data['player stats']
+
         self.get_image = tools.get_image
         self.allow_input = False
         self.background = self.make_background()
@@ -29,11 +34,14 @@ class PlayerMenu(tools.State):
 
         return background
 
-    def update(self, surface):
+    def update(self):
         self.gui.update()
-        self.draw(surface)
+        self.draw()
 
-    def draw(self, surface):
+    def draw(self):
+
+        surface = setup.screen()
+
         surface.blit(self.background.image, self.background.rect)
-        self.gui.draw(surface)
+        self.gui.draw()
 

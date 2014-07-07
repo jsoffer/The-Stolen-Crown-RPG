@@ -11,7 +11,8 @@ from . import constants as c
 
 def main():
     """Add states to control here"""
-    run_it = tools.Control(c.ORIGINAL_CAPTION)
+    run_it = tools.Control()
+
     state_dict = {
         c.MAIN_MENU: main_menu.Menu(),
         c.TOWN: levels.LevelState(c.TOWN),
