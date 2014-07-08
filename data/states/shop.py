@@ -17,7 +17,7 @@ class Shop(tools.State):
     def __init__(self):
         super(Shop, self).__init__()
 
-        self.keeper_key = None
+        self.keeper = None
 
         self.dialogue = None
         self.accept_sale_dialogue = None
@@ -71,7 +71,7 @@ class Shop(tools.State):
         player = self.make_sprite(
             'player', (96, 32), (150, 200), resize=200)
         shop_owner = self.make_sprite(
-            self.keeper_key, (32, 32), (600, 200), resize=200)
+            self.keeper, (32, 32), (600, 200), resize=200)
         counter = self.make_counter()
 
         background.image.blit(player.image, player.rect)
@@ -125,7 +125,7 @@ class Inn(Shop):
     def __init__(self):
         super(Inn, self).__init__()
         self.name = c.INN
-        self.keeper_key = 'innman'
+        self.keeper = 'innman'
 
     def make_dialogue(self):
         """
@@ -158,7 +158,7 @@ class WeaponShop(Shop):
     def __init__(self):
         super(WeaponShop, self).__init__()
         self.name = c.WEAPON_SHOP
-        self.keeper_key = 'weaponman'
+        self.keeper = 'weaponman'
         self.sell_items = ['Long Sword', 'Rapier']
 
 
@@ -194,7 +194,7 @@ class ArmorShop(Shop):
     def __init__(self):
         super(ArmorShop, self).__init__()
         self.name = c.ARMOR_SHOP
-        self.keeper_key = 'armorman'
+        self.keeper = 'armorman'
         self.sell_items = ['Chain Mail', 'Wooden Shield']
 
 
@@ -230,7 +230,7 @@ class MagicShop(Shop):
     def __init__(self):
         super(MagicShop, self).__init__()
         self.name = c.MAGIC_SHOP
-        self.keeper_key = 'magiclady'
+        self.keeper = 'magiclady'
 
 
     def make_dialogue(self):
@@ -267,8 +267,8 @@ class PotionShop(Shop):
     def __init__(self):
         super(PotionShop, self).__init__()
         self.name = c.POTION_SHOP
-        self.keeper_key = 'potionlady'
-        self.sell_items = 'Healing Potion'
+        self.keeper = 'potionlady'
+        self.sell_items = ['Healing Potion', 'Ether Potion']
 
 
     def make_dialogue(self):
