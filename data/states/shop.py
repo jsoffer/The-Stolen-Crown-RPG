@@ -19,9 +19,9 @@ class Shop(tools.State):
 
         self.keeper = None
 
-        self.dialogue = None
-        self.accept_sale_dialogue = None
-        self.accept_dialogue = None
+        self.dialogue = {}
+        #self.accept_sale_dialogue = None
+        #self.accept_dialogue = None
 
         self.items = None
         self.sell_items = None
@@ -35,9 +35,11 @@ class Shop(tools.State):
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
         self.next = c.TOWN
-        self.dialogue = self.make_dialogue()
-        self.accept_dialogue = self.make_accept_dialogue()
-        self.accept_sale_dialogue = ['Item sold.']
+        #self.accept_dialogue = self.make_accept_dialogue()
+        #self.accept_sale_dialogue = ['Item sold.']
+        self.dialogue['dialogue'] = self.make_dialogue()
+        self.dialogue['accept'] = self.make_accept_dialogue()
+        self.dialogue['accept sale'] = ['Item sold.']
         self.items = self.make_purchasable_items()
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)

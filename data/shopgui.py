@@ -37,9 +37,8 @@ class Gui(object):
         self.items = level.items
         self.item_to_be_sold = None
         self.item_to_be_purchased = None
+
         self.dialogue = level.dialogue
-        self.accept_dialogue = level.accept_dialogue
-        self.accept_sale_dialogue = level.accept_sale_dialogue
         self.arrow = textbox.NextArrow()
         self.selection_arrow = textbox.NextArrow()
         self.arrow_pos1 = (50, 475)
@@ -52,7 +51,8 @@ class Gui(object):
         self.two_arrow_pos_list = [self.arrow_pos4, self.arrow_pos5]
         self.arrow_index = 0
         self.selection_arrow.rect.topleft = self.arrow_pos1
-        self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
+        self.dialogue_box = self.make_dialogue_box(
+            self.dialogue['dialogue'], self.index)
         self.gold_box = self.make_gold_box()
         if self.name in self.no_selling:
             choices = self.items[0]['dialogue']
@@ -94,7 +94,7 @@ class Gui(object):
         """
         Blink arrow if more text needs to be read.
         """
-        if self.index < len(self.dialogue) - 1:
+        if self.index < len(self.dialogue['dialogue']) - 1:
             sprite.image.blit(self.arrow.image, self.arrow.rect)
 
     def make_gold_box(self):
@@ -178,14 +178,17 @@ class Gui(object):
 
         keys = setup.keys()
 
-        self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
+        self.dialogue_box = self.make_dialogue_box(
+            self.dialogue['dialogue'], self.index)
 
-        if self.index < (len(self.dialogue) - 1) and self.allow_input:
+        if (
+                self.index < (len(self.dialogue['dialogue']) - 1) and
+                self.allow_input):
             if keys[pg.K_SPACE]:
                 self.index += 1
                 self.allow_input = False
 
-                if self.index == (len(self.dialogue) - 1):
+                if self.index == (len(self.dialogue['dialogue']) - 1):
                     self.state = self.begin_new_transaction()
                 self.notify(c.CLICK2)
 
@@ -214,7 +217,8 @@ class Gui(object):
             choices.append('Leave')
         else:
             choices.append('Cancel')
-        self.dialogue_box = self.make_dialogue_box(self.dialogue, self.index)
+        self.dialogue_box = self.make_dialogue_box(
+            self.dialogue['dialogue'], self.index)
         self.selection_box = self.make_selection_box(choices)
         self.gold_box = self.make_gold_box()
 
@@ -438,7 +442,7 @@ class Gui(object):
     def reject_insufficient_gold(self):
         """Reject player selection if they do not have enough gold"""
 
-        keys = setup.keys
+        keys = setup.keys()
 
         dialogue = ["You don't have enough gold!"]
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
@@ -457,7 +461,7 @@ class Gui(object):
 
         keys = setup.keys()
 
-        self.dialogue_box = self.make_dialogue_box(self.accept_dialogue, 0)
+        self.dialogue_box = self.make_dialogue_box(self.dialogue['accept'], 0)
         self.gold_box = self.make_gold_box()
 
         if keys[pg.K_SPACE] and self.allow_input:
@@ -474,7 +478,8 @@ class Gui(object):
 
         keys = setup.keys()
 
-        self.dialogue_box = self.make_dialogue_box(self.accept_sale_dialogue, 0)
+        self.dialogue_box = self.make_dialogue_box(
+            self.dialogue['accept sale'], 0)
         self.gold_box = self.make_gold_box()
 
         if keys[pg.K_SPACE] and self.allow_input:
