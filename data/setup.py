@@ -13,7 +13,6 @@ SCREEN = None
 SCREEN_RECT = None
 
 FONTS = None
-MUSIC = None
 GFX = None
 SFX = None
 TMX = None
@@ -21,6 +20,12 @@ FONT = None
 
 KEYS = None
 GAME_DATA = None
+
+MIXER = None
+
+def register_mixer(_mixer):
+    global MIXER
+    MIXER = _mixer
 
 def update_keys():
     global KEYS
@@ -48,10 +53,6 @@ def register_fonts(_fonts):
     global FONTS
     FONTS = _fonts
 
-def register_music(_music):
-    global MUSIC
-    MUSIC = _music
-
 def register_gfx(_gfx):
     global GFX
     GFX = _gfx
@@ -77,8 +78,8 @@ def screen_rect():
 def fonts():
     return FONTS
 
-def music():
-    return MUSIC
+def mixer():
+    return MIXER
 
 def gfx():
     return GFX

@@ -66,8 +66,9 @@ class DeathScene(tools.State):
     def __init__(self):
         super(DeathScene, self).__init__()
 
+        self.name = c.DEATH_SCENE
+
         self.arrow = None
-        self.name = None
         self.alpha = None
         self.observers = None
         self.message_box = None
@@ -77,8 +78,7 @@ class DeathScene(tools.State):
         self.state_dict = None
 
         self.next = c.TOWN
-        self.music = setup.MUSIC['shop_theme']
-        self.music_title = 'shop_theme'
+        setup.mixer().set_level_song(self.name, 'shop_theme')
 
     def startup(self):
         self.font = pg.font.Font(setup.FONTS[c.MAIN_FONT], 22)
@@ -93,7 +93,6 @@ class DeathScene(tools.State):
         self.state_dict = self.make_state_dict()
         self.state = c.TRANSITION_IN
         self.alpha = 255
-        self.name = c.DEATH_SCENE
         if not os.path.isfile("save.p"):
             # initializes setup.game_data internally
             tools.create_game_data_dict()

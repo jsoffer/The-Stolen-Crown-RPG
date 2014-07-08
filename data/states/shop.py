@@ -17,7 +17,7 @@ class Shop(tools.State):
     def __init__(self):
         super(Shop, self).__init__()
 
-        self.key = None
+        self.keeper_key = None
 
         self.dialogue = None
         self.accept_sale_dialogue = None
@@ -30,8 +30,6 @@ class Shop(tools.State):
         self.gui = None
         self.background = None
 
-        self.music = setup.music()['shop_theme']
-
     def startup(self):
         """Startup state"""
         self.state_dict = self.make_state_dict()
@@ -43,6 +41,8 @@ class Shop(tools.State):
         self.items = self.make_purchasable_items()
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)
+
+        setup.mixer().set_level_song(self.name, 'shop_theme')
 
     def make_dialogue(self):
         """
@@ -71,7 +71,7 @@ class Shop(tools.State):
         player = self.make_sprite(
             'player', (96, 32), (150, 200), resize=200)
         shop_owner = self.make_sprite(
-            self.key, (32, 32), (600, 200), resize=200)
+            self.keeper_key, (32, 32), (600, 200), resize=200)
         counter = self.make_counter()
 
         background.image.blit(player.image, player.rect)
@@ -125,7 +125,7 @@ class Inn(Shop):
     def __init__(self):
         super(Inn, self).__init__()
         self.name = c.INN
-        self.key = 'innman'
+        self.keeper_key = 'innman'
 
     def make_dialogue(self):
         """
@@ -158,7 +158,7 @@ class WeaponShop(Shop):
     def __init__(self):
         super(WeaponShop, self).__init__()
         self.name = c.WEAPON_SHOP
-        self.key = 'weaponman'
+        self.keeper_key = 'weaponman'
         self.sell_items = ['Long Sword', 'Rapier']
 
 
@@ -194,7 +194,7 @@ class ArmorShop(Shop):
     def __init__(self):
         super(ArmorShop, self).__init__()
         self.name = c.ARMOR_SHOP
-        self.key = 'armorman'
+        self.keeper_key = 'armorman'
         self.sell_items = ['Chain Mail', 'Wooden Shield']
 
 
@@ -230,7 +230,7 @@ class MagicShop(Shop):
     def __init__(self):
         super(MagicShop, self).__init__()
         self.name = c.MAGIC_SHOP
-        self.key = 'magiclady'
+        self.keeper_key = 'magiclady'
 
 
     def make_dialogue(self):
@@ -267,7 +267,7 @@ class PotionShop(Shop):
     def __init__(self):
         super(PotionShop, self).__init__()
         self.name = c.POTION_SHOP
-        self.key = 'potionlady'
+        self.keeper_key = 'potionlady'
         self.sell_items = 'Healing Potion'
 
 

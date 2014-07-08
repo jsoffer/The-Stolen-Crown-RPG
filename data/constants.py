@@ -16,6 +16,7 @@ ORIGINAL_CAPTION = 'The Stolen Crown'
 
 TOWN = 'town'
 MAIN_MENU = 'main menu'
+PLAYER_MENU = 'player menu'
 CASTLE = 'castle'
 INN = 'Inn'
 POTION_SHOP = 'potion shop'

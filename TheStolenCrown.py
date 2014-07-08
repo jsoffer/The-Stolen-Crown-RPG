@@ -33,6 +33,31 @@ def load_all_gfx(directory,
             graphics[name] = img
     return graphics
 
+class Mixer(object):
+    """
+    remote for handling pygame.mixer globally instead of keeping local state
+    scattered everywhere
+
+    """
+
+    def __init__(self):
+        self.old_song = None
+        self.song_map = load_resources(
+            os.path.join('resources', 'music'),
+            accept=('.wav', '.mp3', '.ogg', '.mdi'))
+        self.level_map = {}
+
+    def set_level_song(self, level, song):
+        self.level_map[level] = song
+
+    def play(self, level, volume=0.4):
+        song = self.level_map[level]
+        if song != self.old_song:
+            self.old_song = song
+            pg.mixer.music.load(self.song_map[song])
+            pg.mixer.music.set_volume(volume)
+            pg.mixer.music.play(-1)
+
 def load_resources(directory, accept):
     resources = {}
     for resource in os.listdir(directory):
@@ -66,10 +91,6 @@ if __name__ == '__main__':
                            accept=('.ttf'))
     setup.register_fonts(FONTS)
 
-    MUSIC = load_resources(os.path.join('resources', 'music'),
-                           accept=('.wav', '.mp3', '.ogg', '.mdi'))
-    setup.register_music(MUSIC)
-
     TMX = load_resources(os.path.join('resources', 'tmx'),
                          accept=('.tmx'))
     setup.register_tmx(TMX)
@@ -82,6 +103,9 @@ if __name__ == '__main__':
 
     FONT = pg.font.Font(FONTS['Fixedsys500c'], 20)
     setup.register_font(FONT)
+
+    MIXER = Mixer()
+    setup.register_mixer(MIXER)
 
     main()
     pg.quit()

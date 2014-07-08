@@ -11,6 +11,8 @@ class Menu(tools.State):
     def __init__(self):
         super(Menu, self).__init__()
 
+        self.name = c.MAIN_MENU
+
         self.title_rect = None
         self.title_box = None
         self.map_rect = None
@@ -21,8 +23,7 @@ class Menu(tools.State):
         self.state_dict = None
         self.renderer = None
 
-        self.music = setup.music()['kings_theme']
-        self.music_title = 'kings_theme'
+        setup.mixer().set_level_song(self.name, 'kings_theme')
         self.next = c.INSTRUCTIONS
         self.tmx_map = setup.tmx()['title']
         self.name = c.MAIN_MENU
@@ -82,6 +83,8 @@ class Instructions(tools.State):
     def __init__(self):
         super(Instructions, self).__init__()
 
+        self.name = c.INSTRUCTIONS
+
         self.title_rect = None
         self.title_box = None
         self.map_rect = None
@@ -96,8 +99,8 @@ class Instructions(tools.State):
         self.renderer = None
 
         self.tmx_map = setup.tmx()['title']
-        self.music = None
-        self.music_title = None
+
+        setup.mixer().set_level_song(self.name, 'kings_theme')
 
 
     def startup(self):

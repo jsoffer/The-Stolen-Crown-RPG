@@ -30,23 +30,6 @@ class Timer(object):
     def reset(self):
         self.start_time = pg.time.get_ticks()
 
-class Mixer(object):
-    """
-    remote for handling pygame.mixer globally instead of keeping local state
-    scattered everywhere
-
-    """
-
-    def __init__(self):
-        self.volume = None
-        self.old_song = None
-
-    def play(self, song, volume=0.4):
-        if song != self.old_song:
-            self.song = song
-            pg.mixer.music.load(song)
-            pg.mixer.play(-1)
-
 class Control(object):
     """
     Control class for entire project.  Contains the game loop, and contains
@@ -81,7 +64,7 @@ class Control(object):
         self.state_name = start_state
         self.state = self.state_dict[self.state_name]
 
-        self.set_music()
+        #self.set_music()
 
     def update(self):
         """
@@ -105,7 +88,6 @@ class Control(object):
         """
 
         # keep some info of the current state
-        current_music = self.state.music_title
         current_name = self.state_name
 
         # update
@@ -114,25 +96,10 @@ class Control(object):
 
         # store that saved info on the new state
         self.state.previous = current_name
-        self.state.previous_music = current_music
 
         # initialize the new state
         self.state.startup()
-        self.set_music()
-
-    def set_music(self):
-        """
-        Set music for the new state.
-        """
-
-        if self.state.music_title == self.state.previous_music:
-            # do not restart if the song didn't change
-            pass
-
-        elif self.state.music:
-            pg.mixer.music.load(self.state.music)
-            pg.mixer.music.set_volume(0.4)
-            pg.mixer.music.play(-1)
+        setup.mixer().play(self.state.name)
 
     def event_loop(self):
         events = pg.event.get()
@@ -161,13 +128,11 @@ class State(object):
     def __init__(self):
         self.done = False
 
-        self.music = None
-        self.music_title = None
+        self.name = None
 
         self.next = None
 
         self.previous = None
-        self.previous_music = None
 
         #self.transition_surface = pg.Surface(setup.screen_rect().size)
         #self.transition_surface.fill(c.TRANSITION_COLOR)

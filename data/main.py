@@ -10,7 +10,12 @@ from . import tools
 from . import constants as c
 
 def main():
-    """Add states to control here"""
+    """
+    Add states to control here
+
+    'player menu' is missing (FIXME)
+
+    """
     run_it = tools.Control()
 
     state_dict = {

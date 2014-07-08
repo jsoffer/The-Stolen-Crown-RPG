@@ -14,6 +14,7 @@ class CreditEntry(object):
     The text for each credit for the game.
     """
     def __init__(self, level):
+
         self.alpha = 0
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 22)
         self.credit_sprites = self.make_credits()
@@ -132,9 +133,9 @@ class Credits(tools.State):
     def __init__(self):
         super(Credits, self).__init__()
         self.name = c.CREDITS
-        self.music_title = None
-        self.previous_music = None
-        self.music = None
+
+        setup.mixer().set_level_song(self.name, None)
+
         self.credit = None
         self.background = None
 
@@ -143,7 +144,6 @@ class Credits(tools.State):
         Initialize data at scene start.
         """
 
-        self.music = setup.music()['overworld']
         self.background = pg.Surface(setup.screen_rect().size)
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)

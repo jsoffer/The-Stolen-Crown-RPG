@@ -40,16 +40,15 @@ class LevelState(tools.State):
         self.name = name
         self.tmx_map = setup.tmx()[name]
         self.allow_battles = battles
-        self.music_title = None
-        self.previous_music = None
-        self.music = None
         self.portal = None
 
     def startup(self):
         """
         Call when the State object is flipped to.
         """
-        self.music = self.set_music()
+
+        self.set_music()
+
         self.state = 'transition_in'
         #self.reset_dialogue = ()
         self.switch_to_battle = False
@@ -93,16 +92,12 @@ class LevelState(tools.State):
 
         if setup.game_data()['crown quest'] and (
                 self.name == c.TOWN or self.name == c.CASTLE):
-            self.music_title = 'kings_theme'
-            #return setup.music()['kings_theme'], .4
-            return setup.music()['kings_theme']
+            # only works when loading after completing and saving?
+            setup.mixer().set_level_song(self.name, 'kings_theme')
         elif self.name in music_dict:
             music = music_dict[self.name][0]
             #volume = music_dict[self.name][1]
-            self.music_title = music
-            return setup.music()[music]
-        else:
-            return None
+            setup.mixer().set_level_song(self.name, music)
 
     def make_level_surface(self, map_image):
         """

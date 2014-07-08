@@ -6,11 +6,14 @@ Most of the logic is in menugui.MenuGUI()
 """
 from .. import tools, menugui
 from .. import setup
+from .. import constants as c
 
 
 class PlayerMenu(tools.State):
     def __init__(self, level):
         super(PlayerMenu, self).__init__()
+
+        self.name = c.PLAYER_MENU
 
         game_data = setup.game_data()
 

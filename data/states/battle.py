@@ -11,6 +11,8 @@ class Battle(tools.State):
     def __init__(self):
         super(Battle, self).__init__()
 
+        self.name = c.BATTLE
+
         self.enemy_list = None
         self.player_actions = None
         self.allow_input = None
@@ -38,8 +40,7 @@ class Battle(tools.State):
         self.damage_points = None
         self.experience_points = None
 
-        self.name = 'battle'
-        self.music = setup.music()['high_action']
+        setup.mixer().set_level_song(self.name, 'high_action')
 
         self.action_timer = Timer(1500)
 
@@ -406,6 +407,7 @@ class Battle(tools.State):
         game_data = setup.game_data()
 
         if game_data['battle type'] == 'evilwizard':
+            # update music theme for main town here?
             game_data['crown quest'] = True
             game_data['talked to king'] = True
         print("END PRE", game_data['last state'])
