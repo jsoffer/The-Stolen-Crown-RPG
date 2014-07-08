@@ -33,22 +33,13 @@ def load_all_gfx(directory,
             graphics[name] = img
     return graphics
 
-def load_all_music(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
-    songs = {}
-    for song in os.listdir(directory):
-        name, ext = os.path.splitext(song)
+def load_resources(directory, accept):
+    resources = {}
+    for resource in os.listdir(directory):
+        name, ext = os.path.splitext(resource)
         if ext.lower() in accept:
-            songs[name] = os.path.join(directory, song)
-    return songs
-
-
-def load_all_fonts(directory, accept=('.ttf')):
-    return load_all_music(directory, accept)
-
-
-def load_all_tmx(directory, accept=('.tmx')):
-    return load_all_music(directory, accept)
-
+            resources[name] = os.path.join(directory, resource)
+    return resources
 
 def load_all_sfx(directory, accept=('.wav', '.mp3', '.ogg', '.mdi')):
     effects = {}
@@ -71,20 +62,23 @@ if __name__ == '__main__':
     SCREEN_RECT = SCREEN.get_rect()
     setup.register_screen_rect(SCREEN_RECT)
 
-    FONTS = load_all_fonts(os.path.join('resources', 'fonts'))
+    FONTS = load_resources(os.path.join('resources', 'fonts'),
+                           accept=('.ttf'))
     setup.register_fonts(FONTS)
 
-    MUSIC = load_all_music(os.path.join('resources', 'music'))
+    MUSIC = load_resources(os.path.join('resources', 'music'),
+                           accept=('.wav', '.mp3', '.ogg', '.mdi'))
     setup.register_music(MUSIC)
+
+    TMX = load_resources(os.path.join('resources', 'tmx'),
+                         accept=('.tmx'))
+    setup.register_tmx(TMX)
 
     GFX = load_all_gfx(os.path.join('resources', 'graphics'))
     setup.register_gfx(GFX)
 
     SFX = load_all_sfx(os.path.join('resources', 'sound'))
     setup.register_sfx(SFX)
-
-    TMX = load_all_tmx(os.path.join('resources', 'tmx'))
-    setup.register_tmx(TMX)
 
     FONT = pg.font.Font(FONTS['Fixedsys500c'], 20)
     setup.register_font(FONT)
