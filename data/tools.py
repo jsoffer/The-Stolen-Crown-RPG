@@ -30,6 +30,23 @@ class Timer(object):
     def reset(self):
         self.start_time = pg.time.get_ticks()
 
+class Mixer(object):
+    """
+    remote for handling pygame.mixer globally instead of keeping local state
+    scattered everywhere
+
+    """
+
+    def __init__(self):
+        self.volume = None
+        self.old_song = None
+
+    def play(self, song, volume=0.4):
+        if song != self.old_song:
+            self.song = song
+            pg.mixer.music.load(song)
+            pg.mixer.play(-1)
+
 class Control(object):
     """
     Control class for entire project.  Contains the game loop, and contains
@@ -74,6 +91,8 @@ class Control(object):
         """
 
         if self.state.done:
+            # turn off this state's 'done' before leaving it, or hanged
+            # loop behavior could appear when returning
             self.state.done = False
             self.flip_state()
 
@@ -93,6 +112,7 @@ class Control(object):
         self.state_name = self.state.next
         self.state = self.state_dict[self.state_name]
 
+        # store that saved info on the new state
         self.state.previous = current_name
         self.state.previous_music = current_music
 
@@ -106,12 +126,12 @@ class Control(object):
         """
 
         if self.state.music_title == self.state.previous_music:
-            # do not restart when the song didn't change
+            # do not restart if the song didn't change
             pass
 
         elif self.state.music:
             pg.mixer.music.load(self.state.music)
-            pg.mixer.music.set_volume(self.state.volume)
+            pg.mixer.music.set_volume(0.4)
             pg.mixer.music.play(-1)
 
     def event_loop(self):
@@ -189,7 +209,7 @@ class State(object):
         spritesheet = setup.gfx()[key]
         surface = pg.Surface((32, 32))
         surface.set_colorkey(c.BLACK)
-        image = self.get_image(coordx, coordy, 32, 32, spritesheet)
+        image = get_image(coordx, coordy, 32, 32, spritesheet)
         rect = image.get_rect()
         surface.blit(image, rect)
 

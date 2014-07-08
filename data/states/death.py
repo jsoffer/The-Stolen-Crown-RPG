@@ -78,7 +78,6 @@ class DeathScene(tools.State):
 
         self.next = c.TOWN
         self.music = setup.MUSIC['shop_theme']
-        self.volume = 0.5
         self.music_title = 'shop_theme'
 
     def startup(self):

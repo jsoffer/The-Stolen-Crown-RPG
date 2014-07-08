@@ -23,7 +23,6 @@ class Menu(tools.State):
 
         self.music = setup.music()['kings_theme']
         self.music_title = 'kings_theme'
-        self.volume = 0.4
         self.next = c.INSTRUCTIONS
         self.tmx_map = setup.tmx()['title']
         self.name = c.MAIN_MENU

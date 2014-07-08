@@ -43,14 +43,13 @@ class LevelState(tools.State):
         self.music_title = None
         self.previous_music = None
         self.music = None
-        self.volume = None
         self.portal = None
 
     def startup(self):
         """
         Call when the State object is flipped to.
         """
-        self.music, self.volume = self.set_music()
+        self.music = self.set_music()
         self.state = 'transition_in'
         #self.reset_dialogue = ()
         self.switch_to_battle = False
@@ -95,14 +94,15 @@ class LevelState(tools.State):
         if setup.game_data()['crown quest'] and (
                 self.name == c.TOWN or self.name == c.CASTLE):
             self.music_title = 'kings_theme'
-            return setup.music()['kings_theme'], .4
+            #return setup.music()['kings_theme'], .4
+            return setup.music()['kings_theme']
         elif self.name in music_dict:
             music = music_dict[self.name][0]
-            volume = music_dict[self.name][1]
+            #volume = music_dict[self.name][1]
             self.music_title = music
-            return setup.music()[music], volume
+            return setup.music()[music]
         else:
-            return None, None
+            return None
 
     def make_level_surface(self, map_image):
         """

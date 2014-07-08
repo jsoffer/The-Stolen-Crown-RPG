@@ -17,42 +17,32 @@ class Shop(tools.State):
     def __init__(self):
         super(Shop, self).__init__()
 
-        self.state_dict = None
-        self.get_image = None
+        self.key = None
+
         self.dialogue = None
-        self.gui = None
-        self.background = None
         self.accept_sale_dialogue = None
         self.accept_dialogue = None
+
         self.items = None
-        self.key = None
         self.sell_items = None
 
+        self.state_dict = None
+        self.gui = None
+        self.background = None
+
         self.music = setup.music()['shop_theme']
-        self.volume = 0.4
 
     def startup(self):
         """Startup state"""
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
         self.next = c.TOWN
-        self.get_image = tools.get_image
         self.dialogue = self.make_dialogue()
         self.accept_dialogue = self.make_accept_dialogue()
         self.accept_sale_dialogue = ['Item sold.']
         self.items = self.make_purchasable_items()
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)
-
-    def make_state_dict(self):
-        """
-        Make a dictionary for all state methods.
-        """
-        state_dict = {'normal': self.normal_update,
-                      'transition in': self.transition_in,
-                      'transition out': self.transition_out}
-
-        return state_dict
 
     def make_dialogue(self):
         """
@@ -96,7 +86,7 @@ class Shop(tools.State):
         """
         sprite_sheet = copy.copy(setup.gfx()['house'])
         sprite = pg.sprite.Sprite()
-        sprite.image = self.get_image(102, 64, 26, 82, sprite_sheet)
+        sprite.image = tools.get_image(102, 64, 26, 82, sprite_sheet)
         sprite.image = pg.transform.scale2x(sprite.image)
         sprite.rect = sprite.image.get_rect(left=550, top=225)
 

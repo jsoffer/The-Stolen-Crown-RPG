@@ -135,7 +135,6 @@ class Credits(tools.State):
         self.music_title = None
         self.previous_music = None
         self.music = None
-        self.volume = None
         self.credit = None
         self.background = None
 
@@ -145,7 +144,6 @@ class Credits(tools.State):
         """
 
         self.music = setup.music()['overworld']
-        self.volume = 0.4
         self.background = pg.Surface(setup.screen_rect().size)
         self.background.fill(c.BLACK_BLUE)
         self.credit = CreditEntry(self)

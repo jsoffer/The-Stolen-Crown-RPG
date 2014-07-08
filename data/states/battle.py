@@ -40,7 +40,6 @@ class Battle(tools.State):
 
         self.name = 'battle'
         self.music = setup.music()['high_action']
-        self.volume = 0.4
 
         self.action_timer = Timer(1500)
 
