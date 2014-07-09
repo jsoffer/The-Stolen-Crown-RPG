@@ -54,12 +54,6 @@ class Shop(tools.State):
         """
         return ['Item purchased.']
 
-    def make_purchasable_items(self):
-        """
-        Make the list of items to be bought at shop.
-        """
-        raise NotImplementedError
-
     def make_background(self):
         """
         Make the level surface.
