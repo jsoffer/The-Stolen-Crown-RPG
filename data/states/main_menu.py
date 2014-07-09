@@ -219,8 +219,8 @@ class LoadGame(Instructions):
             elif keys[pg.K_SPACE]:
                 if self.arrow.index == 0:
 
-                    #self.game_data = pickle.load(open("save.p", "rb"))
-                    setup.register_game_data(pickle.load(open("save.p", "rb")))
+                    with open("save.p", "rb") as save_file:
+                        setup.register_game_data(pickle.load(save_file))
 
                     self.next = c.TOWN
                     self.state = c.TRANSITION_OUT

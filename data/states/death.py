@@ -96,7 +96,8 @@ class DeathScene(tools.State):
         if not os.path.isfile("save.p"):
             # initializes setup.game_data internally
             tools.create_game_data_dict()
-            pickle.dump(setup.game_data(), open("save.p", "wb"))
+            with open("save.p", "wb") as save_file:
+                pickle.dump(game_data, save_file)
         self.observers = [observer.SoundEffects()]
 
     def notify(self, event):
@@ -162,8 +163,8 @@ class DeathScene(tools.State):
         if keys[pg.K_SPACE]:
             if self.arrow.index == 0:
                 self.next = c.TOWN
-                #self.game_data = pickle.load(open("save.p", "rb"))
-                setup.register_game_data(pickle.load(open("save.p", "rb")))
+                with open("save.p", "rb") as save_file:
+                    setup.register_game_data(pickle.load(save_file))
             elif self.arrow.index == 1:
                 self.next = c.MAIN_MENU
             self.state = c.TRANSITION_OUT

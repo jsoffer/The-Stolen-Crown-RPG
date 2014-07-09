@@ -20,8 +20,6 @@ class Shop(tools.State):
         self.keeper = None
 
         self.dialogue = {}
-        #self.accept_sale_dialogue = None
-        #self.accept_dialogue = None
 
         self.items = None
         self.sell_items = None
@@ -35,8 +33,6 @@ class Shop(tools.State):
         self.state_dict = self.make_state_dict()
         self.state = 'transition in'
         self.next = c.TOWN
-        #self.accept_dialogue = self.make_accept_dialogue()
-        #self.accept_sale_dialogue = ['Item sold.']
         self.dialogue['dialogue'] = self.make_dialogue()
         self.dialogue['accept'] = self.make_accept_dialogue()
         self.dialogue['accept sale'] = ['Item sold.']
@@ -152,7 +148,13 @@ class Inn(Shop):
                 'power': None,
                 'dialogue': dialogue}
 
-        return [item]
+        dummy = {'type': 'breakfast',
+                'price': 10,
+                'quantity': 0,
+                'power': None,
+                'dialogue': "Restore health (no save)"}
+
+        return [item, dummy]
 
 
 class WeaponShop(Shop):
