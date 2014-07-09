@@ -1,0 +1,72 @@
+Inn:
+    -
+        type: room
+        price: 30
+        quantity: 0
+        power:
+        dialogue: Restore and save (30 gold)
+    -
+        type: breakfast
+        price: 10
+        quantity: 0
+        power:
+        dialogue: Restore only (10 gold)
+
+weapon shop:
+    -
+        type: Long Sword
+        price: 150
+        quantity: 1
+        power: 11
+        dialogue: Long Sword (150 gold)
+    -
+        type: Rapier
+        price: 50
+        quantity: 1
+        power: 9
+        dialogue: Rapier (50 gold)
+
+armor shop:
+    -
+        type: Chain Mail
+        price: 50
+        quantity: 1
+        power: 2
+        dialogue: Chain Mail (50 gold)
+    -
+        type: Wooden Shield
+        price: 75
+        quantity: 1
+        power: 3
+        dialogue: Wooden Shield (75 gold)
+
+magic shop:
+    -
+        type: Cure
+        price: 50
+        quantity: 1
+        magic points: 25
+        power: 50
+        dialogue: Cure (50 gold)
+    -
+        type: Fire Blast
+        price: 150
+        quantity: 1
+        magic points: 40
+        power: 15
+        dialogue: Fire Blast (150 gold)
+
+potion shop:
+    -
+        type: Healing Potion
+        price: 15
+        quantity: 1
+        power:
+        dialogue: Healing Potion (15 gold)
+    -
+        type: Ether Potion
+        price: 15
+        quantity: 1
+        power:
+        dialogue: Ether Potion (15 gold)
+
