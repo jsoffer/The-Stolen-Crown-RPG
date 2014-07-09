@@ -97,7 +97,7 @@ class DeathScene(tools.State):
             # initializes setup.game_data internally
             tools.create_game_data_dict()
             with open("save.p", "wb") as save_file:
-                pickle.dump(game_data, save_file)
+                pickle.dump(setup.game_data(), save_file)
         self.observers = [observer.SoundEffects()]
 
     def notify(self, event):

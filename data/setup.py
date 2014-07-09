@@ -22,6 +22,23 @@ KEYS = None
 GAME_DATA = None
 
 MIXER = None
+MUSIC = None
+
+YAML = None
+
+def register_music(_music):
+    global MUSIC
+    MUSIC = _music
+
+def music():
+    return MUSIC
+
+def register_yaml(_yaml):
+    global YAML
+    YAML = _yaml
+
+def yaml():
+    return YAML
 
 def register_mixer(_mixer):
     global MIXER

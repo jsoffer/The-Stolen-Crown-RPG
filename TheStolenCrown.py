@@ -12,6 +12,8 @@ __author__ = 'justinarmstrong'
 import os
 import sys
 import pygame as pg
+import yaml
+
 from data.main import main
 from data.constants import ORIGINAL_CAPTION
 
@@ -106,6 +108,15 @@ if __name__ == '__main__':
 
     MIXER = Mixer()
     setup.register_mixer(MIXER)
+
+    # still required for the 'observer'-driven fanfare
+    MUSIC = load_resources(os.path.join('resources', 'music'),
+                           accept=('.wav', '.mp3', '.ogg', '.mdi'))
+    setup.register_music(MUSIC)
+
+    with open(os.path.join('resources', 'yaml', 'shops.yaml')) as yaml_file:
+        YAML = yaml.safe_load(yaml_file)
+        setup.register_yaml(YAML)
 
     main()
     pg.quit()
