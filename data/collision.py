@@ -4,12 +4,13 @@ from . import setup
 class CollisionHandler(object):
     """Handles collisions between the user, blockers and computer
     characters"""
-    def __init__(self, player, blockers, sprites, portals, level):
-        self.player = player
-        self.static_blockers = blockers
-        self.blockers = make_blocker_list(blockers, sprites)
-        self.sprites = sprites
-        self.portals = portals
+    #def __init__(self, player, blockers, sprites, portals, level):
+    def __init__(self, level):
+        self.player = level.player
+        self.static_blockers = level.blockers
+        self.blockers = make_blocker_list(level.blockers, level.sprites)
+        self.sprites = level.sprites
+        self.portals = level.portals
         self.level = level
 
     def update(self):
@@ -40,6 +41,7 @@ class CollisionHandler(object):
         """
         Check for a portal to change level scene.
         """
+
         portal = pg.sprite.spritecollideany(self.player, self.portals)
 
         if portal:

@@ -66,10 +66,10 @@ class LevelState(tools.State):
         self.blockers = self.make_blockers()
         self.sprites = self.make_sprites()
 
-        self.collision_handler = collision.CollisionHandler(self.player,
-                                                            self.blockers,
-                                                            self.sprites,
-                                                            self.portals,
+        self.collision_handler = collision.CollisionHandler(#self.player,
+                                                            #self.blockers,
+                                                            #self.sprites,
+                                                            #self.portals,
                                                             self)
         self.dialogue_handler = textbox.TextHandler(self)
         self.state_dict = self.make_state_dict()
@@ -116,6 +116,9 @@ class LevelState(tools.State):
     def make_player(self):
         """
         Make the player and sets location.
+
+        Player (inherits from Sprite)
+
         """
         last_state = self.previous
 
@@ -142,6 +145,9 @@ class LevelState(tools.State):
     def make_blockers(self):
         """
         Make the blockers for the level.
+
+        List of rectangles
+
         """
         blockers = []
 
@@ -158,6 +164,9 @@ class LevelState(tools.State):
     def make_sprites(self):
         """
         Make any sprites for the level as needed.
+
+        Sprite group
+
         """
         sprites = pg.sprite.Group()
 
@@ -345,6 +354,9 @@ class LevelState(tools.State):
     def make_level_portals(self):
         """
         Make the portals to switch state.
+
+        Sprite group
+
         """
         portal_group = pg.sprite.Group()
 
@@ -355,7 +367,6 @@ class LevelState(tools.State):
                 posy = (properties['y'] * 2) - 32
                 new_state = properties['type']
                 portal_group.add(portal.Portal(posx, posy, new_state))
-
 
         return portal_group
 
