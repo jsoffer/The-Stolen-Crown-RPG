@@ -21,9 +21,6 @@ class Shop(tools.State):
 
         self.dialogue = {}
 
-        self.items = None
-        self.sell_items = None
-
         self.state_dict = None
         self.gui = None
         self.background = None
@@ -36,7 +33,6 @@ class Shop(tools.State):
         self.dialogue['dialogue'] = self.make_dialogue()
         self.dialogue['accept'] = self.make_accept_dialogue()
         self.dialogue['accept sale'] = ['Item sold.']
-        self.items = setup.yaml()[self.name]
         self.background = self.make_background()
         self.gui = shopgui.Gui(self)
 
@@ -138,8 +134,6 @@ class WeaponShop(Shop):
         super(WeaponShop, self).__init__()
         self.name = c.WEAPON_SHOP
         self.keeper = 'weaponman'
-        self.sell_items = ['Long Sword', 'Rapier']
-
 
     def make_dialogue(self):
         """Make the list of dialogue phrases"""
@@ -153,8 +147,6 @@ class ArmorShop(Shop):
         super(ArmorShop, self).__init__()
         self.name = c.ARMOR_SHOP
         self.keeper = 'armorman'
-        self.sell_items = ['Chain Mail', 'Wooden Shield']
-
 
     def make_dialogue(self):
         """Make the list of dialogue phrases"""
@@ -170,7 +162,6 @@ class MagicShop(Shop):
         self.name = c.MAGIC_SHOP
         self.keeper = 'magiclady'
 
-
     def make_dialogue(self):
         """Make the list of dialogue phrases"""
         shop_name = "{}{}".format(self.name[0].upper(), self.name[1:])
@@ -184,8 +175,6 @@ class PotionShop(Shop):
         super(PotionShop, self).__init__()
         self.name = c.POTION_SHOP
         self.keeper = 'potionlady'
-        self.sell_items = ['Healing Potion', 'Ether Potion']
-
 
     def make_dialogue(self):
         """Make the list of dialogue phrases"""

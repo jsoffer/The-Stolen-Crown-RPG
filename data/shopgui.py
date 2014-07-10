@@ -21,7 +21,6 @@ class Gui(object):
 
         self.sfx_observer = observer.SoundEffects()
         self.observers = [self.sfx_observer]
-        self.sellable_items = level.sell_items
 
         self.player_inventory = game_data['player inventory']
 
@@ -34,7 +33,7 @@ class Gui(object):
         self.index = 0
         self.timer = 0.0
         self.allow_input = False
-        self.items = level.items
+        self.items = setup.yaml()[self.name] # was: level.items
         self.item_to_be_sold = None
         self.item_to_be_purchased = None
 
@@ -564,7 +563,8 @@ class Gui(object):
     def check_for_sellable_items(self):
         """Check for sellable items"""
         for item in self.player_inventory:
-            if item in self.sellable_items:
+            #if item in self.sellable_items:
+            if item in [k['type'] for k in setup.yaml()[self.name]]:
                 return True
         return False
 
