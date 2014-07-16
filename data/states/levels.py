@@ -66,11 +66,7 @@ class LevelState(tools.State):
         self.blockers = self.make_blockers()
         self.sprites = self.make_sprites()
 
-        self.collision_handler = collision.CollisionHandler(#self.player,
-                                                            #self.blockers,
-                                                            #self.sprites,
-                                                            #self.portals,
-                                                            self)
+        self.collision_handler = collision.CollisionHandler(self)
         self.dialogue_handler = textbox.TextHandler(self)
         self.state_dict = self.make_state_dict()
         self.menu_screen = player_menu.PlayerMenu(self)
