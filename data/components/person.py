@@ -4,7 +4,7 @@ import math, random, copy
 import pygame as pg
 from .. import setup, observer
 from .. import constants as c
-from ..tools import Timer, get_image
+from ..tools import Timer, get_image, FadeSurface
 
 class Person(pg.sprite.Sprite):
     """
@@ -13,19 +13,17 @@ class Person(pg.sprite.Sprite):
 
     """
 
-    def __init__(self, sheet_key, pos_x, pos_y,
-                 direction='down', state='resting', index=0):
+    def __init__(self, sheet_key, position, state='resting', index=0):
         super(Person, self).__init__()
-        self.alpha = 255
         self.name = sheet_key
         self.get_image = get_image
         self.spritesheet_dict = self.create_spritesheet_dict(sheet_key)
         self.animation_dict = self.create_animation_dict()
         self.index = index
-        self.direction = direction
+        self.direction = 'down'
         self.image_list = self.animation_dict[self.direction]
         self.image = self.image_list[self.index]
-        self.rect = self.image.get_rect(left=pos_x, top=pos_y)
+        self.rect = self.image.get_rect(topleft=position)
         self.origin_pos = self.rect.topleft
         self.state_dict = self.create_state_dict()
 
@@ -42,7 +40,7 @@ class Person(pg.sprite.Sprite):
         self.blockers = self.set_blockers()
         self.location = self.get_tile_location()
         self.dialogue = ['Location: ' + str(self.location)]
-        self.default_direction = direction
+        self.default_direction = 'down'
         self.item = None
         self.wander_box = self.make_wander_box()
         self.observers = [observer.SoundEffects()]
@@ -231,8 +229,8 @@ class Person(pg.sprite.Sprite):
         Increment index and set self.image for animation.
         """
         self.animation()
-        assert(self.rect.x % 32 == 0 or self.rect.y % 32 == 0), \
-            'Not centered on tile'
+        #assert(self.rect.x % 32 == 0 or self.rect.y % 32 == 0), \
+        #    'Not centered on tile'
 
     def animated_resting(self):
         self.animation(500)
@@ -321,6 +319,14 @@ class Person(pg.sprite.Sprite):
         self.x_vel = -5
         self.state = 'attack'
 
+    def fade_death(self):
+        """
+        Make character become transparent in death.
+        """
+        self.image.update_alpha(8)
+        if self.image.faded():
+            self.kill()
+            self.notify(c.ENEMY_DEAD)
 
     def attack(self):
         """
@@ -453,19 +459,6 @@ class Person(pg.sprite.Sprite):
                 self.state = 'battle resting'
                 self.x_vel = 0
 
-    def fade_death(self):
-        """
-        Make character become transparent in death.
-        """
-        self.image = pg.Surface((64, 64)).convert()
-        self.image.set_colorkey(c.BLACK)
-        self.image.set_alpha(self.alpha)
-        self.image.blit(self.death_image, (0, 0))
-        self.alpha -= 8
-        if self.alpha <= 0:
-            self.kill()
-            self.notify(c.ENEMY_DEAD)
-
 
     def enter_knock_back_state(self):
         """
@@ -485,9 +478,8 @@ class Player(Person):
     User controlled character.
     """
 
-    def __init__(self, direction,
-                 x=0, y=0, state='resting', index=0):
-        super(Player, self).__init__('player', x, y, direction, state, index)
+    def __init__(self, pos=(0,0), index=0):
+        super(Player, self).__init__('player', position=pos, index=index)
         self.damaged = False
         self.healing = False
         self.damage_alpha = 0
@@ -609,23 +601,28 @@ class Enemy(Person):
     """
     Enemy sprite.
     """
-    def __init__(self, sheet_key, x, y,
-                 direction='down', state='resting', index=0):
-        super(Enemy, self).__init__(sheet_key, x, y, direction, state, index)
+    def __init__(self, sheet_key, position, index=0):
+        super(Enemy, self).__init__(sheet_key, position, index)
         self.level = 1
         self.type = 'enemy'
+        self.state = 'battle resting'
+
+    def cue_death(self):
+        self.image = FadeSurface((64, 64))
+        self.image.blit(self.death_image, (0, 0))
+        self.state = c.FADE_DEATH
 
 
 class Chest(Person):
     """
     Treasure chest that contains items to collect.
     """
-    def __init__(self, x, y, identifier):
-        super(Chest, self).__init__('treasurechest', x, y)
+    def __init__(self, position, identifier):
+        super(Chest, self).__init__('treasurechest', position)
         self.spritesheet_dict = self.make_image_dict()
         self.image_list = self.make_image_list()
         self.image = self.image_list[self.index]
-        self.rect = self.image.get_rect(x=x, y=y)
+        self.rect = self.image.get_rect(topleft=position)
         self.identifier = identifier
 
     def make_image_dict(self):

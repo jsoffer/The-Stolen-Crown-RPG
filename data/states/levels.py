@@ -121,7 +121,8 @@ class LevelState(tools.State):
         game_data = setup.game_data()
 
         if last_state == 'battle':
-            player = person.Player(game_data['last direction'])
+            #player = person.Player(game_data['last direction'])
+            player = person.Player()
             player.rect.x = game_data['last location'][0] * 32
             player.rect.y = game_data['last location'][1] * 32
 
@@ -132,7 +133,8 @@ class LevelState(tools.State):
                     if last_state == properties['state']:
                         posx = properties['x'] * 2
                         posy = (properties['y'] * 2) - 32
-                        player = person.Player(properties['direction'])
+                        #player = person.Player(properties['direction'])
+                        player = person.Player()
                         player.rect.x = posx
                         player.rect.y = posy
 
@@ -204,31 +206,22 @@ class LevelState(tools.State):
                 pos_y = ((properties['y']) * 2) - 32
 
                 sprite_dict = {'oldman': person.Person('oldman',
-                                                       pos_x, pos_y,
-                                                       direction),
-                               'bluedressgirl': person.Person('femalevillager',
-                                                              pos_x, pos_y,
-                                                              direction,
-                                                              'resting', 1),
-                               'femalewarrior': person.Person('femvillager2',
-                                                              pos_x, pos_y,
-                                                              direction,
-                                                              'autoresting'),
-                               'devil': person.Person('devil', pos_x, pos_y,
-                                                      'down', 'autoresting'),
-                               'oldmanbrother': person.Person('oldmanbrother',
-                                                              pos_x, pos_y,
-                                                              direction),
-                               'soldier': person.Person('soldier',
-                                                        pos_x, pos_y,
-                                                        direction,
-                                                        'resting', index),
-                               'king': person.Person('king', pos_x, pos_y,
-                                                     direction),
-                               'evilwizard': person.Person('evilwizard',
-                                                           pos_x, pos_y,
-                                                           direction),
-                               'treasurechest': person.Chest(pos_x, pos_y,
+                                                       (pos_x, pos_y)),
+                               'bluedressgirl': person.Person(
+                                   'femalevillager', (pos_x, pos_y)),
+                               'femalewarrior': person.Person(
+                                   'femvillager2', (pos_x, pos_y),
+                                   'autoresting'),
+                               'devil': person.Person('devil', (pos_x, pos_y),
+                                                      'autoresting'),
+                               'oldmanbrother': person.Person(
+                                   'oldmanbrother', (pos_x, pos_y)),
+                               'soldier': person.Person(
+                                   'soldier', (pos_x, pos_y)),
+                               'king': person.Person('king', (pos_x, pos_y)),
+                               'evilwizard': person.Person(
+                                   'evilwizard', (pos_x, pos_y)),
+                               'treasurechest': person.Chest((pos_x, pos_y),
                                                              identifier)}
 
                 sprite = sprite_dict[properties['type']]
