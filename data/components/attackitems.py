@@ -54,6 +54,21 @@ class Sword(object):
             surface = setup.screen()
             surface.blit(self.image, self.rect)
 
+class FadeSurface(pg.Surface):
+    """
+    A surface that has a countdown linked to its alpha value;
+    once the countdown is over, the surface is deleted
+    """
+    def __init__(self, size):
+        super(FadeSurface, self).__init__(size)
+        self.alpha = 255
+        self.set_alpha(self.alpha)
+        self.set_colorkey(c.BLACK)
+        self.convert()
+
+    def update_alpha(self, amount):
+        self.alpha -= amount
+        self.set_alpha(self.alpha)
 
 class HealthPoints(pg.sprite.Sprite):
     """
@@ -61,17 +76,19 @@ class HealthPoints(pg.sprite.Sprite):
     """
     def __init__(self, points, topleft_pos, damage=True, ether=False):
         super(HealthPoints, self).__init__()
+
         self.ether = ether
         self.damage = damage
+
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 27)
+
         self.text_image = self.make_surface(points)
         self.rect = self.text_image.get_rect(x=topleft_pos[0]+20,
                                              bottom=topleft_pos[1]+10)
-        self.image = pg.Surface(self.rect.size).convert()
-        self.image.set_colorkey(c.BLACK)
-        self.alpha = 255
-        self.image.set_alpha(self.alpha)
+        self.image = FadeSurface(self.rect.size)
+
         self.image.blit(self.text_image, (0, 0))
+
         self.start_posy = self.rect.y
         self.y_vel = -1
         self.fade_out = False
@@ -110,11 +127,8 @@ class HealthPoints(pg.sprite.Sprite):
         Fade score in and out.
         """
         if self.fade_out:
-            self.image = pg.Surface(self.rect.size).convert()
-            self.image.set_colorkey(c.BLACK)
-            self.image.set_alpha(self.alpha)
-            self.image.blit(self.text_image, (0, 0))
-            self.alpha -= 15
-            if self.alpha <= 0:
+            #self.image.blit(self.text_image, (0, 0))
+            self.image.update_alpha(15)
+            if self.image.alpha <= 0:
                 self.kill()
 
