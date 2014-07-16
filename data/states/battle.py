@@ -143,14 +143,14 @@ class Battle(tools.State):
         enemy_group = pg.sprite.Group()
 
         if game_data['battle type']:
-            enemy = person.Enemy('evilwizard', 0, 0,
-                                 'down', 'battle resting')
+            enemy = person.Enemy('evilwizard', (0, 0),
+                                 'battle resting')
             enemy_group.add(enemy)
         else:
             if game_data['start of game']:
                 for enemy in range(3):
-                    enemy_group.add(person.Enemy('devil', 0, 0,
-                                                 'down', 'battle resting'))
+                    enemy_group.add(person.Enemy('devil', (0, 0),
+                                                 'battle resting'))
                 game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 2)):
