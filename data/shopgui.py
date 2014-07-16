@@ -351,14 +351,19 @@ class Gui(object):
             item_to_add = {'magic points': item['magic points'],
                            'power': item['power']}
             player_items[item_type] = item_to_add
+
         if item_type in player_armor:
             equipped_armor.append(item_type)
+
         if item_type in player_weapons:
             player_items['equipped weapon'] = item_type
+
         if item_type in player_items and item_type not in magic_list:
             player_items[item_type]['quantity'] += quantity
+
         elif quantity > 0:
             player_items[item_type] = item_to_add
+
         elif item_type == 'room':
             player_health['current'] = player_health['maximum']
             player_magic['current'] = player_magic['maximum']
@@ -576,13 +581,16 @@ class Gui(object):
         dialogue = ["What would you like to sell?"]
         choices = []
         item_list = []
+
         for item in self.items:
             if item['type'] in self.player_inventory:
                 name = item['type']
-                price = " (" + str(item['price'] / 2) + " gold)"
+                price = " (" + str(item['price'] // 2) + " gold)"
                 choices.append(name + price)
                 item_list.append(name)
+
         choices.append('Cancel')
+
         self.dialogue_box = self.make_dialogue_box(dialogue, 0)
         self.selection_box = self.make_selection_box(choices)
 
