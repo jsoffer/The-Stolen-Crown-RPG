@@ -324,3 +324,24 @@ def empty_background():
     background.rect = background.image.get_rect()
 
     return background
+
+class FadeSurface(pg.Surface):
+    """
+    A surface that has a countdown linked to its alpha value;
+    once the countdown is over, the surface is done
+
+    """
+
+    def __init__(self, size):
+        super(FadeSurface, self).__init__(size)
+        self.alpha = 255
+        self.set_alpha(self.alpha)
+        self.set_colorkey(c.BLACK)
+        self.convert()
+
+    def update_alpha(self, amount):
+        self.alpha -= amount
+        self.set_alpha(self.alpha)
+
+    def faded(self):
+        return self.alpha < 0

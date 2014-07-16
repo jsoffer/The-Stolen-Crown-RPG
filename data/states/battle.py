@@ -154,8 +154,8 @@ class Battle(tools.State):
                 game_data['start of game'] = False
             else:
                 for enemy in range(random.randint(1, 2)):
-                    enemy_group.add(person.Enemy('devil', 0, 0,
-                                                 'down', 'battle resting'))
+                    enemy_group.add(person.Enemy('devil', (0, 0),
+                                                 'battle resting'))
 
         for i, enemy in enumerate(enemy_group):
             enemy.rect.topleft = pos_list[i]
@@ -175,7 +175,7 @@ class Battle(tools.State):
         """
         Make the sprite for the player's character.
         """
-        player = person.Player('left', 630, 220, 'battle resting', 1)
+        player = person.Player((630, 220), 1)
         player.image = pg.transform.scale2x(player.image)
         return player
 
@@ -426,7 +426,7 @@ class Battle(tools.State):
             enemy.enter_knock_back_state()
             if enemy.health <= 0:
                 self.enemy_list.pop(enemy.index)
-                enemy.state = c.FADE_DEATH
+                enemy.cue_death()
                 self.arrow.remove_pos(self.player.attacked_enemy)
             self.enemy_index = 0
 

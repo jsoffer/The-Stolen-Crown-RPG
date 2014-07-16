@@ -54,22 +54,6 @@ class Sword(object):
             surface = setup.screen()
             surface.blit(self.image, self.rect)
 
-class FadeSurface(pg.Surface):
-    """
-    A surface that has a countdown linked to its alpha value;
-    once the countdown is over, the surface is deleted
-    """
-    def __init__(self, size):
-        super(FadeSurface, self).__init__(size)
-        self.alpha = 255
-        self.set_alpha(self.alpha)
-        self.set_colorkey(c.BLACK)
-        self.convert()
-
-    def update_alpha(self, amount):
-        self.alpha -= amount
-        self.set_alpha(self.alpha)
-
 class HealthPoints(pg.sprite.Sprite):
     """
     A sprite that shows how much damage an attack inflicted.
@@ -77,27 +61,24 @@ class HealthPoints(pg.sprite.Sprite):
     def __init__(self, points, topleft_pos, damage=True, ether=False):
         super(HealthPoints, self).__init__()
 
-        self.ether = ether
-        self.damage = damage
-
         self.font = pg.font.Font(setup.fonts()[c.MAIN_FONT], 27)
 
-        self.text_image = self.make_surface(points)
+        self.text_image = self.make_surface(points, damage, ether)
         self.rect = self.text_image.get_rect(x=topleft_pos[0]+20,
                                              bottom=topleft_pos[1]+10)
-        self.image = FadeSurface(self.rect.size)
+
+        self.image = tools.FadeSurface(self.rect.size)
 
         self.image.blit(self.text_image, (0, 0))
 
         self.start_posy = self.rect.y
         self.y_vel = -1
-        self.fade_out = False
 
-    def make_surface(self, points):
+    def make_surface(self, points, damage, ether):
         """
         Make the surface for the sprite.
         """
-        if self.damage:
+        if damage:
             if points > 0:
                 text = "-{}".format(str(points))
                 surface = self.font.render(text, True, c.RED)
@@ -106,7 +87,7 @@ class HealthPoints(pg.sprite.Sprite):
                 return self.font.render('Miss', True, c.WHITE).convert_alpha()
         else:
             text = "+{}".format(str(points))
-            if self.ether:
+            if ether:
                 surface = self.font.render(text, True, c.PINK)
             else:
                 surface = self.font.render(text, True, c.GREEN)
@@ -117,18 +98,14 @@ class HealthPoints(pg.sprite.Sprite):
         """
         Update sprite position or delete if necessary.
         """
-        self.fade_animation()
         self.rect.y += self.y_vel
         if self.rect.y < (self.start_posy - 29):
-            self.fade_out = True
+            self.fade_animation()
 
     def fade_animation(self):
         """
         Fade score in and out.
         """
-        if self.fade_out:
-            #self.image.blit(self.text_image, (0, 0))
-            self.image.update_alpha(15)
-            if self.image.alpha <= 0:
-                self.kill()
-
+        self.image.update_alpha(15)
+        if self.image.faded():
+            self.kill()
